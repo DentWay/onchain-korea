@@ -1,0 +1,155 @@
+export const weeks = [
+  {
+    id: 1,
+    title: '지갑 + 보안의 모든 것',
+    subtitle: 'Wallet Hygiene · Wallets · 시드 문구 · 버너 지갑',
+    status: 'current',
+    progress: 60,
+    lessons: [
+      { id: 'w1-1', title: '지갑이란? — 주소, 프라이빗 키, 시드 문구 이해', source: 'S1-L5', type: '📖 읽기', status: 'done' },
+      { id: 'w1-2', title: '지갑 클라이언트 비교 — Phantom, Solflare, Backpack', source: 'S2-L1', type: '📖 읽기', status: 'done' },
+      { id: 'w1-3', title: '하드웨어 지갑 & 멀티시그 — 왜 필요한가?', source: 'S2-L1', type: '📖 읽기', status: 'current' },
+      { id: 'w1-4', title: '버너 지갑 만들기 — 가장 안전한 온체인 습관', source: 'S2-L1', type: '⚡ 실습', status: 'locked' },
+      { id: 'w1-5', title: '키 관리 & 보안 베스트 프랙티스', source: 'S1-L5', type: '🔒 보안', status: 'locked' },
+    ],
+    actions: [
+      { id: 'a1-1', title: 'Phantom 지갑 설치 + 생성', status: 'done' },
+      { id: 'a1-2', title: 'Solflare 버너 지갑 만들기 + 비우기', status: 'current' },
+      { id: 'a1-3', title: '시드 문구 안전 보관 실습', status: 'locked' },
+    ],
+    hiddenTopic: {
+      title: '왜 스테이블코인이 주목받고 있을까? — 한국에서의 실제 활용 사례',
+      desc: '한국에서 스테이블코인은 왜 중요할까요? 해외 송금, P2P 결제, DeFi 진입점으로서의 역할을 알아봅니다.',
+      readTime: '10분 읽기',
+      action: 'USDC 전송 체험',
+      forumCount: 23,
+    },
+  },
+  {
+    id: 2,
+    title: '온체인 탐색 + 리서치 (DYOR)',
+    subtitle: 'Onchain Explorers · DYOR Part 1 & 2 · 스캠 식별',
+    status: 'locked',
+    progress: 0,
+    lessons: [
+      { id: 'w2-1', title: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', source: 'S2-L6', type: '📖 읽기', status: 'locked' },
+      { id: 'w2-2', title: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', source: 'S2-L6', type: '📖 읽기', status: 'locked' },
+      { id: 'w2-3', title: 'DYOR 기초 — 레드플래그 식별법', source: 'S1-L7', type: '📖 읽기', status: 'locked' },
+      { id: 'w2-4', title: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', source: 'S1-L8', type: '📖 읽기', status: 'locked' },
+      { id: 'w2-5', title: '실전 스캠 분석 — 실제 사례로 배우기', source: 'S1-L4', type: '🔒 보안', status: 'locked' },
+    ],
+    actions: [
+      { id: 'a2-1', title: 'Solscan에서 내 트랜잭션 찾기', status: 'locked' },
+      { id: 'a2-2', title: '의심 프로젝트 3개 리서치 보고서 작성', status: 'locked' },
+    ],
+    hiddenTopic: {
+      title: '트럼프는 왜 비트코인을 밀까? — 미국 크립토 정책이 한국에 미치는 영향',
+      desc: '미국 정치와 크립토의 관계, 그리고 한국 시장에 미치는 파급효과를 분석합니다.',
+      readTime: '12분 읽기',
+      action: '비트코인 가격 추적 실습',
+      forumCount: 0,
+    },
+  },
+  {
+    id: 3,
+    title: 'DeFi · 디지털 에셋 · NFT',
+    subtitle: 'AMM/LP · Metaplex Core 민팅 · NFT 활용',
+    status: 'locked',
+    progress: 0,
+    lessons: [
+      { id: 'w3-1', title: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', source: 'S2-L4', type: '📖 읽기', status: 'locked' },
+      { id: 'w3-2', title: 'DEX에서 스왑하기 — Orca, Raydium 비교', source: 'S2-L4', type: '⚡ 실습', status: 'locked' },
+      { id: 'w3-3', title: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', source: 'S2-L2', type: '📖 읽기', status: 'locked' },
+      { id: 'w3-4', title: 'NFT 이해하기 — 개념부터 활용까지', source: 'S1-L6', type: '📖 읽기', status: 'locked' },
+      { id: 'w3-5', title: 'Metaplex Core로 내 에셋 민팅하기', source: 'S2-L2', type: '⚡ 실습', status: 'locked' },
+    ],
+    actions: [
+      { id: 'a3-1', title: 'DEX에서 첫 스왑 실행', status: 'locked' },
+      { id: 'a3-2', title: 'Metaplex Core로 NFT 민팅', status: 'locked' },
+    ],
+    hiddenTopic: {
+      title: '한국에서 NFT는 끝났나? — 진짜 유스케이스와 Metaplex Core',
+      desc: '한국 NFT 시장의 현실과 실제 활용 사례, Metaplex Core의 가능성을 탐구합니다.',
+      readTime: '10분 읽기',
+      action: '내 NFT 민팅',
+      forumCount: 0,
+    },
+  },
+  {
+    id: 4,
+    title: '스테이블코인 · 크로스체인 · 스테이킹',
+    subtitle: 'Stablecoins · Bridging · Validators & Staking',
+    status: 'locked',
+    progress: 0,
+    lessons: [
+      { id: 'w4-1', title: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', source: 'S2-L7', type: '📖 읽기', status: 'locked' },
+      { id: 'w4-2', title: '크로스체인 & 브릿지 — L2, 롤업, deBridge', source: 'S2-L8', type: '📖 읽기', status: 'locked' },
+      { id: 'w4-3', title: '밸리데이터 & 스테이킹 — 원리와 참여 방법', source: 'S1-L1', type: '📖 읽기', status: 'locked' },
+      { id: 'w4-4', title: '거버넌스 & DAO — 온체인 의사결정', source: 'S1-L2', type: '📖 읽기', status: 'locked' },
+    ],
+    actions: [
+      { id: 'a4-1', title: '스테이블코인 전송 실습', status: 'locked' },
+      { id: 'a4-2', title: 'deBridge로 크로스체인 브릿지', status: 'locked' },
+      { id: 'a4-3', title: 'SOL 스테이킹 (Greed Validator)', status: 'locked' },
+    ],
+    hiddenTopic: {
+      title: '한국 거래소 vs 해외 DEX — 어디서 거래해야 할까?',
+      desc: '업비트, 빗썸 같은 한국 거래소와 해외 DEX의 장단점을 비교합니다.',
+      readTime: '10분 읽기',
+      action: 'DEX에서 첫 스왑',
+      forumCount: 0,
+    },
+  },
+]
+
+export const actionGuides = [
+  {
+    weekId: 1,
+    id: 'burner-wallet',
+    title: 'Solflare 버너 지갑 만들기',
+    subtitle: 'Greed Academy S2-L1 실습 과제 · 약 10분 · 초급',
+    icon: '👛',
+    description: '버너 지갑은 의심스러운 dApp이나 민팅에 사용하는 "일회용 지갑"입니다. 메인 지갑을 보호하는 가장 실전적인 방법이에요.',
+    steps: [
+      { text: 'solflare.com 에 접속 → Chrome 확장 또는 모바일 앱 설치', link: 'https://solflare.com', note: '이미 Phantom이 있어도 Solflare를 별도로 설치하세요' },
+      { text: '기존 지갑 시드 문구로 Solflare에 로그인', note: 'Semester 2 등록 시 사용한 지갑과 동일해야 합니다' },
+      { text: '"버너 지갑 만들기" 기능 사용 (Solflare 내장)', note: '다른 지갑에서는 "새 주소 추가"로 동일하게 가능' },
+      { text: '버너 지갑으로 소액 전송 → 테스트 트랜잭션 → 자산 전부 메인으로 회수', note: '버너를 비운 후 그 주소는 폐기하는 것이 원칙' },
+      { text: 'Solscan에서 내 트랜잭션 확인', link: 'https://solscan.io', note: '지갑 주소 검색 → 전송 내역이 보이면 성공!' },
+    ],
+    safetyTips: [
+      '시드 문구를 절대 스크린샷 찍지 마세요. 종이에만 기록하세요.',
+      '공식 사이트 외 링크를 클릭하지 마세요 (피싱 주의).',
+      '"지갑 연결" 요청이 오면 항상 URL을 확인하세요.',
+      '처음에는 소액으로만 연습하세요.',
+    ],
+  },
+  {
+    weekId: 1,
+    id: 'phantom-setup',
+    title: 'Phantom 지갑 설치 + 생성',
+    subtitle: '약 5분 · 초급',
+    icon: '💜',
+    description: 'Solana 생태계에서 가장 인기 있는 지갑 클라이언트를 설치하고 첫 지갑을 만듭니다.',
+    steps: [
+      { text: 'phantom.app 에 접속', link: 'https://phantom.app', note: 'Chrome, Brave, Firefox, Edge 지원' },
+      { text: '"새 지갑 만들기" 클릭 → 비밀번호 설정 (8자 이상)', note: '이 비밀번호는 브라우저 잠금용입니다' },
+      { text: '시드 문구 12개를 종이에 적으세요', note: '⚠️ 절대 디지털로 저장하지 마세요' },
+      { text: '시드 문구 확인 → 지갑 생성 완료!', note: '지갑 주소가 화면 상단에 표시됩니다' },
+    ],
+    safetyTips: [
+      '시드 문구 = 지갑의 마스터 키. 이걸 가진 사람이 지갑을 소유합니다.',
+      '절대 다른 사람에게 공유하지 마세요.',
+      '종이 2장에 적어 다른 장소에 보관하세요.',
+    ],
+  },
+]
+
+export const userProgress = {
+  name: 'Jason',
+  currentWeek: 1,
+  completedLessons: 3,
+  totalLessons: 16,
+  onchainActions: 1,
+  hiddenTopicsRead: 0,
+}
