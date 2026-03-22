@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, Settings } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy } from 'lucide-react'
 import { userProgress } from '../data/curriculum'
 
 const navItems = [

@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
-import { weeks } from '../data/curriculum'
+import { weeks, actionGuides } from '../data/curriculum'
 
 const dotClass = {
   done: 'bg-emerald-500',
@@ -18,7 +18,7 @@ export default function WeekDetail() {
         <h1 className="text-lg font-semibold text-gray-900">
           Week {week.id}: {week.title}
         </h1>
-        <Link to="/" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
+        <Link to="/dashboard" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
           <ArrowLeft size={12} /> 대시보드
         </Link>
       </div>
@@ -55,11 +55,14 @@ export default function WeekDetail() {
             {lesson.status === 'done' && (
               <span className="text-[10px] text-emerald-600 shrink-0">✓</span>
             )}
-            {lesson.status === 'current' && (
-              <Link to={`/action/burner-wallet`} className="text-[10px] text-blue-600 font-medium shrink-0 hover:underline">
-                시작 →
-              </Link>
-            )}
+            {lesson.status === 'current' && (() => {
+              const guide = actionGuides.find(g => g.weekId === week.id)
+              return guide ? (
+                <Link to={`/action/${guide.id}`} className="text-[10px] text-blue-600 font-medium shrink-0 hover:underline">
+                  시작 →
+                </Link>
+              ) : null
+            })()}
           </div>
         ))}
       </div>
@@ -78,11 +81,15 @@ export default function WeekDetail() {
               {action.title}
             </span>
             {action.status === 'done' && <span className="text-[10px] text-emerald-600">완료 ✓</span>}
-            {action.status === 'current' && (
-              <Link to="/action/burner-wallet" className="text-[10px] text-blue-600 font-medium hover:underline">
-                가이드 →
-              </Link>
-            )}
+            {action.status === 'current' && (() => {
+              const guide = actionGuides.find(g => g.weekId === week.id && g.title.includes(action.title.split(' ')[0]))
+                || actionGuides.find(g => g.weekId === week.id)
+              return guide ? (
+                <Link to={`/action/${guide.id}`} className="text-[10px] text-blue-600 font-medium hover:underline">
+                  가이드 →
+                </Link>
+              ) : null
+            })()}
           </div>
         ))}
       </div>

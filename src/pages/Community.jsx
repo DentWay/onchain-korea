@@ -13,7 +13,7 @@ export default function Community() {
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-lg font-semibold text-gray-900">💬 커뮤니티</h1>
-        <Link to="/" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
+        <Link to="/dashboard" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
           <ArrowLeft size={12} /> 대시보드
         </Link>
       </div>
@@ -38,9 +38,9 @@ export default function Community() {
               {ch.locked ? (
                 <p className="text-[10px] text-gray-400 mt-2">🔒 수료 후 오픈</p>
               ) : (
-                <button className="mt-2.5 inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-blue-600 text-white text-[10px] font-medium hover:bg-blue-700 transition-colors">
+                <span className="mt-2.5 inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-blue-600 text-white text-[10px] font-medium">
                   {ch.btn}
-                </button>
+                </span>
               )}
             </Wrapper>
           )
