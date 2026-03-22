@@ -13,7 +13,7 @@ export default function Certificate() {
     <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-lg font-semibold text-gray-900">🏆 수료증</h1>
-        <Link to="/" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
+        <Link to="/dashboard" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
           <ArrowLeft size={12} /> 대시보드
         </Link>
       </div>
