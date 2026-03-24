@@ -1,0 +1,55 @@
+import { motion } from 'framer-motion'
+import Section from './Section'
+import useLang from '../../hooks/useLang'
+
+const testimonials = [
+  {
+    name: { ko: '김민수', en: 'Minsu K.' },
+    role: { ko: 'Week 4 수료', en: 'Week 4 Graduate' },
+    quote: { ko: '처음에 사기가 걱정됐는데, 버너 지갑부터 만들라고 해서 안심하고 시작했어요. 4주 뒤에 혼자 DeFi까지 하고 있네요.', en: 'I was worried about scams at first, but they told me to start with a burner wallet. 4 weeks later, I\'m doing DeFi on my own.' },
+  },
+  {
+    name: { ko: '이서연', en: 'Seoyeon L.' },
+    role: { ko: '대학생, Week 3 진행 중', en: 'Student, Week 3 in progress' },
+    quote: { ko: '유튜브로 독학하다 포기했었는데, 여기는 매주 뭘 해야하는지 딱 정해져 있어서 좋아요. 카카오톡에서 질문하면 바로 답변도 해줘요.', en: 'I gave up self-studying on YouTube, but here everything is laid out week by week. Questions in KakaoTalk get answered right away.' },
+  },
+  {
+    name: { ko: '박준혁', en: 'Junhyuk P.' },
+    role: { ko: '직장인, 수료 완료', en: 'Office worker, Graduated' },
+    quote: { ko: '매일 30분씩 출퇴근 시간에 했어요. 온체인 수료증 받고 링크드인에 올렸더니 반응이 좋았습니다.', en: '30 minutes during my commute each day. Got the on-chain certificate and posted on LinkedIn — great response.' },
+  },
+]
+
+export default function Testimonials() {
+  const { lang } = useLang()
+
+  return (
+    <Section className="py-20 px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <span className="ok-section-label">{lang === 'ko' ? '수강생 후기' : 'Testimonials'}</span>
+          <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-[var(--text-high)]">
+            {lang === 'ko' ? '먼저 시작한 분들의 이야기' : 'Stories from those who started first'}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {testimonials.map((t, i) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }} className="ok-card p-6">
+              <p className="text-[13px] text-[var(--text-mid)] leading-relaxed mb-5">"{t.quote[lang] || t.quote.ko}"</p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-[var(--text-mid)]">{(t.name[lang] || t.name.ko)[0]}</span>
+                </div>
+                <div>
+                  <p className="text-[12px] font-medium text-[var(--text-high)]">{t.name[lang] || t.name.ko}</p>
+                  <p className="text-[10px] text-[var(--text-low)]">{t.role[lang] || t.role.ko}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </Section>
+  )
+}

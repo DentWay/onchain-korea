@@ -6,7 +6,7 @@ export default function FloatingBlocks() {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-lg border border-accent/10 bg-accent/5 backdrop-blur-sm"
+          className="absolute rounded-lg border border-blue-500/10 bg-blue-500/5 backdrop-blur-sm"
           style={{
             width: 40 + i * 15,
             height: 40 + i * 15,

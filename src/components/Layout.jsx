@@ -1,12 +1,28 @@
 import { Outlet } from 'react-router-dom'
+import { useState } from 'react'
+import { Menu } from 'lucide-react'
 import Sidebar from './Sidebar'
+import LangToggle from './LangToggle'
 
 export default function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto p-6 bg-white">
-        <Outlet />
+    <div className="flex h-screen overflow-hidden bg-[var(--surface-0)] text-[var(--text-high)]">
+      <div className={`ok-sidebar-overlay md:hidden ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)} />
+      <div className={`fixed md:relative z-50 md:z-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <Sidebar onClose={() => setSidebarOpen(false)} />
+      </div>
+      <main className="flex-1 overflow-y-auto relative">
+        <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-[var(--surface-0)]/95 backdrop-blur-xl border-b border-[var(--border)]">
+          <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"><Menu size={20} className="text-[var(--text-mid)]" /></button>
+          <span className="text-[13px] font-semibold">Onchain Korea</span>
+          <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
+        </div>
+        <div className="hidden md:block fixed top-3 right-6 z-40">
+          <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)]" />
+        </div>
+        <div className="p-4 md:p-6 ok-page-enter"><Outlet /></div>
       </main>
     </div>
   )

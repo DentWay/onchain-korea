@@ -52,7 +52,7 @@ export default function BlockchainCanvas() {
             ctx.beginPath()
             ctx.moveTo(nodes[i].x, nodes[i].y)
             ctx.lineTo(nodes[j].x, nodes[j].y)
-            ctx.strokeStyle = `rgba(74, 144, 217, ${opacity})`
+            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }
@@ -63,11 +63,11 @@ export default function BlockchainCanvas() {
         const glow = Math.sin(n.pulse) * 0.3 + 0.7
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.radius * glow, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(74, 144, 217, ${0.4 * glow})`
+        ctx.fillStyle = `rgba(59, 130, 246, ${0.4 * glow})`
         ctx.fill()
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.radius * 3, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(74, 144, 217, ${0.05 * glow})`
+        ctx.fillStyle = `rgba(59, 130, 246, ${0.05 * glow})`
         ctx.fill()
       })
 

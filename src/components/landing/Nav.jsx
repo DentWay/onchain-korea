@@ -1,26 +1,39 @@
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import LangToggle from '../LangToggle'
+import FomoBanner from './FomoBanner'
+import useLang from '../../hooks/useLang'
 
 export default function Nav() {
+  const { t, lang } = useLang()
+  const [bannerVisible, setBannerVisible] = useState(true)
+  const handleBannerChange = useCallback((v) => setBannerVisible(v), [])
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0f1e]/80 backdrop-blur-xl border-b border-white/[0.04]">
-      <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-cyan-400 flex items-center justify-center">
-            <span className="text-white text-[10px] font-bold tracking-tight">OK</span>
+    <>
+      <FomoBanner onVisibilityChange={handleBannerChange} />
+      <nav className={`fixed left-0 right-0 z-50 bg-[#0C0D11]/80 backdrop-blur-xl border-b border-[var(--border)] transition-all ${bannerVisible ? 'top-9' : 'top-0'}`}>
+        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
+              <span className="text-white text-[10px] font-bold tracking-tight">OK</span>
+            </div>
+            <span className="font-semibold text-[15px] tracking-tight text-[var(--text-high)]">Onchain Korea</span>
+            <div className="hidden sm:flex items-center gap-1.5 ml-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-success ok-pulse-dot" />
+              <span className="text-[10px] text-[var(--text-low)]">
+                23 {lang === 'ko' ? '학습 중' : 'studying'}
+              </span>
+            </div>
           </div>
-          <span className="font-semibold text-[15px] tracking-tight">Onchain Korea</span>
+          <div className="flex items-center gap-4">
+            <a href="#curriculum" className="text-[13px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors hidden sm:block">{t('nav.curriculum')}</a>
+            <a href="#features" className="text-[13px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors hidden sm:block">{t('nav.features')}</a>
+            <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)]" />
+            <Link to="/dashboard" className="ok-btn ok-btn-primary text-[13px] px-5 py-1.5">{t('nav.start')}</Link>
+          </div>
         </div>
-        <div className="flex items-center gap-6">
-          <a href="#curriculum" className="text-[13px] text-white/50 hover:text-white/80 transition-colors hidden sm:block">커리큘럼</a>
-          <a href="#features" className="text-[13px] text-white/50 hover:text-white/80 transition-colors hidden sm:block">특징</a>
-          <Link
-            to="/dashboard"
-            className="text-[13px] px-4 py-1.5 rounded-full bg-white text-[#0a0f1e] font-medium hover:bg-white/90 transition-colors"
-          >
-            시작하기
-          </Link>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   )
 }

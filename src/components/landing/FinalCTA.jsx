@@ -1,33 +1,42 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Section from './Section'
+import CountdownTimer from '../CountdownTimer'
+import useLang from '../../hooks/useLang'
+
+const SEMESTER_DEADLINE = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
 export default function FinalCTA() {
+  const { t, lang } = useLang()
+
   return (
     <Section className="py-32 px-6 relative">
-      <div className="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent" />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent/3 rounded-full blur-[120px]" />
 
       <div className="relative max-w-xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-          4주 뒤,<br />
-          <span className="bg-gradient-to-r from-accent to-cyan-400 text-transparent bg-clip-text">
-            온체인이 익숙해집니다
-          </span>
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
+          <p className="text-[11px] text-[var(--text-low)] uppercase tracking-wider mb-3">
+            {lang === 'ko' ? '등록 마감까지' : 'Registration closes in'}
+          </p>
+          <div className="flex justify-center"><CountdownTimer targetDate={SEMESTER_DEADLINE} /></div>
+        </motion.div>
+
+        <h2 className="text-3xl md:text-[44px] font-bold tracking-tight leading-tight text-[var(--text-high)]">
+          {t('landing.finalTitle1')}<br />
+          <span className="text-accent-soft">{t('landing.finalTitle2')}</span>
         </h2>
-        <p className="text-[15px] text-white/35 mt-4">
-          지갑 만들기부터 스테이킹까지. 완전 무료, 한국어로.
-        </p>
-        <Link
-          to="/dashboard"
-          className="group inline-flex items-center gap-2 mt-10 px-8 py-3.5 rounded-full bg-white text-[#0a0f1e] text-[16px] font-semibold hover:shadow-[0_0_40px_rgba(74,144,217,0.3)] transition-all"
-        >
-          무료로 시작하기
+        <p className="text-[16px] text-[var(--text-mid)] mt-5 font-light">{t('landing.finalDesc')}</p>
+
+        <Link to="/dashboard" className="group ok-btn ok-btn-primary mt-12 px-9 py-4 text-[16px]">
+          {t('landing.startFree')}
           <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </Link>
-        <p className="mt-5 text-[12px] text-white/20">
-          가입 없이 바로 시작할 수 있어요
+
+        <p className="mt-5 text-[12px] text-[var(--text-low)]">
+          {lang === 'ko' ? '147명이 이미 등록했습니다' : '147 already enrolled'}
         </p>
+        <p className="mt-2 text-[12px] text-[var(--text-low)]">{t('landing.noSignup')}</p>
       </div>
     </Section>
   )

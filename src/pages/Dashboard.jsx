@@ -1,91 +1,111 @@
 import { Link } from 'react-router-dom'
-import { weeks, userProgress } from '../data/curriculum'
+import { motion } from 'framer-motion'
+import { ArrowRight } from 'lucide-react'
+import { weeks, l } from '../data/curriculum'
+import useProgress from '../hooks/useProgress'
+import useLang from '../hooks/useLang'
+import CircleProgress from '../components/CircleProgress'
+import ActivityFeed from '../components/ActivityFeed'
+import CountdownTimer from '../components/CountdownTimer'
+
+const FAKE_COMPLETIONS = [89, 67, 42, 28]
+const SEMESTER_DEADLINE = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
 function StatCard({ label, value, sub }) {
   return (
-    <div className="bg-gray-50 rounded-lg p-3.5">
-      <p className="text-[10px] text-gray-500">{label}</p>
-      <p className="text-xl font-semibold text-gray-900 mt-0.5">{value}</p>
-      {sub && <p className="text-[10px] text-emerald-600 mt-0.5">{sub}</p>}
+    <div className="ok-card p-4">
+      <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{label}</p>
+      <p className="text-2xl font-bold text-[var(--text-high)] ok-tabular-nums mt-1">{value}</p>
+      {sub && <p className="text-[10px] text-[var(--text-low)] mt-1">{sub}</p>}
     </div>
   )
 }
 
-function WeekCard({ week }) {
-  const isLocked = week.status === 'locked'
-  const isCurrent = week.status === 'current'
+function WeekCard({ week, progress, lang, index }) {
+  const isDone = progress >= 100
+  const isStarted = progress > 0
 
   return (
-    <Link
-      to={isLocked ? '#' : `/week/${week.id}`}
-      className={`block border rounded-lg mb-2 transition-all ${
-        isLocked ? 'opacity-40 pointer-events-none' : 'hover:border-gray-300'
-      }`}
-    >
-      <div className="flex items-center gap-3 p-3">
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium ${
-          week.status === 'done' ? 'bg-emerald-50 text-emerald-600' :
-          isCurrent ? 'bg-blue-50 text-blue-600' :
-          'bg-gray-100 text-gray-400'
-        }`}>
-          {week.id}
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + index * 0.1 }}>
+      <Link to={`/week/${week.id}`} className="block ok-card p-4">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest">WEEK {week.id}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] text-[var(--text-low)] ok-tabular-nums">{FAKE_COMPLETIONS[index]}{lang === 'ko' ? '명 완료' : ' completed'}</span>
+            {isDone && <span className="ok-tag ok-tag-done">✓</span>}
+            {isStarted && !isDone && <span className="ok-tag ok-tag-progress">{progress}%</span>}
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-medium text-gray-900 truncate">{week.title}</p>
-          <p className="text-[11px] text-gray-500 truncate">{week.subtitle}</p>
+        <h3 className="text-[14px] font-semibold text-[var(--text-high)] mb-1">{l(week.title, lang)}</h3>
+        <p className="text-[11px] text-[var(--text-mid)]">{l(week.subtitle, lang)}</p>
+        {isStarted && <div className="mt-3 ok-progress-track"><div className="ok-progress-fill" style={{ width: `${progress}%` }} /></div>}
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex gap-1.5">
+            <span className="text-[9px] px-2 py-0.5 rounded-md bg-[var(--surface-2)] text-[var(--text-low)]">{week.lessons.length} {lang === 'ko' ? '레슨' : 'lessons'}</span>
+            <span className="text-[9px] px-2 py-0.5 rounded-md bg-[var(--surface-2)] text-[var(--text-low)]">{week.actions.length} {lang === 'ko' ? '액션' : 'actions'}</span>
+          </div>
+          <ArrowRight size={14} className="text-[var(--text-low)]" />
         </div>
-        {isCurrent && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium shrink-0">
-            진행 중
-          </span>
-        )}
-      </div>
-      {isCurrent && (
-        <div className="h-[2px] bg-gray-100 mx-3 mb-2.5 rounded-full">
-          <div className="h-full bg-blue-500 rounded-full" style={{ width: `${week.progress}%` }} />
-        </div>
-      )}
-    </Link>
+      </Link>
+    </motion.div>
   )
 }
 
 export default function Dashboard() {
-  const currentWeek = weeks.find(w => w.status === 'current')
+  const { completedLessons, completedActions, readHiddenTopics, overallProgress, activeWeek, getWeekProgress, totalLessons } = useProgress()
+  const { t, lang } = useLang()
+  const currentWeek = weeks.find(w => w.id === activeWeek)
 
   return (
-    <div className="max-w-3xl">
-      <h1 className="text-lg font-semibold text-gray-900 mb-5">
-        안녕하세요, {userProgress.name}! 👋
-      </h1>
+    <div className="max-w-4xl mx-auto">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row items-center gap-6 mb-8">
+        <CircleProgress value={overallProgress} size="lg" label={t('dash.progress')} />
+        <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
+          <StatCard label={t('dash.completedLessons')} value={`${completedLessons.length}/${totalLessons}`} sub={completedLessons.length > 0 ? `+${completedLessons.length} ${t('dash.completed')}` : t('dash.notStarted')} />
+          <StatCard label={t('dash.onchainActions')} value={completedActions.length} sub={completedActions.length > 0 ? t('dash.inProgress') : t('dash.notStarted')} />
+          <StatCard label={t('dash.hiddenTopics')} value={`${readHiddenTopics.length}/4`} sub={readHiddenTopics.length > 0 ? t('dash.readDone') : t('dash.thisWeekOpen')} />
+        </div>
+      </motion.div>
 
-      <div className="grid grid-cols-4 gap-2.5 mb-6">
-        <StatCard label="진행률" value="25%" sub={`Week ${userProgress.currentWeek} / 4`} />
-        <StatCard label="완료 레슨" value={`${userProgress.completedLessons}/${userProgress.totalLessons}`} sub="+3 이번 주" />
-        <StatCard label="온체인 액션" value={userProgress.onchainActions} sub="지갑 생성 ✓" />
-        <StatCard label="히든 토픽" value={`${userProgress.hiddenTopicsRead}/4`} sub="이번 주 공개!" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="ok-card p-4">
+          <ActivityFeed maxItems={4} />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="ok-card p-4">
+          <div className="mb-4">
+            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-3">{lang === 'ko' ? '학기 마감' : 'Semester Deadline'}</p>
+            <CountdownTimer targetDate={SEMESTER_DEADLINE} />
+          </div>
+          <div className="border-t border-[var(--border)] pt-3">
+            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-1">{lang === 'ko' ? '남은 리워드' : 'Remaining Rewards'}</p>
+            <p className="text-xl font-bold text-[var(--text-high)] ok-tabular-nums">$87,420</p>
+            <p className="text-[10px] text-[var(--text-low)] mt-0.5">{lang === 'ko' ? '147명 등록 완료' : '147 enrolled'}</p>
+          </div>
+        </motion.div>
       </div>
 
-      <h2 className="text-sm font-medium text-gray-900 mb-2">4주 커리큘럼</h2>
-      {weeks.map(week => <WeekCard key={week.id} week={week} />)}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('dash.curriculum4w')}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {weeks.map((week, i) => <WeekCard key={week.id} week={week} progress={getWeekProgress(week.id)} lang={lang} index={i} />)}
+        </div>
+      </motion.div>
 
       {currentWeek?.hiddenTopic && (
-        <>
-          <h2 className="text-sm font-medium text-gray-900 mt-5 mb-2">🔥 이번 주 히든 토픽</h2>
-          <Link
-            to="/hidden"
-            className="block bg-gradient-to-r from-pink-50/60 to-blue-50/60 border border-pink-200/40 rounded-lg p-3.5 hover:border-pink-300/60 transition-all"
-          >
-            <p className="text-[9px] text-pink-600 uppercase tracking-wider font-medium mb-1">
-              Week {currentWeek.id} hidden topic
-            </p>
-            <p className="text-[13px] font-medium text-gray-900">{currentWeek.hiddenTopic.title}</p>
-            <div className="flex gap-3 mt-2 text-[10px] text-gray-500">
-              <span>📖 {currentWeek.hiddenTopic.readTime}</span>
-              <span>💬 포럼 {currentWeek.hiddenTopic.forumCount}명</span>
-              <span>⚡ {currentWeek.hiddenTopic.action}</span>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6">
+          <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('dash.thisWeekHidden')}</h2>
+          <Link to="/hidden" className="block ok-card p-4 border-accent/20 hover:border-accent/30">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="ok-tag ok-tag-accent">NEW</span>
+              <span className="text-[9px] text-[var(--text-low)] uppercase tracking-wider">Week {currentWeek.id}</span>
+            </div>
+            <p className="text-[14px] font-semibold text-[var(--text-high)]">{l(currentWeek.hiddenTopic.title, lang)}</p>
+            <div className="flex gap-3 mt-2 text-[10px] text-[var(--text-low)]">
+              <span>{l(currentWeek.hiddenTopic.readTime, lang)}</span>
+              <span>{currentWeek.hiddenTopic.forumCount}{t('week.participating')}</span>
             </div>
           </Link>
-        </>
+        </motion.div>
       )}
     </div>
   )

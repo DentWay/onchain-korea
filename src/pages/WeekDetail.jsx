@@ -1,116 +1,86 @@
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
-import { weeks, actionGuides } from '../data/curriculum'
-
-const dotClass = {
-  done: 'bg-emerald-500',
-  current: 'bg-blue-500',
-  locked: 'bg-gray-200',
-}
+import { useParams, Link, Navigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Check } from 'lucide-react'
+import { weeks, l } from '../data/curriculum'
+import useProgress from '../hooks/useProgress'
+import useLang from '../hooks/useLang'
 
 export default function WeekDetail() {
   const { weekId } = useParams()
-  const week = weeks.find(w => w.id === Number(weekId)) || weeks[0]
+  const week = weeks.find(w => w.id === Number(weekId))
+  const { isWeekUnlocked, toggleLesson, toggleAction, getLessonStatus, getActionStatus, getWeekProgress } = useProgress()
+  const { t, lang } = useLang()
+
+  if (!week) return <Navigate to="/dashboard" replace />
+  if (!isWeekUnlocked(week.id)) return <Navigate to="/dashboard" replace />
+  const progress = getWeekProgress(week.id)
 
   return (
-    <div className="max-w-3xl">
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-lg font-semibold text-gray-900">
-          Week {week.id}: {week.title}
-        </h1>
-        <Link to="/dashboard" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
-          <ArrowLeft size={12} /> 대시보드
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5 mb-5">
-        <div className="bg-gray-50 rounded-lg p-3.5">
-          <p className="text-[10px] text-gray-500">학습 진행률</p>
-          <p className="text-xl font-semibold text-gray-900">{week.progress}%</p>
+    <div className="max-w-3xl mx-auto">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="flex items-center justify-between mb-5">
+          <h1 className="text-lg font-semibold text-[var(--text-high)]">Week {week.id}: {l(week.title, lang)}</h1>
+          <Link to="/dashboard" className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> {t('week.back')}</Link>
         </div>
-        <div className="bg-gray-50 rounded-lg p-3.5">
-          <p className="text-[10px] text-gray-500">온체인 액션</p>
-          <p className="text-xl font-semibold text-gray-900">
-            {week.actions.filter(a => a.status === 'done').length}/{week.actions.length} 완료
-          </p>
+
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="ok-card p-4">
+            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.learningProgress')}</p>
+            <p className="text-2xl font-bold text-[var(--text-high)] mt-1 ok-tabular-nums">{progress}%</p>
+            <div className="mt-2 ok-progress-track"><div className="ok-progress-fill" style={{ width: `${progress}%` }} /></div>
+          </div>
+          <div className="ok-card p-4">
+            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.onchainAction')}</p>
+            <p className="text-2xl font-bold text-[var(--text-high)] mt-1 ok-tabular-nums">{week.actions.filter(a => getActionStatus(a.id) === 'done').length}/{week.actions.length} {t('week.complete')}</p>
+          </div>
         </div>
-      </div>
 
-      <h2 className="text-sm font-medium text-gray-900 mb-2">📖 학습 콘텐츠 (Greed Academy 기반)</h2>
-      <div className="border rounded-lg overflow-hidden mb-5">
-        {week.lessons.map((lesson, i) => (
-          <div
-            key={lesson.id}
-            className={`flex items-center gap-2.5 px-3 py-2 text-[12px] ${
-              i < week.lessons.length - 1 ? 'border-b' : ''
-            } ${lesson.status === 'current' ? 'bg-blue-50/40' : ''}`}
-          >
-            <div className={`w-[7px] h-[7px] rounded-full shrink-0 ${dotClass[lesson.status]}`} />
-            <span className={`flex-1 text-gray-900 ${lesson.status === 'current' ? 'font-medium' : ''}`}>
-              {lesson.title}
-            </span>
-            <span className="text-[9px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 shrink-0">
-              {lesson.source}
-            </span>
-            {lesson.status === 'done' && (
-              <span className="text-[10px] text-emerald-600 shrink-0">✓</span>
-            )}
-            {lesson.status === 'current' && (() => {
-              const guide = actionGuides.find(g => g.weekId === week.id)
-              return guide ? (
-                <Link to={`/action/${guide.id}`} className="text-[10px] text-blue-600 font-medium shrink-0 hover:underline">
-                  시작 →
-                </Link>
-              ) : null
-            })()}
-          </div>
-        ))}
-      </div>
+        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.lessons')}</h2>
+        <div className="ok-card overflow-hidden mb-6">
+          {week.lessons.map((lesson, i) => {
+            const done = getLessonStatus(lesson.id) === 'done'
+            return (
+              <div key={lesson.id} className={`flex items-center gap-2.5 px-4 py-2.5 text-[12px] ${i < week.lessons.length - 1 ? 'border-b border-[var(--border)]' : ''} hover:bg-[var(--surface-2)] transition-colors`}>
+                <button onClick={() => toggleLesson(lesson.id)} className={`w-[20px] h-[20px] rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
+                  {done && <Check size={10} strokeWidth={3} />}
+                </button>
+                <Link to={`/lesson/${lesson.id}`} className={`flex-1 hover:text-accent-soft transition-colors ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(lesson.title, lang)}</Link>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--text-low)] shrink-0">{lesson.source}</span>
+              </div>
+            )
+          })}
+        </div>
 
-      <h2 className="text-sm font-medium text-gray-900 mb-2">⚡ 이번 주 실습 (Action Guide)</h2>
-      <div className="border rounded-lg overflow-hidden mb-5">
-        {week.actions.map((action, i) => (
-          <div
-            key={action.id}
-            className={`flex items-center gap-2.5 px-3 py-2 text-[12px] ${
-              i < week.actions.length - 1 ? 'border-b' : ''
-            } ${action.status === 'current' ? 'bg-blue-50/40' : ''}`}
-          >
-            <div className={`w-[7px] h-[7px] rounded-full shrink-0 ${dotClass[action.status]}`} />
-            <span className={`flex-1 text-gray-900 ${action.status === 'current' ? 'font-medium' : ''}`}>
-              {action.title}
-            </span>
-            {action.status === 'done' && <span className="text-[10px] text-emerald-600">완료 ✓</span>}
-            {action.status === 'current' && (() => {
-              const guide = actionGuides.find(g => g.weekId === week.id && g.title.includes(action.title.split(' ')[0]))
-                || actionGuides.find(g => g.weekId === week.id)
-              return guide ? (
-                <Link to={`/action/${guide.id}`} className="text-[10px] text-blue-600 font-medium hover:underline">
-                  가이드 →
-                </Link>
-              ) : null
-            })()}
-          </div>
-        ))}
-      </div>
+        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.actions')}</h2>
+        <div className="ok-card overflow-hidden mb-6">
+          {week.actions.map((action, i) => {
+            const done = getActionStatus(action.id) === 'done'
+            return (
+              <div key={action.id} className={`flex items-center gap-2.5 px-4 py-2.5 text-[12px] ${i < week.actions.length - 1 ? 'border-b border-[var(--border)]' : ''} hover:bg-[var(--surface-2)] transition-colors`}>
+                <button onClick={() => toggleAction(action.id)} className={`w-[20px] h-[20px] rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
+                  {done && <Check size={10} strokeWidth={3} />}
+                </button>
+                <span className={`flex-1 ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(action.title, lang)}</span>
+                {action.guideId && <Link to={`/action/${action.guideId}`} className="text-[10px] text-accent-soft font-medium hover:text-accent transition-colors">{t('week.guide')}</Link>}
+              </div>
+            )
+          })}
+        </div>
 
-      {week.hiddenTopic && (
-        <>
-          <h2 className="text-sm font-medium text-gray-900 mb-2">🔥 히든 토픽</h2>
-          <Link
-            to="/hidden"
-            className="block bg-gradient-to-r from-pink-50/60 to-blue-50/60 border border-pink-200/40 rounded-lg p-3.5 hover:border-pink-300/60 transition-all"
-          >
-            <p className="text-[9px] text-pink-600 uppercase tracking-wider font-medium mb-1">이번 주 핫이슈</p>
-            <p className="text-[13px] font-medium text-gray-900">{week.hiddenTopic.title}</p>
-            <div className="flex gap-3 mt-2 text-[10px] text-gray-500">
-              <span>📖 {week.hiddenTopic.readTime}</span>
-              <span>💬 {week.hiddenTopic.forumCount}명 참여</span>
-              <span>⚡ {week.hiddenTopic.action}</span>
-            </div>
-          </Link>
-        </>
-      )}
+        {week.hiddenTopic && (
+          <>
+            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.hiddenTopic')}</h2>
+            <Link to="/hidden" className="block ok-card p-4 border-accent/20 hover:border-accent/30">
+              <p className="text-[9px] text-accent-soft uppercase tracking-wider font-medium mb-1">{t('week.hotIssue')}</p>
+              <p className="text-[13px] font-medium text-[var(--text-high)]">{l(week.hiddenTopic.title, lang)}</p>
+              <div className="flex gap-3 mt-2 text-[10px] text-[var(--text-low)]">
+                <span>{l(week.hiddenTopic.readTime, lang)}</span>
+                <span>{week.hiddenTopic.forumCount}{t('week.participating')}</span>
+              </div>
+            </Link>
+          </>
+        )}
+      </motion.div>
     </div>
   )
 }

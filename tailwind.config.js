@@ -4,12 +4,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: { 900: '#16213E', 800: '#1A2744', 700: '#0F3460' },
-        accent: '#4A90D9',
-        hot: '#D4537E',
+        surface: {
+          0: '#0C0D11',
+          1: '#14151A',
+          2: '#1C1D23',
+          3: '#24252B',
+        },
+        accent: '#3B82F6',
+        'accent-soft': '#60A5FA',
+        success: '#4ADE80',
       },
       fontFamily: {
-        sans: ['"Pretendard"', '"Inter"', 'system-ui', 'sans-serif'],
+        sans: ['"Pretendard Variable"', '"Pretendard"', '"Inter"', 'system-ui', 'sans-serif'],
       },
     },
   },

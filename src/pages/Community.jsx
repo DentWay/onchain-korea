@@ -1,67 +1,73 @@
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { ArrowLeft, MessageCircle, Bell, Flame, BookOpen } from 'lucide-react'
-
-const channels = [
-  { icon: MessageCircle, title: '카카오톡 오픈채팅', desc: '실시간 질문, 이번 주 수업 논의, 스터디 모집', btn: '카카오톡 입장 →', color: 'text-yellow-600' },
-  { icon: Bell, title: '주간 리마인더', desc: '매주 월요일 — 이번 주 학습 내용, 히든 토픽 미리보기', btn: '알림 설정 →', color: 'text-blue-600' },
-  { icon: Flame, title: '히든 토픽 포럼', desc: '매주 핫이슈 토론, 의견 공유, 투표', btn: '이번 주 포럼 →', color: 'text-pink-600', link: '/hidden' },
-  { icon: BookOpen, title: '졸업생 스터디', desc: '4주 수료 후 자율 심화 스터디 그룹', locked: true, color: 'text-purple-600' },
-]
+import useLang from '../hooks/useLang'
+import ActivityFeed from '../components/ActivityFeed'
 
 export default function Community() {
+  const { t, lang } = useLang()
+
+  const channels = [
+    { icon: MessageCircle, title: t('ch.kakao.title'), desc: t('ch.kakao.desc'), btn: t('ch.kakao.btn'), featured: true },
+    { icon: Bell, title: t('ch.reminder.title'), desc: t('ch.reminder.desc'), btn: t('ch.reminder.btn') },
+    { icon: Flame, title: t('ch.forum.title'), desc: t('ch.forum.desc'), btn: t('ch.forum.btn'), link: '/hidden' },
+    { icon: BookOpen, title: t('ch.alumni.title'), desc: t('ch.alumni.desc'), locked: true },
+  ]
+
   return (
-    <div className="max-w-3xl">
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-lg font-semibold text-gray-900">💬 커뮤니티</h1>
-        <Link to="/dashboard" className="text-[11px] text-blue-600 flex items-center gap-1 hover:underline">
-          <ArrowLeft size={12} /> 대시보드
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        {channels.map((ch) => {
-          const Icon = ch.icon
-          const Wrapper = ch.link ? Link : 'div'
-          const wrapperProps = ch.link ? { to: ch.link } : {}
-
-          return (
-            <Wrapper
-              key={ch.title}
-              {...wrapperProps}
-              className={`border rounded-lg p-3.5 transition-all ${
-                ch.locked ? 'opacity-50' : 'hover:border-gray-300 cursor-pointer'
-              }`}
-            >
-              <Icon size={20} className={`mb-1.5 ${ch.color}`} />
-              <p className="text-[12px] font-medium text-gray-900">{ch.title}</p>
-              <p className="text-[10px] text-gray-500 mt-0.5">{ch.desc}</p>
-              {ch.locked ? (
-                <p className="text-[10px] text-gray-400 mt-2">🔒 수료 후 오픈</p>
-              ) : (
-                <span className="mt-2.5 inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-blue-600 text-white text-[10px] font-medium">
-                  {ch.btn}
-                </span>
-              )}
-            </Wrapper>
-          )
-        })}
-      </div>
-
-      <h2 className="text-sm font-medium text-gray-900 mb-2">📊 커뮤니티 현황</h2>
-      <div className="grid grid-cols-3 gap-2.5">
-        <div className="bg-gray-50 rounded-lg p-3.5">
-          <p className="text-[10px] text-gray-500">총 참여자</p>
-          <p className="text-xl font-semibold text-gray-900">47</p>
+    <div className="max-w-3xl mx-auto">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="flex items-center justify-between mb-5">
+          <h1 className="text-lg font-semibold text-[var(--text-high)]">{t('community.title')}</h1>
+          <Link to="/dashboard" className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> {t('week.back')}</Link>
         </div>
-        <div className="bg-gray-50 rounded-lg p-3.5">
-          <p className="text-[10px] text-gray-500">카톡 활성 멤버</p>
-          <p className="text-xl font-semibold text-gray-900">38</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          {channels.map((ch, i) => {
+            const Icon = ch.icon
+            const Wrapper = ch.link ? Link : 'div'
+            const wrapperProps = ch.link ? { to: ch.link } : {}
+            return (
+              <motion.div key={ch.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
+                <Wrapper {...wrapperProps} className={`block ok-card p-4 ${ch.locked ? 'opacity-40' : ''} ${ch.featured ? 'border-accent/20' : ''}`}>
+                  <Icon size={20} className={`mb-2 ${ch.featured ? 'text-accent-soft' : 'text-[var(--text-low)]'}`} />
+                  <p className="text-[13px] font-medium text-[var(--text-high)]">{ch.title}</p>
+                  <p className="text-[11px] text-[var(--text-mid)] mt-1">{ch.desc}</p>
+                  {ch.locked ? (
+                    <p className="text-[10px] text-[var(--text-low)] mt-3">{t('ch.alumni.lock')}</p>
+                  ) : ch.featured ? (
+                    <span className="mt-3 ok-btn ok-btn-primary text-[10px] px-3 py-1.5">{ch.btn}</span>
+                  ) : (
+                    <span className="mt-3 ok-btn ok-btn-ghost text-[10px] px-3 py-1.5">{ch.btn || 'Coming Soon'}</span>
+                  )}
+                </Wrapper>
+              </motion.div>
+            )
+          })}
         </div>
-        <div className="bg-gray-50 rounded-lg p-3.5">
-          <p className="text-[10px] text-gray-500">이번 주 포럼 글</p>
-          <p className="text-xl font-semibold text-gray-900">23</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('community.stats')}</h2>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: t('community.totalMembers'), value: '147' },
+                { label: t('community.activeMembers'), value: '89' },
+                { label: t('community.forumPosts'), value: '34' },
+              ].map((s, i) => (
+                <div key={i} className="ok-card p-3">
+                  <p className="text-[9px] text-[var(--text-low)] uppercase tracking-wider">{s.label}</p>
+                  <p className="text-xl font-bold text-[var(--text-high)] mt-1 ok-tabular-nums">{s.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{lang === 'ko' ? '최근 활동' : 'Recent Activity'}</h2>
+            <div className="ok-card p-3"><ActivityFeed maxItems={4} /></div>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
