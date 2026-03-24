@@ -62,12 +62,14 @@ export function ProgressProvider({ children }) {
   const totalLessons = weekData.reduce((sum, w) => sum + w.lessons.length, 0)
   const totalActions = weekData.reduce((sum, w) => sum + w.actions.length, 0)
 
-  // Week unlock logic: all weeks open (demo/beta mode)
-  // TODO: re-enable progressive unlock when launching production
-  // Original: week N unlocks when week N-1 has >= 60% lessons done
-  const isWeekUnlocked = useCallback(() => {
-    return true
-  }, [])
+  // Week unlock logic: week N unlocks when week N-1 has >= 60% lessons done
+  const isWeekUnlocked = useCallback((weekId) => {
+    if (weekId === 1) return true
+    const prevWeek = weekData.find(w => w.id === weekId - 1)
+    if (!prevWeek) return false
+    const done = prevWeek.lessons.filter(l => progress.completedLessons.includes(l.id)).length
+    return (done / prevWeek.lessons.length) >= 0.6
+  }, [progress.completedLessons])
 
   // Get lesson status for a specific lesson
   const getLessonStatus = useCallback((lessonId) => {

@@ -9,13 +9,14 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--surface-0)] text-[var(--text-high)]">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-3 focus:bg-accent focus:text-white">Skip to content</a>
       <div className={`ok-sidebar-overlay md:hidden ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)} />
       <div className={`fixed md:relative z-50 md:z-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
-      <main className="flex-1 overflow-y-auto relative">
+      <main id="main-content" className="flex-1 overflow-y-auto relative">
         <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-[var(--surface-0)]/95 backdrop-blur-xl border-b border-[var(--border)]">
-          <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"><Menu size={20} className="text-[var(--text-mid)]" /></button>
+          <button onClick={() => setSidebarOpen(true)} aria-label="메뉴 열기" className="p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"><Menu size={20} className="text-[var(--text-mid)]" /></button>
           <span className="text-[13px] font-semibold">Onchain Korea</span>
           <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
         </div>

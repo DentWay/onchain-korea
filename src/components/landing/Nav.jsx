@@ -22,7 +22,7 @@ export default function Nav() {
             <div className="hidden sm:flex items-center gap-1.5 ml-3">
               <div className="w-1.5 h-1.5 rounded-full bg-success ok-pulse-dot" />
               <span className="text-[10px] text-[var(--text-low)]">
-                23 {lang === 'ko' ? '학습 중' : 'studying'}
+                {lang === 'ko' ? '학습 진행 중' : 'Live'}
               </span>
             </div>
           </div>

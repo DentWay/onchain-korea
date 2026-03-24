@@ -35,12 +35,12 @@ export default function Sidebar({ onClose }) {
           </div>
           <p className="text-[9px] text-[var(--text-low)] mt-1.5">{t('sidebar.tagline')}</p>
         </div>
-        <button onClick={onClose} className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
+        <button onClick={onClose} aria-label="메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
           <X size={16} className="text-[var(--text-low)]" />
         </button>
       </div>
 
-      <nav className="mt-4 flex-1 overflow-y-auto">
+      <nav aria-label="Main navigation" className="mt-4 flex-1 overflow-y-auto">
         {navItems.map((group) => (
           <div key={group.label}>
             <p className="text-[9px] text-[var(--text-low)] uppercase tracking-widest px-2 mt-4 mb-1">{group.label}</p>

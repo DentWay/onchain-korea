@@ -19,9 +19,9 @@ export default function CircleProgress({ value = 0, size = 'md', label }) {
   }, [value])
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2" role="progressbar" aria-valuenow={animated} aria-valuemin={0} aria-valuemax={100} aria-label={label || 'Progress'}>
       <div className="relative" style={{ width: config.size, height: config.size }}>
-        <svg width={config.size} height={config.size} className="-rotate-90">
+        <svg width={config.size} height={config.size} className="-rotate-90" aria-hidden="true">
           <circle cx={config.size / 2} cy={config.size / 2} r={radius} fill="none" stroke="var(--surface-2)" strokeWidth={config.stroke} />
           <circle cx={config.size / 2} cy={config.size / 2} r={radius} fill="none" stroke="var(--accent)" strokeWidth={config.stroke} strokeLinecap="round"
             strokeDasharray={circumference} strokeDashoffset={offset}

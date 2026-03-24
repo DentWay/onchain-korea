@@ -96,6 +96,7 @@ const translations = {
   'community.totalMembers': { ko: '총 참여자', en: 'Total Members' },
   'community.activeMembers': { ko: '카톡 활성 멤버', en: 'Active Members' },
   'community.forumPosts': { ko: '이번 주 포럼 글', en: 'Forum Posts' },
+  'community.recentActivity': { ko: '최근 활동', en: 'Recent Activity' },
 
   // Landing page
   'landing.badge': { ko: 'Greed Academy 커리큘럼 기반 · 완전 무료', en: 'Based on Greed Academy Curriculum · 100% Free' },

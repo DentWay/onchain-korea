@@ -8,8 +8,8 @@ import CircleProgress from '../components/CircleProgress'
 import ActivityFeed from '../components/ActivityFeed'
 import CountdownTimer from '../components/CountdownTimer'
 
-const FAKE_COMPLETIONS = [89, 67, 42, 28]
-const SEMESTER_DEADLINE = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+// Semester 3 deadline: 2026-04-30 KST
+const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 function StatCard({ label, value, sub }) {
   return (
@@ -31,7 +31,6 @@ function WeekCard({ week, progress, lang, index }) {
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest">WEEK {week.id}</span>
           <div className="flex items-center gap-2">
-            <span className="text-[9px] text-[var(--text-low)] ok-tabular-nums">{FAKE_COMPLETIONS[index]}{lang === 'ko' ? '명 완료' : ' completed'}</span>
             {isDone && <span className="ok-tag ok-tag-done">✓</span>}
             {isStarted && !isDone && <span className="ok-tag ok-tag-progress">{progress}%</span>}
           </div>
@@ -52,7 +51,7 @@ function WeekCard({ week, progress, lang, index }) {
 }
 
 export default function Dashboard() {
-  const { completedLessons, completedActions, readHiddenTopics, overallProgress, activeWeek, getWeekProgress, totalLessons } = useProgress()
+  const { completedLessons, completedActions, readHiddenTopics, overallProgress, activeWeek, getWeekProgress, totalLessons, certificateStatus } = useProgress()
   const { t, lang } = useLang()
   const currentWeek = weeks.find(w => w.id === activeWeek)
 
@@ -77,9 +76,8 @@ export default function Dashboard() {
             <CountdownTimer targetDate={SEMESTER_DEADLINE} />
           </div>
           <div className="border-t border-[var(--border)] pt-3">
-            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-1">{lang === 'ko' ? '남은 리워드' : 'Remaining Rewards'}</p>
-            <p className="text-xl font-bold text-[var(--text-high)] ok-tabular-nums">$87,420</p>
-            <p className="text-[10px] text-[var(--text-low)] mt-0.5">{lang === 'ko' ? '147명 등록 완료' : '147 enrolled'}</p>
+            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-1">{lang === 'ko' ? '수료 조건' : 'Certificate Requirements'}</p>
+            <p className="text-sm text-[var(--text-mid)] mt-1">{lang === 'ko' ? `레슨 ${certificateStatus.lessonsComplete}/${certificateStatus.lessonsRequired} · 액션 ${certificateStatus.actionsComplete}/${certificateStatus.actionsRequired} · 히든토픽 ${certificateStatus.hiddenTopicsRead}/${certificateStatus.hiddenTopicsRequired}` : `Lessons ${certificateStatus.lessonsComplete}/${certificateStatus.lessonsRequired} · Actions ${certificateStatus.actionsComplete}/${certificateStatus.actionsRequired} · Topics ${certificateStatus.hiddenTopicsRead}/${certificateStatus.hiddenTopicsRequired}`}</p>
           </div>
         </motion.div>
       </div>

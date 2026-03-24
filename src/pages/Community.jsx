@@ -63,7 +63,7 @@ export default function Community() {
             </div>
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{lang === 'ko' ? '최근 활동' : 'Recent Activity'}</h2>
+            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('community.recentActivity')}</h2>
             <div className="ok-card p-3"><ActivityFeed maxItems={4} /></div>
           </div>
         </div>
