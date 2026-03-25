@@ -1,9 +1,15 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Shield, ExternalLink, Check } from 'lucide-react'
+import { ArrowLeft, Shield, ExternalLink, Check, Wallet, Download, KeyRound, Search, FileText, ArrowLeftRight, Paintbrush, Banknote, GitBranch, Landmark } from 'lucide-react'
 import { actionGuides, l } from '../data/curriculum'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
+
+const iconMap = {
+  wallet: Wallet, download: Download, key: KeyRound, search: Search,
+  'file-text': FileText, 'arrow-left-right': ArrowLeftRight,
+  paintbrush: Paintbrush, banknote: Banknote, 'git-branch': GitBranch, landmark: Landmark,
+}
 
 export default function ActionGuide() {
   const { actionId } = useParams()
@@ -28,7 +34,7 @@ export default function ActionGuide() {
 
         <div className="ok-card p-5 mb-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-[var(--accent-surface)] flex items-center justify-center text-lg">{guide.icon}</div>
+            {(() => { const Icon = iconMap[guide.icon]; return <div className="w-10 h-10 rounded-lg bg-[var(--accent-surface)] flex items-center justify-center">{Icon ? <Icon size={20} className="text-accent-soft" /> : null}</div> })()}
             <div>
               <p className="text-[14px] font-semibold text-[var(--text-high)]">{l(guide.title, lang)}</p>
               <p className="text-[11px] text-[var(--text-mid)]">{l(guide.subtitle, lang)}</p>
@@ -59,7 +65,7 @@ export default function ActionGuide() {
         {nextGuide && (
           <Link to={`/action/${nextGuide.id}`} className="block ok-card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[var(--surface-2)] flex items-center justify-center text-lg">{nextGuide.icon}</div>
+              {(() => { const Icon = iconMap[nextGuide.icon]; return <div className="w-10 h-10 rounded-lg bg-[var(--surface-2)] flex items-center justify-center">{Icon ? <Icon size={20} className="text-[var(--text-low)]" /> : null}</div> })()}
               <div>
                 <p className="text-[13px] font-medium text-[var(--text-high)]">{t('action.next')}: {l(nextGuide.title, lang)}</p>
                 <p className="text-[11px] text-[var(--text-low)]">{t('action.nextStart')}</p>

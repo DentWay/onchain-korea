@@ -1,9 +1,12 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check } from 'lucide-react'
+import { ArrowLeft, Check, BookOpen, Zap, Shield } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
+
+const typeIcons = { read: BookOpen, practice: Zap, security: Shield }
+const typeColors = { read: 'text-accent-soft', practice: 'text-amber-400', security: 'text-emerald-400' }
 
 export default function WeekDetail() {
   const { weekId } = useParams()
@@ -44,6 +47,7 @@ export default function WeekDetail() {
                 <button onClick={() => toggleLesson(lesson.id)} className={`w-[20px] h-[20px] rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
                   {done && <Check size={10} strokeWidth={3} />}
                 </button>
+                {(() => { const TypeIcon = typeIcons[lesson.type]; return TypeIcon ? <TypeIcon size={13} className={`shrink-0 ${typeColors[lesson.type]}`} /> : null })()}
                 <Link to={`/lesson/${lesson.id}`} className={`flex-1 hover:text-accent-soft transition-colors ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(lesson.title, lang)}</Link>
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--text-low)] shrink-0">{lesson.source}</span>
               </div>

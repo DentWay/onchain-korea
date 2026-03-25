@@ -1,10 +1,16 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ExternalLink, Check, Lightbulb } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Check, Lightbulb, BookOpen, Zap, Shield } from 'lucide-react'
 import { findLesson, l } from '../data/curriculum'
 import { lessonContents } from '../data/content'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
+
+const typeConfig = {
+  read: { icon: BookOpen, label: { ko: '읽기', en: 'Read' }, color: 'text-accent-soft' },
+  practice: { icon: Zap, label: { ko: '실습', en: 'Practice' }, color: 'text-amber-400' },
+  security: { icon: Shield, label: { ko: '보안', en: 'Security' }, color: 'text-emerald-400' },
+}
 
 export default function LessonDetail() {
   const { lessonId } = useParams()
@@ -21,15 +27,20 @@ export default function LessonDetail() {
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-lg font-semibold text-[var(--text-high)]">{l(lesson.type, lang)} {l(lesson.title, lang)}</h1>
-          <Link to={`/week/${lesson.weekId}`} className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors shrink-0 ml-4"><ArrowLeft size={12} /> Week {lesson.weekId}</Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link to={`/week/${lesson.weekId}`} className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> Week {lesson.weekId}</Link>
         </div>
 
-        <div className="flex items-center gap-2 mb-6">
-          <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--surface-2)] text-[var(--text-low)]">Greed Academy {lesson.source}</span>
-          <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--accent-surface)] text-accent-soft">Week {lesson.weekId}</span>
+        <div className="flex items-center gap-2 mb-3">
+          {lesson.type && typeConfig[lesson.type] && (() => {
+            const cfg = typeConfig[lesson.type]
+            const Icon = cfg.icon
+            return <span className={`flex items-center gap-1 text-[10px] font-medium ${cfg.color}`}><Icon size={12} /> {cfg.label[lang] || cfg.label.ko}</span>
+          })()}
+          <span className="text-[10px] text-[var(--text-low)]">Greed Academy {lesson.source}</span>
         </div>
+
+        <h1 className="text-xl font-bold text-[var(--text-high)] mb-6 leading-snug">{l(lesson.title, lang)}</h1>
 
         {content ? (
           <>
