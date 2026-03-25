@@ -1,12 +1,11 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check, BookOpen, Zap, Shield } from 'lucide-react'
+import { ArrowLeft, Check, BookOpen, Zap, Shield, ChevronRight, Flame } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
 
 const typeIcons = { read: BookOpen, practice: Zap, security: Shield }
-const typeColors = { read: 'text-accent-soft', practice: 'text-amber-400', security: 'text-emerald-400' }
 
 export default function WeekDetail() {
   const { weekId } = useParams()
@@ -18,69 +17,99 @@ export default function WeekDetail() {
   if (!isWeekUnlocked(week.id)) return <Navigate to="/dashboard" replace />
   const progress = getWeekProgress(week.id)
 
+  const completedLessons = week.lessons.filter(l => getLessonStatus(l.id) === 'done').length
+  const completedActions = week.actions.filter(a => getActionStatus(a.id) === 'done').length
+
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-lg font-semibold text-[var(--text-high)]">Week {week.id}: {l(week.title, lang)}</h1>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
           <Link to="/dashboard" className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> {t('week.back')}</Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
+        <div className="mb-8">
+          <p className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase mb-2">Week {week.id}</p>
+          <h1 className="text-xl font-bold text-[var(--text-high)] mb-1">{l(week.title, lang)}</h1>
+          <p className="text-[12px] text-[var(--text-mid)]">{l(week.subtitle, lang)}</p>
+        </div>
+
+        {/* Progress overview */}
+        <div className="grid grid-cols-2 gap-3 mb-8">
           <div className="ok-card p-4">
-            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.learningProgress')}</p>
-            <p className="text-2xl font-bold text-[var(--text-high)] mt-1 ok-tabular-nums">{progress}%</p>
-            <div className="mt-2 ok-progress-track"><div className="ok-progress-fill" style={{ width: `${progress}%` }} /></div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.learningProgress')}</p>
+              <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{progress}%</p>
+            </div>
+            <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${progress}%` }} /></div>
+            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedLessons}/{week.lessons.length} {lang === 'ko' ? '레슨 완료' : 'lessons done'}</p>
           </div>
           <div className="ok-card p-4">
-            <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.onchainAction')}</p>
-            <p className="text-2xl font-bold text-[var(--text-high)] mt-1 ok-tabular-nums">{week.actions.filter(a => getActionStatus(a.id) === 'done').length}/{week.actions.length} {t('week.complete')}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.onchainAction')}</p>
+              <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{completedActions}/{week.actions.length}</p>
+            </div>
+            <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${week.actions.length > 0 ? (completedActions / week.actions.length * 100) : 0}%` }} /></div>
+            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedActions}/{week.actions.length} {lang === 'ko' ? '액션 인증' : 'actions verified'}</p>
           </div>
         </div>
 
-        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.lessons')}</h2>
-        <div className="ok-card overflow-hidden mb-6">
+        {/* Lessons */}
+        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('week.lessons')}</h2>
+        <div className="space-y-1.5 mb-8">
           {week.lessons.map((lesson, i) => {
             const done = getLessonStatus(lesson.id) === 'done'
+            const TypeIcon = typeIcons[lesson.type]
             return (
-              <div key={lesson.id} className={`flex items-center gap-2.5 px-4 py-2.5 text-[12px] ${i < week.lessons.length - 1 ? 'border-b border-[var(--border)]' : ''} hover:bg-[var(--surface-2)] transition-colors`}>
-                <button onClick={() => toggleLesson(lesson.id)} className={`w-[20px] h-[20px] rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
-                  {done && <Check size={10} strokeWidth={3} />}
-                </button>
-                {(() => { const TypeIcon = typeIcons[lesson.type]; return TypeIcon ? <TypeIcon size={13} className={`shrink-0 ${typeColors[lesson.type]}`} /> : null })()}
-                <Link to={`/lesson/${lesson.id}`} className={`flex-1 hover:text-accent-soft transition-colors ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(lesson.title, lang)}</Link>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--text-low)] shrink-0">{lesson.source}</span>
-              </div>
+              <motion.div key={lesson.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
+                <div className="ok-card flex items-center gap-3 px-4 py-3 group hover:bg-[var(--surface-2)] transition-colors">
+                  <button onClick={() => toggleLesson(lesson.id)} className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
+                    {done && <Check size={10} strokeWidth={3} />}
+                  </button>
+                  {TypeIcon && <TypeIcon size={13} className="shrink-0 text-accent-soft" />}
+                  <Link to={`/lesson/${lesson.id}`} className={`flex-1 text-[13px] group-hover:text-accent-soft transition-colors ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>
+                    {l(lesson.title, lang)}
+                  </Link>
+                  <ChevronRight size={14} className="text-[var(--text-low)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                </div>
+              </motion.div>
             )
           })}
         </div>
 
-        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.actions')}</h2>
-        <div className="ok-card overflow-hidden mb-6">
+        {/* Actions */}
+        <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('week.actions')}</h2>
+        <div className="space-y-1.5 mb-8">
           {week.actions.map((action, i) => {
             const done = getActionStatus(action.id) === 'done'
             return (
-              <div key={action.id} className={`flex items-center gap-2.5 px-4 py-2.5 text-[12px] ${i < week.actions.length - 1 ? 'border-b border-[var(--border)]' : ''} hover:bg-[var(--surface-2)] transition-colors`}>
-                <button onClick={() => toggleAction(action.id)} className={`w-[20px] h-[20px] rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
-                  {done && <Check size={10} strokeWidth={3} />}
-                </button>
-                <span className={`flex-1 ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(action.title, lang)}</span>
-                {action.guideId && <Link to={`/action/${action.guideId}`} className="text-[10px] text-accent-soft font-medium hover:text-accent transition-colors">{t('week.guide')}</Link>}
-              </div>
+              <motion.div key={action.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
+                <div className="ok-card flex items-center gap-3 px-4 py-3 group hover:bg-[var(--surface-2)] transition-colors">
+                  <button onClick={() => toggleAction(action.id)} className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${done ? 'bg-success border-success text-white' : 'border-[var(--border)] hover:border-accent/50'}`}>
+                    {done && <Check size={10} strokeWidth={3} />}
+                  </button>
+                  <Zap size={13} className="shrink-0 text-accent-soft" />
+                  <span className={`flex-1 text-[13px] ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>{l(action.title, lang)}</span>
+                  {action.guideId && (
+                    <Link to={`/action/${action.guideId}`} className="text-[10px] text-accent-soft font-medium hover:text-accent transition-colors ok-btn ok-btn-ghost px-2 py-0.5">{t('week.guide')}</Link>
+                  )}
+                </div>
+              </motion.div>
             )
           })}
         </div>
 
+        {/* Hidden Topic */}
         {week.hiddenTopic && (
           <>
-            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('week.hiddenTopic')}</h2>
-            <Link to="/hidden" className="block ok-card p-4 border-accent/20 hover:border-accent/30">
-              <p className="text-[9px] text-accent-soft uppercase tracking-wider font-medium mb-1">{t('week.hotIssue')}</p>
-              <p className="text-[13px] font-medium text-[var(--text-high)]">{l(week.hiddenTopic.title, lang)}</p>
-              <div className="flex gap-3 mt-2 text-[10px] text-[var(--text-low)]">
-                <span>{l(week.hiddenTopic.readTime, lang)}</span>
-                <span>{week.hiddenTopic.forumCount}{t('week.participating')}</span>
+            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('week.hiddenTopic')}</h2>
+            <Link to="/hidden" className="block ok-card p-5 border-accent/10 hover:border-accent/20 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <Flame size={13} className="text-accent-soft" />
+                <span className="text-[10px] text-accent-soft uppercase tracking-wider font-medium">{t('week.hotIssue')}</span>
               </div>
+              <p className="text-[14px] font-semibold text-[var(--text-high)] leading-snug">{l(week.hiddenTopic.title, lang)}</p>
+              <p className="text-[11px] text-[var(--text-mid)] mt-1">{l(week.hiddenTopic.readTime, lang)}</p>
             </Link>
           </>
         )}

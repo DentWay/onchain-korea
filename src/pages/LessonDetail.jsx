@@ -1,15 +1,15 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ExternalLink, Check, Lightbulb, BookOpen, Zap, Shield } from 'lucide-react'
-import { findLesson, greedArticles, l } from '../data/curriculum'
+import { ArrowLeft, ExternalLink, Check, Lightbulb, BookOpen, Zap, Shield, ChevronRight } from 'lucide-react'
+import { findLesson, weeks, greedArticles, l } from '../data/curriculum'
 import { lessonContents } from '../data/content'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
 
 const typeConfig = {
-  read: { icon: BookOpen, label: { ko: '읽기', en: 'Read' }, color: 'text-accent-soft' },
-  practice: { icon: Zap, label: { ko: '실습', en: 'Practice' }, color: 'text-amber-400' },
-  security: { icon: Shield, label: { ko: '보안', en: 'Security' }, color: 'text-emerald-400' },
+  read: { icon: BookOpen, label: { ko: '읽기', en: 'Read' } },
+  practice: { icon: Zap, label: { ko: '실습', en: 'Practice' } },
+  security: { icon: Shield, label: { ko: '보안', en: 'Security' } },
 }
 
 export default function LessonDetail() {
@@ -24,51 +24,69 @@ export default function LessonDetail() {
   const done = getLessonStatus(lesson.id) === 'done'
   const content = lessonContents[lesson.id]
 
+  // Find next lesson
+  const week = weeks.find(w => w.id === lesson.weekId)
+  const lessonIndex = week?.lessons.findIndex(l => l.id === lesson.id) ?? -1
+  const nextLesson = week?.lessons[lessonIndex + 1]
+
+  const cfg = typeConfig[lesson.type]
+  const TypeIcon = cfg?.icon
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-4">
-          <Link to={`/week/${lesson.weekId}`} className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> Week {lesson.weekId}</Link>
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-low)] mb-8">
+          <Link to="/dashboard" className="hover:text-[var(--text-mid)] transition-colors">Dashboard</Link>
+          <ChevronRight size={10} />
+          <Link to={`/week/${lesson.weekId}`} className="hover:text-[var(--text-mid)] transition-colors">Week {lesson.weekId}</Link>
+          <ChevronRight size={10} />
+          <span className="text-[var(--text-mid)]">{l(lesson.title, lang).split(' — ')[0]}</span>
         </div>
 
-        <div className="flex items-center gap-2 mb-3">
-          {lesson.type && typeConfig[lesson.type] && (() => {
-            const cfg = typeConfig[lesson.type]
-            const Icon = cfg.icon
-            return <span className={`flex items-center gap-1 text-[10px] font-medium ${cfg.color}`}><Icon size={12} /> {cfg.label[lang] || cfg.label.ko}</span>
-          })()}
-          <span className="text-[10px] text-[var(--text-low)]">{greedArticles[lesson.source]?.title || lesson.source}</span>
+        {/* Header */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            {TypeIcon && (
+              <span className="flex items-center gap-1.5 text-[10px] font-medium text-accent-soft px-2 py-0.5 rounded-full bg-[var(--accent-surface)]">
+                <TypeIcon size={11} />
+                {cfg.label[lang] || cfg.label.ko}
+              </span>
+            )}
+            <span className="text-[10px] text-[var(--text-low)]">{greedArticles[lesson.source]?.title}</span>
+          </div>
+          <h1 className="text-2xl md:text-[28px] font-bold text-[var(--text-high)] leading-tight tracking-tight">{l(lesson.title, lang)}</h1>
         </div>
-
-        <h1 className="text-xl font-bold text-[var(--text-high)] mb-6 leading-snug">{l(lesson.title, lang)}</h1>
 
         {content ? (
           <>
-            <div className="space-y-6 mb-8">
+            {/* Article body — clean reading flow, no card wrappers */}
+            <article className="mb-12">
               {content.sections.map((section, i) => (
-                <motion.section key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }}
-                  className="ok-card p-5">
-                  <h2 className="text-[15px] font-semibold text-[var(--text-high)] mb-3">{section.heading}</h2>
-                  <div className="space-y-3">
+                <motion.section key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 + i * 0.05 }}
+                  className="mb-10">
+                  <h2 className="text-[17px] font-semibold text-[var(--text-high)] mb-4 pb-2 border-b border-[var(--border)]">{section.heading}</h2>
+                  <div className="space-y-4">
                     {section.content.split('\n\n').map((para, j) => (
-                      <p key={j} className="text-[13px] text-[var(--text-mid)] leading-relaxed">{para}</p>
+                      <p key={j} className="text-[14px] text-[var(--text-mid)] leading-[1.8]">{para}</p>
                     ))}
                   </div>
                 </motion.section>
               ))}
-            </div>
+            </article>
 
+            {/* Key Takeaways */}
             {content.keyTakeaways && (
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                className="ok-card p-5 mb-6 border-accent/20">
-                <div className="flex items-center gap-2 mb-3">
+                className="rounded-xl bg-[var(--accent-surface)] border border-accent/10 p-6 mb-8">
+                <div className="flex items-center gap-2 mb-4">
                   <Lightbulb size={16} className="text-accent-soft" />
-                  <h3 className="text-[13px] font-semibold text-[var(--text-high)]">{lang === 'ko' ? '핵심 정리' : 'Key Takeaways'}</h3>
+                  <h3 className="text-[14px] font-semibold text-[var(--text-high)]">{lang === 'ko' ? '핵심 정리' : 'Key Takeaways'}</h3>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {content.keyTakeaways.map((item, i) => (
-                    <li key={i} className="text-[12px] text-[var(--text-mid)] flex items-start gap-2">
-                      <span className="text-accent-soft mt-0.5 shrink-0">•</span>
+                    <li key={i} className="text-[13px] text-[var(--text-mid)] leading-relaxed flex items-start gap-3">
+                      <span className="w-5 h-5 rounded-full bg-accent/10 text-accent-soft flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">{i + 1}</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -76,11 +94,18 @@ export default function LessonDetail() {
               </motion.div>
             )}
 
+            {/* Source attribution */}
             {lesson.mediumUrl && (
-              <a href={lesson.mediumUrl} target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 ok-btn ok-btn-ghost px-5 py-2.5 text-[12px] mb-4">
-                {lang === 'ko' ? '원문 읽기' : 'Read Original'} — Greed Academy: {greedArticles[lesson.source]?.title || lesson.source} <ExternalLink size={13} />
-              </a>
+              <div className="flex items-center justify-between ok-card p-4 mb-6">
+                <div>
+                  <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-0.5">{lang === 'ko' ? '원문 출처' : 'Original Source'}</p>
+                  <p className="text-[12px] text-[var(--text-mid)]">Greed Academy — {greedArticles[lesson.source]?.title}</p>
+                </div>
+                <a href={lesson.mediumUrl} target="_blank" rel="noopener noreferrer"
+                  className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5 shrink-0">
+                  {lang === 'ko' ? '원문 읽기' : 'Read Original'} <ExternalLink size={11} />
+                </a>
+              </div>
             )}
           </>
         ) : (
@@ -97,10 +122,24 @@ export default function LessonDetail() {
           </div>
         )}
 
-        <button onClick={() => toggleLesson(lesson.id)}
-          className={`w-full ok-btn py-3 text-[13px] ${done ? 'ok-btn-ghost border-success/20 text-success' : 'ok-btn-primary'}`}>
-          {done ? <><Check size={16} /> {t('lesson.completed')}</> : <>{t('lesson.markComplete')}</>}
-        </button>
+        {/* Bottom actions */}
+        <div className="space-y-3">
+          <button onClick={() => toggleLesson(lesson.id)}
+            className={`w-full ok-btn py-3.5 text-[13px] ${done ? 'ok-btn-ghost border-success/20 text-success' : 'ok-btn-primary'}`}>
+            {done ? <><Check size={16} /> {t('lesson.completed')}</> : <>{t('lesson.markComplete')}</>}
+          </button>
+
+          {nextLesson && (
+            <Link to={`/lesson/${nextLesson.id}`}
+              className="flex items-center justify-between w-full ok-card p-4 hover:bg-[var(--surface-2)] transition-colors group">
+              <div>
+                <p className="text-[10px] text-[var(--text-low)] mb-0.5">{lang === 'ko' ? '다음 레슨' : 'Next Lesson'}</p>
+                <p className="text-[13px] text-[var(--text-high)] font-medium">{l(nextLesson.title, lang)}</p>
+              </div>
+              <ChevronRight size={16} className="text-[var(--text-low)] group-hover:text-accent-soft transition-colors" />
+            </Link>
+          )}
+        </div>
       </motion.div>
     </div>
   )
