@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import CountdownTimer from '../CountdownTimer'
+import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
 
 // Semester 3 deadline: 2026-04-30 KST
@@ -8,15 +9,11 @@ const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 export default function FomoBanner({ onVisibilityChange }) {
   const { lang } = useLang()
+  const { stats } = useStats()
   const [visible, setVisible] = useState(() => {
     try { return sessionStorage.getItem('ok-fomo-dismissed') !== 'true' } catch { return true }
   })
-  const [count, setCount] = useState(147)
-
-  useEffect(() => {
-    const id = setInterval(() => setCount(prev => prev + (Math.random() > 0.7 ? 1 : 0)), 30000)
-    return () => clearInterval(id)
-  }, [])
+  const count = stats.total_users || 0
 
   useEffect(() => { onVisibilityChange?.(visible) }, [visible, onVisibilityChange])
 

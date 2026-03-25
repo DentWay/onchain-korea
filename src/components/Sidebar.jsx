@@ -1,12 +1,16 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, X } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, X, LogOut } from 'lucide-react'
 import useProgress from '../hooks/useProgress'
+import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
 
 export default function Sidebar({ onClose }) {
   const location = useLocation()
   const { activeWeek, overallProgress } = useProgress()
+  const { user, profile, signOut, supabaseEnabled } = useAuth()
   const { t } = useLang()
+
+  const displayName = profile?.display_name || user?.email?.split('@')[0] || ''
 
   const navItems = [
     { label: t('sidebar.learning'), items: [
@@ -68,6 +72,14 @@ export default function Sidebar({ onClose }) {
           <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${overallProgress}%` }} /></div>
           <p className="text-[9px] text-[var(--text-low)] mt-1.5">Week {activeWeek} {t('sidebar.weekProgress')}</p>
         </div>
+        {supabaseEnabled && user && (
+          <div className="px-2.5 pt-2 mt-1 border-t border-[var(--border)] flex items-center justify-between">
+            <span className="text-[11px] text-[var(--text-mid)] truncate mr-2">{displayName}</span>
+            <button onClick={signOut} className="text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors shrink-0" title={t('auth.signOut')}>
+              <LogOut size={14} />
+            </button>
+          </div>
+        )}
       </div>
     </aside>
   )

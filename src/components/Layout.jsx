@@ -1,11 +1,17 @@
 import { Outlet } from 'react-router-dom'
 import { useState } from 'react'
-import { Menu } from 'lucide-react'
+import { Menu, LogOut } from 'lucide-react'
 import Sidebar from './Sidebar'
 import LangToggle from './LangToggle'
+import useAuth from '../hooks/useAuth'
+import useLang from '../hooks/useLang'
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, profile, signOut, supabaseEnabled } = useAuth()
+  const { t } = useLang()
+
+  const displayName = profile?.display_name || user?.email?.split('@')[0] || ''
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--surface-0)] text-[var(--text-high)]">
@@ -20,7 +26,16 @@ export default function Layout() {
           <span className="text-[13px] font-semibold">Onchain Korea</span>
           <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
         </div>
-        <div className="hidden md:block fixed top-3 right-6 z-40">
+        <div className="hidden md:flex fixed top-3 right-6 z-40 items-center gap-3">
+          {supabaseEnabled && user && (
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-[var(--text-low)]">{displayName}</span>
+              <button onClick={signOut} className="flex items-center gap-1 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors px-2 py-1 rounded-md hover:bg-[var(--surface-2)]">
+                <LogOut size={12} />
+                {t('auth.signOut')}
+              </button>
+            </div>
+          )}
           <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)]" />
         </div>
         <div className="p-4 md:p-6 ok-page-enter"><Outlet /></div>

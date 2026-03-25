@@ -2,10 +2,13 @@ import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import LangToggle from '../LangToggle'
 import FomoBanner from './FomoBanner'
+import useAuth from '../../hooks/useAuth'
 import useLang from '../../hooks/useLang'
 
 export default function Nav() {
   const { t, lang } = useLang()
+  const { user, supabaseEnabled } = useAuth()
+  const startLink = supabaseEnabled && !user ? '/auth' : '/dashboard'
   const [bannerVisible, setBannerVisible] = useState(true)
   const handleBannerChange = useCallback((v) => setBannerVisible(v), [])
 
@@ -30,7 +33,7 @@ export default function Nav() {
             <a href="#curriculum" className="text-[13px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors hidden sm:block">{t('nav.curriculum')}</a>
             <a href="#features" className="text-[13px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors hidden sm:block">{t('nav.features')}</a>
             <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)]" />
-            <Link to="/dashboard" className="ok-btn ok-btn-primary text-[13px] px-5 py-1.5">{t('nav.start')}</Link>
+            <Link to={startLink} className="ok-btn ok-btn-primary text-[13px] px-5 py-1.5">{t('nav.start')}</Link>
           </div>
         </div>
       </nav>

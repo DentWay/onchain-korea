@@ -178,6 +178,16 @@ const translations = {
   'fomo.reward': { ko: '리워드 풀', en: 'Reward Pool' },
   'fomo.partners': { ko: '파트너', en: 'Partners' },
 
+  // Auth
+  'auth.title': { ko: '로그인', en: 'Sign In' },
+  'auth.signup': { ko: '회원가입', en: 'Sign Up' },
+  'auth.email': { ko: '이메일', en: 'Email' },
+  'auth.password': { ko: '비밀번호', en: 'Password' },
+  'auth.google': { ko: 'Google로 계속하기', en: 'Continue with Google' },
+  'auth.noAccount': { ko: '계정이 없으신가요?', en: "Don't have an account?" },
+  'auth.hasAccount': { ko: '이미 계정이 있으신가요?', en: 'Already have an account?' },
+  'auth.signOut': { ko: '로그아웃', en: 'Sign Out' },
+
   // Footer
   'footer.based': { ko: 'Greed Academy 커리큘럼 기반', en: 'Based on Greed Academy Curriculum' },
 

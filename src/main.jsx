@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './hooks/useAuth'
 import { ProgressProvider } from './hooks/useProgress'
 import { LangProvider } from './hooks/useLang'
 import { FomoToastProvider } from './components/FomoToast'
@@ -13,11 +14,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ErrorBoundary>
         <LangProvider>
-          <ProgressProvider>
-            <FomoToastProvider>
-              <App />
-            </FomoToastProvider>
-          </ProgressProvider>
+          <AuthProvider>
+            <ProgressProvider>
+              <FomoToastProvider>
+                <App />
+              </FomoToastProvider>
+            </ProgressProvider>
+          </AuthProvider>
         </LangProvider>
       </ErrorBoundary>
     </BrowserRouter>

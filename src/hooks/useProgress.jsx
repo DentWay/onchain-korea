@@ -1,16 +1,18 @@
-import { useState, useEffect, useCallback, createContext, useContext } from 'react'
+import { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react'
 import { weeks as weekData } from '../data/curriculum'
+import { supabase } from '../lib/supabase'
+import useAuth from './useAuth'
 
 const STORAGE_KEY = 'onchain-korea-progress'
 
 const defaultProgress = {
-  completedLessons: [],   // ['w1-1', 'w1-2', ...]
-  completedActions: [],   // ['a1-1', ...]
-  readHiddenTopics: [],   // [1, 2, ...] (week ids)
+  completedLessons: [],
+  completedActions: [],
+  readHiddenTopics: [],
   currentWeek: 1,
 }
 
-function loadProgress() {
+function loadLocal() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     return saved ? { ...defaultProgress, ...JSON.parse(saved) } : defaultProgress
@@ -19,50 +21,149 @@ function loadProgress() {
   }
 }
 
+function saveLocal(progress) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)) } catch {}
+}
+
+function mergeProgress(local, remote) {
+  return {
+    completedLessons: [...new Set([...local.completedLessons, ...remote.completedLessons])],
+    completedActions: [...new Set([...local.completedActions, ...remote.completedActions])],
+    readHiddenTopics: [...new Set([...local.readHiddenTopics, ...remote.readHiddenTopics])],
+    currentWeek: Math.max(local.currentWeek, remote.currentWeek),
+  }
+}
+
 const ProgressContext = createContext(null)
 
 export function ProgressProvider({ children }) {
-  const [progress, setProgress] = useState(loadProgress)
+  const { user } = useAuth()
+  const [progress, setProgress] = useState(loadLocal)
+  const syncTimer = useRef(null)
+  const initialSyncDone = useRef(false)
 
+  // Save to localStorage on every change
+  useEffect(() => { saveLocal(progress) }, [progress])
+
+  // Debounced sync to Supabase
+  const syncToSupabase = useCallback((data) => {
+    if (!supabase || !user) return
+    clearTimeout(syncTimer.current)
+    syncTimer.current = setTimeout(async () => {
+      await supabase.from('user_progress').upsert({
+        id: user.id,
+        completed_lessons: data.completedLessons,
+        completed_actions: data.completedActions,
+        read_hidden_topics: data.readHiddenTopics,
+        current_week: data.currentWeek,
+        updated_at: new Date().toISOString(),
+      })
+    }, 500)
+  }, [user])
+
+  // Flush pending sync on tab close
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
-  }, [progress])
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && supabase && user) {
+        clearTimeout(syncTimer.current)
+        const data = loadLocal()
+        navigator.sendBeacon?.(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/user_progress?id=eq.${user.id}`, '')
+        // Fallback: sync immediately
+        supabase.from('user_progress').upsert({
+          id: user.id,
+          completed_lessons: data.completedLessons,
+          completed_actions: data.completedActions,
+          read_hidden_topics: data.readHiddenTopics,
+          current_week: data.currentWeek,
+          updated_at: new Date().toISOString(),
+        })
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [user])
 
-  // Toggle lesson complete/incomplete
+  // Initial sync: merge local + remote on login
+  useEffect(() => {
+    if (!supabase || !user || initialSyncDone.current) return
+    initialSyncDone.current = true
+
+    ;(async () => {
+      const { data: remote } = await supabase
+        .from('user_progress')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (remote) {
+        const remoteProgress = {
+          completedLessons: remote.completed_lessons || [],
+          completedActions: remote.completed_actions || [],
+          readHiddenTopics: remote.read_hidden_topics || [],
+          currentWeek: remote.current_week || 1,
+        }
+        const local = loadLocal()
+        const merged = mergeProgress(local, remoteProgress)
+        setProgress(merged)
+        saveLocal(merged)
+        syncToSupabase(merged)
+      }
+    })()
+  }, [user, syncToSupabase])
+
+  // Reset sync flag on logout
+  useEffect(() => {
+    if (!user) initialSyncDone.current = false
+  }, [user])
+
+  // Re-sync on reconnect
+  useEffect(() => {
+    const handleOnline = () => {
+      if (supabase && user) syncToSupabase(loadLocal())
+    }
+    window.addEventListener('online', handleOnline)
+    return () => window.removeEventListener('online', handleOnline)
+  }, [user, syncToSupabase])
+
+  const updateProgress = useCallback((updater) => {
+    setProgress(prev => {
+      const next = updater(prev)
+      syncToSupabase(next)
+      return next
+    })
+  }, [syncToSupabase])
+
   const toggleLesson = useCallback((lessonId) => {
-    setProgress(prev => {
-      const completed = prev.completedLessons.includes(lessonId)
+    updateProgress(prev => ({
+      ...prev,
+      completedLessons: prev.completedLessons.includes(lessonId)
         ? prev.completedLessons.filter(id => id !== lessonId)
-        : [...prev.completedLessons, lessonId]
-      return { ...prev, completedLessons: completed }
-    })
-  }, [])
+        : [...prev.completedLessons, lessonId],
+    }))
+  }, [updateProgress])
 
-  // Toggle action complete/incomplete
   const toggleAction = useCallback((actionId) => {
-    setProgress(prev => {
-      const completed = prev.completedActions.includes(actionId)
+    updateProgress(prev => ({
+      ...prev,
+      completedActions: prev.completedActions.includes(actionId)
         ? prev.completedActions.filter(id => id !== actionId)
-        : [...prev.completedActions, actionId]
-      return { ...prev, completedActions: completed }
-    })
-  }, [])
+        : [...prev.completedActions, actionId],
+    }))
+  }, [updateProgress])
 
-  // Mark hidden topic as read
   const toggleHiddenTopic = useCallback((weekId) => {
-    setProgress(prev => {
-      const read = prev.readHiddenTopics.includes(weekId)
+    updateProgress(prev => ({
+      ...prev,
+      readHiddenTopics: prev.readHiddenTopics.includes(weekId)
         ? prev.readHiddenTopics.filter(id => id !== weekId)
-        : [...prev.readHiddenTopics, weekId]
-      return { ...prev, readHiddenTopics: read }
-    })
-  }, [])
+        : [...prev.readHiddenTopics, weekId],
+    }))
+  }, [updateProgress])
 
   // Computed values
   const totalLessons = weekData.reduce((sum, w) => sum + w.lessons.length, 0)
   const totalActions = weekData.reduce((sum, w) => sum + w.actions.length, 0)
 
-  // Week unlock logic: week N unlocks when week N-1 has >= 60% lessons done
   const isWeekUnlocked = useCallback((weekId) => {
     if (weekId === 1) return true
     const prevWeek = weekData.find(w => w.id === weekId - 1)
@@ -71,17 +172,14 @@ export function ProgressProvider({ children }) {
     return (done / prevWeek.lessons.length) >= 0.6
   }, [progress.completedLessons])
 
-  // Get lesson status for a specific lesson
   const getLessonStatus = useCallback((lessonId) => {
     return progress.completedLessons.includes(lessonId) ? 'done' : 'available'
   }, [progress.completedLessons])
 
-  // Get action status
   const getActionStatus = useCallback((actionId) => {
     return progress.completedActions.includes(actionId) ? 'done' : 'available'
   }, [progress.completedActions])
 
-  // Week progress percentage
   const getWeekProgress = useCallback((weekId) => {
     const week = weekData.find(w => w.id === weekId)
     if (!week) return 0
@@ -89,7 +187,6 @@ export function ProgressProvider({ children }) {
     return Math.round((done / week.lessons.length) * 100)
   }, [progress.completedLessons])
 
-  // Certificate eligibility: 80% lessons + 3 actions + 2 hidden topics
   const certificateStatus = {
     lessonsComplete: progress.completedLessons.length,
     lessonsRequired: Math.ceil(totalLessons * 0.8),
@@ -105,21 +202,29 @@ export function ProgressProvider({ children }) {
     },
   }
 
-  // Overall progress percentage
   const overallProgress = Math.round(
     (progress.completedLessons.length / totalLessons) * 100
   )
 
-  // Current active week (highest unlocked week with incomplete lessons)
   const activeWeek = weekData.reduce((active, w) => {
     if (isWeekUnlocked(w.id)) return w.id
     return active
   }, 1)
 
-  // Reset all progress
   const resetProgress = useCallback(() => {
-    setProgress(defaultProgress)
-  }, [])
+    const reset = { ...defaultProgress }
+    setProgress(reset)
+    if (supabase && user) {
+      supabase.from('user_progress').upsert({
+        id: user.id,
+        completed_lessons: [],
+        completed_actions: [],
+        read_hidden_topics: [],
+        current_week: 1,
+        updated_at: new Date().toISOString(),
+      })
+    }
+  }, [user])
 
   const value = {
     ...progress,

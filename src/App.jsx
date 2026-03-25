@@ -1,6 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
+import ProtectedRoute from './components/ProtectedRoute'
 import Landing from './pages/Landing'
+import Auth from './pages/Auth'
+import AuthCallback from './pages/AuthCallback'
 import Dashboard from './pages/Dashboard'
 import WeekDetail from './pages/WeekDetail'
 import ActionGuide from './pages/ActionGuide'
@@ -13,7 +16,9 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route element={<Layout />}>
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/week/:weekId" element={<WeekDetail />} />
         <Route path="/lesson/:lessonId" element={<LessonDetail />} />

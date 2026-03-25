@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, MessageCircle, Bell, Flame, BookOpen } from 'lucide-react'
 import useLang from '../hooks/useLang'
+import useStats from '../hooks/useStats'
 import ActivityFeed from '../components/ActivityFeed'
 
 export default function Community() {
   const { t, lang } = useLang()
+  const { stats } = useStats()
 
   const channels = [
     { icon: MessageCircle, title: t('ch.kakao.title'), desc: t('ch.kakao.desc'), btn: t('ch.kakao.btn'), featured: true },
@@ -51,9 +53,9 @@ export default function Community() {
             <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('community.stats')}</h2>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: t('community.totalMembers'), value: '147' },
-                { label: t('community.activeMembers'), value: '89' },
-                { label: t('community.forumPosts'), value: '34' },
+                { label: t('community.totalMembers'), value: stats.total_users || '—' },
+                { label: t('community.activeMembers'), value: stats.week1_completions || '—' },
+                { label: t('community.forumPosts'), value: stats.certificate_count || '—' },
               ].map((s, i) => (
                 <div key={i} className="ok-card p-3">
                   <p className="text-[9px] text-[var(--text-low)] uppercase tracking-wider">{s.label}</p>

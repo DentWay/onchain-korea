@@ -4,6 +4,8 @@ import { useRef } from 'react'
 import { ArrowRight } from 'lucide-react'
 import BlockchainCanvas from './BlockchainCanvas'
 import FloatingBlocks from './FloatingBlocks'
+import useAuth from '../../hooks/useAuth'
+import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
 
 export default function Hero() {
@@ -13,6 +15,9 @@ export default function Hero() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.95])
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 100])
   const { t, lang } = useLang()
+  const { user, supabaseEnabled } = useAuth()
+  const { stats } = useStats()
+  const startLink = supabaseEnabled && !user ? '/auth' : '/dashboard'
 
   return (
     <motion.section
@@ -60,14 +65,16 @@ export default function Hero() {
           className="mt-12 flex flex-col items-center gap-4"
         >
           <div className="flex items-center justify-center gap-4">
-            <Link to="/dashboard" className="ok-btn ok-btn-primary px-8 py-3.5 text-[15px]">
+            <Link to={startLink} className="ok-btn ok-btn-primary px-8 py-3.5 text-[15px]">
               {t('landing.startFree')}
               <ArrowRight size={16} />
             </Link>
             <a href="#curriculum" className="ok-btn ok-btn-ghost px-8 py-3.5 text-[15px]">{t('landing.viewCurriculum')}</a>
           </div>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="text-[12px] text-[var(--text-low)]">
-            {lang === 'ko' ? '147명이 이미 시작했습니다' : '147 have already started'}
+            {stats.total_users > 0
+              ? (lang === 'ko' ? `${stats.total_users}명이 이미 시작했습니다` : `${stats.total_users} have already started`)
+              : (lang === 'ko' ? '지금 바로 시작할 수 있어요' : 'Start right now')}
           </motion.p>
         </motion.div>
 
