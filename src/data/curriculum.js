@@ -1,18 +1,18 @@
-// Source mapping for Medium article URLs
-const mediumUrls = {
-  'S1-L1': 'https://medium.com/@GreedAcademy/lesson-1-staking-and-validators-378beb4b3624',
-  'S1-L2': 'https://medium.com/@GreedAcademy/lesson-2-governance-4e6f42381104',
-  'S1-L4': 'https://medium.com/@GreedAcademy/lesson-4-hype-6b5911ae077b',
-  'S1-L5': 'https://medium.com/@GreedAcademy/lesson-5-wallets-533940862aa6',
-  'S1-L6': 'https://medium.com/@GreedAcademy/lesson-6-nfts-5d6d968b0ffe',
-  'S1-L7': 'https://medium.com/@GreedAcademy/lesson-7-dyor-part-1-b37bca48479e',
-  'S1-L8': 'https://medium.com/@GreedAcademy/lesson-8-dyor-part-2-8f491539bdbd',
-  'S2-L1': 'https://medium.com/@GreedAcademy/lesson-1-wallets-and-wallet-hygiene-8eaf26a62269',
-  'S2-L2': 'https://medium.com/@GreedAcademy/lesson-2-digital-assets-b325f0fcc0a1',
-  'S2-L4': 'https://medium.com/@GreedAcademy/lesson-4-defi-29f03eb73f00',
-  'S2-L6': 'https://medium.com/@GreedAcademy/lesson-6-onchain-explorers-bc61de7d3250',
-  'S2-L7': 'https://medium.com/@GreedAcademy/lesson-7-stablecoins-22ef6be6c003',
-  'S2-L8': 'https://medium.com/@GreedAcademy/lesson-8-cross-chain-and-bridging-7af924e1016d',
+// Greed Academy source articles
+export const greedArticles = {
+  'S1-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-staking-and-validators-378beb4b3624', title: 'Staking and Validators' },
+  'S1-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-governance-4e6f42381104', title: 'Governance' },
+  'S1-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-hype-6b5911ae077b', title: 'Hype' },
+  'S1-L5': { url: 'https://medium.com/@GreedAcademy/lesson-5-wallets-533940862aa6', title: 'Wallets' },
+  'S1-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-nfts-5d6d968b0ffe', title: 'NFTs' },
+  'S1-L7': { url: 'https://medium.com/@GreedAcademy/lesson-7-dyor-part-1-b37bca48479e', title: 'DYOR Part 1' },
+  'S1-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-dyor-part-2-8f491539bdbd', title: 'DYOR Part 2' },
+  'S2-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-wallets-and-wallet-hygiene-8eaf26a62269', title: 'Wallets & Wallet Hygiene' },
+  'S2-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-digital-assets-b325f0fcc0a1', title: 'Digital Assets' },
+  'S2-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-defi-29f03eb73f00', title: 'DeFi' },
+  'S2-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-onchain-explorers-bc61de7d3250', title: 'Onchain Explorers' },
+  'S2-L7': { url: 'https://medium.com/@GreedAcademy/lesson-7-stablecoins-22ef6be6c003', title: 'Stablecoins' },
+  'S2-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-cross-chain-and-bridging-7af924e1016d', title: 'Cross-chain & Bridging' },
 }
 
 export const weeks = [
@@ -21,11 +21,11 @@ export const weeks = [
     title: { ko: '지갑 + 보안의 모든 것', en: 'Wallets + Security Essentials' },
     subtitle: { ko: 'Wallet Hygiene · Wallets · 시드 문구 · 버너 지갑', en: 'Wallet Hygiene · Wallets · Seed Phrases · Burner Wallets' },
     lessons: [
-      { id: 'w1-1', title: { ko: '지갑이란? — 주소, 프라이빗 키, 시드 문구 이해', en: 'What is a Wallet? — Addresses, Private Keys, Seed Phrases' }, source: 'S1-L5', type: 'read', mediumUrl: mediumUrls['S1-L5'] },
-      { id: 'w1-2', title: { ko: '지갑 클라이언트 비교 — Phantom, Solflare, Backpack', en: 'Comparing Wallet Clients — Phantom, Solflare, Backpack' }, source: 'S2-L1', type: 'read', mediumUrl: mediumUrls['S2-L1'] },
-      { id: 'w1-3', title: { ko: '하드웨어 지갑 & 멀티시그 — 왜 필요한가?', en: 'Hardware Wallets & Multisig — Why Do You Need Them?' }, source: 'S2-L1', type: 'read', mediumUrl: mediumUrls['S2-L1'] },
-      { id: 'w1-4', title: { ko: '버너 지갑 만들기 — 가장 안전한 온체인 습관', en: 'Creating a Burner Wallet — The Safest On-chain Habit' }, source: 'S2-L1', type: 'practice', mediumUrl: mediumUrls['S2-L1'] },
-      { id: 'w1-5', title: { ko: '키 관리 & 보안 베스트 프랙티스', en: 'Key Management & Security Best Practices' }, source: 'S1-L5', type: 'security', mediumUrl: mediumUrls['S1-L5'] },
+      { id: 'w1-1', title: { ko: '지갑이란? — 주소, 프라이빗 키, 시드 문구 이해', en: 'What is a Wallet? — Addresses, Private Keys, Seed Phrases' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
+      { id: 'w1-2', title: { ko: '지갑 클라이언트 비교 — Phantom, Solflare, Backpack', en: 'Comparing Wallet Clients — Phantom, Solflare, Backpack' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
+      { id: 'w1-3', title: { ko: '하드웨어 지갑 & 멀티시그 — 왜 필요한가?', en: 'Hardware Wallets & Multisig — Why Do You Need Them?' }, source: 'S2-L1', type: 'read', mediumUrl: greedArticles['S2-L1'].url },
+      { id: 'w1-4', title: { ko: '버너 지갑 만들기 — 가장 안전한 온체인 습관', en: 'Creating a Burner Wallet — The Safest On-chain Habit' }, source: 'S2-L1', type: 'practice', mediumUrl: greedArticles['S2-L1'].url },
+      { id: 'w1-5', title: { ko: '키 관리 & 보안 베스트 프랙티스', en: 'Key Management & Security Best Practices' }, source: 'S2-L1', type: 'security', mediumUrl: greedArticles['S2-L1'].url },
     ],
     actions: [
       { id: 'a1-1', title: { ko: 'Phantom 지갑 설치 + 생성', en: 'Install + Create Phantom Wallet' }, guideId: 'phantom-setup' },
@@ -45,11 +45,11 @@ export const weeks = [
     title: { ko: '온체인 탐색 + 리서치 (DYOR)', en: 'On-chain Exploration + Research (DYOR)' },
     subtitle: { ko: 'Onchain Explorers · DYOR Part 1 & 2 · 스캠 식별', en: 'Onchain Explorers · DYOR Part 1 & 2 · Scam Identification' },
     lessons: [
-      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: mediumUrls['S2-L6'] },
-      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: mediumUrls['S2-L6'] },
-      { id: 'w2-3', title: { ko: 'DYOR 기초 — 레드플래그 식별법', en: 'DYOR Basics — Identifying Red Flags' }, source: 'S1-L7', type: 'read', mediumUrl: mediumUrls['S1-L7'] },
-      { id: 'w2-4', title: { ko: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', en: 'Advanced DYOR — Project & NFT Research Tools' }, source: 'S1-L8', type: 'read', mediumUrl: mediumUrls['S1-L8'] },
-      { id: 'w2-5', title: { ko: '실전 스캠 분석 — 실제 사례로 배우기', en: 'Real Scam Analysis — Learning from Actual Cases' }, source: 'S1-L4', type: 'security', mediumUrl: mediumUrls['S1-L4'] },
+      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w2-3', title: { ko: 'DYOR 기초 — 레드플래그 식별법', en: 'DYOR Basics — Identifying Red Flags' }, source: 'S1-L7', type: 'read', mediumUrl: greedArticles['S1-L7'].url },
+      { id: 'w2-4', title: { ko: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', en: 'Advanced DYOR — Project & NFT Research Tools' }, source: 'S1-L8', type: 'read', mediumUrl: greedArticles['S1-L8'].url },
+      { id: 'w2-5', title: { ko: '실전 스캠 분석 — 실제 사례로 배우기', en: 'Real Scam Analysis — Learning from Actual Cases' }, source: 'S1-L4', type: 'security', mediumUrl: greedArticles['S1-L4'].url },
     ],
     actions: [
       { id: 'a2-1', title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' }, guideId: 'solscan-tx' },
@@ -68,11 +68,11 @@ export const weeks = [
     title: { ko: 'DeFi · 디지털 에셋 · NFT', en: 'DeFi · Digital Assets · NFT' },
     subtitle: { ko: 'AMM/LP · Metaplex Core 민팅 · NFT 활용', en: 'AMM/LP · Metaplex Core Minting · NFT Applications' },
     lessons: [
-      { id: 'w3-1', title: { ko: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', en: 'What is DeFi? — AMM, Liquidity Pools, Fee Structures' }, source: 'S2-L4', type: 'read', mediumUrl: mediumUrls['S2-L4'] },
-      { id: 'w3-2', title: { ko: 'DEX에서 스왑하기 — Orca, Raydium 비교', en: 'Swapping on DEX — Comparing Orca & Raydium' }, source: 'S2-L4', type: 'practice', mediumUrl: mediumUrls['S2-L4'] },
-      { id: 'w3-3', title: { ko: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'S2-L2', type: 'read', mediumUrl: mediumUrls['S2-L2'] },
-      { id: 'w3-4', title: { ko: 'NFT 이해하기 — 개념부터 활용까지', en: 'Understanding NFTs — From Concepts to Applications' }, source: 'S1-L6', type: 'read', mediumUrl: mediumUrls['S1-L6'] },
-      { id: 'w3-5', title: { ko: 'Metaplex Core로 내 에셋 민팅하기', en: 'Minting Your Asset with Metaplex Core' }, source: 'S2-L2', type: 'practice', mediumUrl: mediumUrls['S2-L2'] },
+      { id: 'w3-1', title: { ko: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', en: 'What is DeFi? — AMM, Liquidity Pools, Fee Structures' }, source: 'S2-L4', type: 'read', mediumUrl: greedArticles['S2-L4'].url },
+      { id: 'w3-2', title: { ko: 'DEX에서 스왑하기 — Orca, Raydium 비교', en: 'Swapping on DEX — Comparing Orca & Raydium' }, source: 'S2-L4', type: 'practice', mediumUrl: greedArticles['S2-L4'].url },
+      { id: 'w3-3', title: { ko: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'S2-L2', type: 'read', mediumUrl: greedArticles['S2-L2'].url },
+      { id: 'w3-4', title: { ko: 'NFT 이해하기 — 개념부터 활용까지', en: 'Understanding NFTs — From Concepts to Applications' }, source: 'S1-L6', type: 'read', mediumUrl: greedArticles['S1-L6'].url },
+      { id: 'w3-5', title: { ko: 'Metaplex Core로 내 에셋 민팅하기', en: 'Minting Your Asset with Metaplex Core' }, source: 'S1-L6', type: 'practice', mediumUrl: greedArticles['S1-L6'].url },
     ],
     actions: [
       { id: 'a3-1', title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' }, guideId: 'dex-swap' },
@@ -91,10 +91,10 @@ export const weeks = [
     title: { ko: '스테이블코인 · 크로스체인 · 스테이킹', en: 'Stablecoins · Cross-chain · Staking' },
     subtitle: { ko: 'Stablecoins · Bridging · Validators & Staking', en: 'Stablecoins · Bridging · Validators & Staking' },
     lessons: [
-      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: mediumUrls['S2-L7'] },
-      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: mediumUrls['S2-L8'] },
-      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: mediumUrls['S1-L1'] },
-      { id: 'w4-4', title: { ko: '거버넌스 & DAO — 온체인 의사결정', en: 'Governance & DAOs — On-chain Decision Making' }, source: 'S1-L2', type: 'read', mediumUrl: mediumUrls['S1-L2'] },
+      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: greedArticles['S2-L7'].url },
+      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: greedArticles['S2-L8'].url },
+      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: greedArticles['S1-L1'].url },
+      { id: 'w4-4', title: { ko: '거버넌스 & DAO — 온체인 의사결정', en: 'Governance & DAOs — On-chain Decision Making' }, source: 'S1-L2', type: 'read', mediumUrl: greedArticles['S1-L2'].url },
     ],
     actions: [
       { id: 'a4-1', title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' }, guideId: 'stablecoin-transfer' },

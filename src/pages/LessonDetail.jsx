@@ -1,7 +1,7 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ExternalLink, Check, Lightbulb, BookOpen, Zap, Shield } from 'lucide-react'
-import { findLesson, l } from '../data/curriculum'
+import { findLesson, greedArticles, l } from '../data/curriculum'
 import { lessonContents } from '../data/content'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
@@ -37,7 +37,7 @@ export default function LessonDetail() {
             const Icon = cfg.icon
             return <span className={`flex items-center gap-1 text-[10px] font-medium ${cfg.color}`}><Icon size={12} /> {cfg.label[lang] || cfg.label.ko}</span>
           })()}
-          <span className="text-[10px] text-[var(--text-low)]">Greed Academy {lesson.source}</span>
+          <span className="text-[10px] text-[var(--text-low)]">{greedArticles[lesson.source]?.title || lesson.source}</span>
         </div>
 
         <h1 className="text-xl font-bold text-[var(--text-high)] mb-6 leading-snug">{l(lesson.title, lang)}</h1>
@@ -79,7 +79,7 @@ export default function LessonDetail() {
             {lesson.mediumUrl && (
               <a href={lesson.mediumUrl} target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 ok-btn ok-btn-ghost px-5 py-2.5 text-[12px] mb-4">
-                {lang === 'ko' ? '원문 읽기 (English)' : 'Read Original (English)'} <ExternalLink size={13} />
+                {lang === 'ko' ? '원문 읽기' : 'Read Original'} — Greed Academy: {greedArticles[lesson.source]?.title || lesson.source} <ExternalLink size={13} />
               </a>
             )}
           </>
