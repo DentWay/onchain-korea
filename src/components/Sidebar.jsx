@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, Link, useLocation } from 'react-router-dom'
 import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, X, LogOut } from 'lucide-react'
 import useProgress from '../hooks/useProgress'
 import useAuth from '../hooks/useAuth'
@@ -29,15 +29,18 @@ export default function Sidebar({ onClose }) {
     <aside className="w-[220px] h-screen bg-[var(--surface-1)] text-[var(--text-high)] flex flex-col p-3 shrink-0 border-r border-[var(--border)]">
       <div className="px-1 mb-1 flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
               <span className="text-white text-[10px] font-bold tracking-tight">OK</span>
             </div>
             <div>
               <h1 className="text-[15px] font-semibold tracking-tight">Onchain Korea</h1>
             </div>
+          </Link>
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <p className="text-[9px] text-[var(--text-low)]">{t('sidebar.tagline')}</p>
+            <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded bg-accent/10 text-accent-soft uppercase tracking-wider">Beta</span>
           </div>
-          <p className="text-[9px] text-[var(--text-low)] mt-1.5">{t('sidebar.tagline')}</p>
         </div>
         <button onClick={onClose} aria-label="메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
           <X size={16} className="text-[var(--text-low)]" />

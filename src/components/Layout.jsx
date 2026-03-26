@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 import { useState } from 'react'
 import { Menu, LogOut } from 'lucide-react'
 import Sidebar from './Sidebar'
@@ -23,7 +23,7 @@ export default function Layout() {
       <main id="main-content" className="flex-1 overflow-y-auto relative">
         <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-[var(--surface-0)]/95 backdrop-blur-xl border-b border-[var(--border)]">
           <button onClick={() => setSidebarOpen(true)} aria-label="메뉴 열기" className="p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"><Menu size={20} className="text-[var(--text-mid)]" /></button>
-          <span className="text-[13px] font-semibold">Onchain Korea</span>
+          <Link to="/" className="text-[13px] font-semibold flex items-center gap-1.5">Onchain Korea <span className="text-[8px] font-semibold px-1 py-0.5 rounded bg-accent/10 text-accent-soft uppercase tracking-wider">Beta</span></Link>
           <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
         </div>
         <div className="hidden md:flex fixed top-3 right-6 z-40 items-center gap-3">
