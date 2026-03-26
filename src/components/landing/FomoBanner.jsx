@@ -29,8 +29,8 @@ export default function FomoBanner({ onVisibilityChange }) {
       <div className="max-w-5xl mx-auto px-4 h-9 flex items-center justify-between">
         <p className="text-[11px] text-white font-medium truncate flex-1">
           {lang === 'ko'
-            ? `Semester 3 사전등록 중 — ${count}명 등록 완료 · 선착순 마감 예정`
-            : `Semester 3 Pre-registration — ${count} enrolled · Limited spots`}
+            ? `Semester 3 등록 중 — ${count > 0 ? `${count}/200명` : '200명 한정'} · 4월 30일 마감`
+            : `Semester 3 Open — ${count > 0 ? `${count}/200 spots` : '200 spots'} · Closes Apr 30`}
         </p>
         <div className="hidden sm:flex items-center gap-3 shrink-0 ml-3">
           <CountdownTimer targetDate={SEMESTER_DEADLINE} compact />

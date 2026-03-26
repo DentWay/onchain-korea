@@ -5,11 +5,12 @@ import WhySection from '../components/landing/WhySection'
 import SocialProof from '../components/landing/SocialProof'
 import Testimonials from '../components/landing/Testimonials'
 import Curriculum from '../components/landing/Curriculum'
+import InlineCTA from '../components/landing/InlineCTA'
 import Features from '../components/landing/Features'
 import CertificatePreview from '../components/landing/CertificatePreview'
+import FAQ from '../components/landing/FAQ'
 import FinalCTA from '../components/landing/FinalCTA'
 import Footer from '../components/landing/Footer'
-import LiveTicker from '../components/landing/LiveTicker'
 
 export default function Landing() {
   return (
@@ -17,15 +18,16 @@ export default function Landing() {
       <Nav />
       <Hero />
       <Stats />
-      <WhySection />
       <SocialProof />
-      <Testimonials />
+      <WhySection />
       <Curriculum />
+      <InlineCTA />
       <Features />
       <CertificatePreview />
+      <Testimonials />
+      <FAQ />
       <FinalCTA />
       <Footer />
-      <LiveTicker />
     </div>
   )
 }

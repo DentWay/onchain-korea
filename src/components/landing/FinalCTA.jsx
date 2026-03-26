@@ -3,12 +3,18 @@ import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Section from './Section'
 import CountdownTimer from '../CountdownTimer'
+import useAuth from '../../hooks/useAuth'
+import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
 
-const SEMESTER_DEADLINE = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+// Real semester deadline — same as FomoBanner
+const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 export default function FinalCTA() {
   const { t, lang } = useLang()
+  const { user, supabaseEnabled } = useAuth()
+  const { stats } = useStats()
+  const startLink = supabaseEnabled && !user ? '/auth' : '/dashboard'
 
   return (
     <Section className="py-32 px-6 relative">
@@ -17,7 +23,7 @@ export default function FinalCTA() {
       <div className="relative max-w-xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-[11px] text-[var(--text-low)] uppercase tracking-wider mb-3">
-            {lang === 'ko' ? '등록 마감까지' : 'Registration closes in'}
+            {lang === 'ko' ? 'Semester 3 마감까지' : 'Semester 3 closes in'}
           </p>
           <div className="flex justify-center"><CountdownTimer targetDate={SEMESTER_DEADLINE} /></div>
         </motion.div>
@@ -28,15 +34,31 @@ export default function FinalCTA() {
         </h2>
         <p className="text-[16px] text-[var(--text-mid)] mt-5 font-light">{t('landing.finalDesc')}</p>
 
-        <Link to="/dashboard" className="group ok-btn ok-btn-primary mt-12 px-9 py-4 text-[16px]">
-          {t('landing.startFree')}
-          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-        </Link>
+        {/* Price anchoring */}
+        <div className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
+          <span className="text-[13px] text-[var(--text-low)] line-through">
+            {lang === 'ko' ? '유사 교육 과정 50~200만원' : 'Similar courses $400~$1,500'}
+          </span>
+          <span className="text-[14px] font-bold text-success">
+            {lang === 'ko' ? '₩0 무료' : '$0 Free'}
+          </span>
+        </div>
 
-        <p className="mt-5 text-[12px] text-[var(--text-low)]">
-          {lang === 'ko' ? '147명이 이미 등록했습니다' : '147 already enrolled'}
+        <div className="mt-8">
+          <Link to={startLink} className="group ok-btn ok-btn-primary px-9 py-4 text-[16px]">
+            {lang === 'ko' ? 'Week 1부터 시작하기' : 'Start from Week 1'}
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        {stats.total_users > 0 && (
+          <p className="mt-4 text-[12px] text-[var(--text-low)]">
+            {lang === 'ko' ? `${stats.total_users}명이 이미 등록했습니다` : `${stats.total_users} already enrolled`}
+          </p>
+        )}
+        <p className="mt-2 text-[11px] text-[var(--text-low)]">
+          {lang === 'ko' ? '카드 정보 불필요 · 광고 없음 · 언제든 중단 가능' : 'No credit card · No ads · Quit anytime'}
         </p>
-        <p className="mt-2 text-[12px] text-[var(--text-low)]">{t('landing.noSignup')}</p>
       </div>
     </Section>
   )
