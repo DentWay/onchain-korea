@@ -8,7 +8,7 @@ export default function Stats() {
 
   const stats = [
     { value: 4, suffix: t('stats.weeks'), label: t('stats.curriculum'), sub: t('stats.stepByStep') },
-    { value: 19, suffix: t('stats.lessons'), label: t('stats.lesson'), sub: t('stats.theoryPractice') },
+    { value: 20, suffix: t('stats.lessons'), label: t('stats.lesson'), sub: t('stats.theoryPractice') },
     { value: 10, suffix: t('stats.actions'), label: t('stats.practice'), sub: t('stats.handson') },
     { value: 100, suffix: '%', label: t('stats.free'), sub: t('stats.noCost') },
   ]

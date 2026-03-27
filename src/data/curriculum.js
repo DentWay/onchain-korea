@@ -16,14 +16,15 @@ export const greedArticles = {
 }
 
 export const weeks = [
+  // ── Week 1: 크립토 기초 + 지갑 설정 ──
   {
     id: 1,
-    title: { ko: '지갑 + 보안의 모든 것', en: 'Wallets + Security Essentials' },
-    subtitle: { ko: 'Wallet Hygiene · Wallets · 시드 문구 · 버너 지갑', en: 'Wallet Hygiene · Wallets · Seed Phrases · Burner Wallets' },
+    title: { ko: '크립토 기초 + 지갑 설정', en: 'Crypto Basics + Wallet Setup' },
+    subtitle: { ko: '거래소에서 온체인으로 · 지갑 · 시드 문구 · 버너 지갑 · 보안', en: 'From Exchange to On-chain · Wallets · Seed Phrases · Burner · Security' },
     lessons: [
+      { id: 'w1-0', title: { ko: '한국 거래소에서 온체인으로 — 업비트에서 시작해서 지갑까지', en: 'From Korean Exchange to On-chain — Starting from Upbit to Your Wallet' }, source: null, type: 'read', mediumUrl: null },
       { id: 'w1-1', title: { ko: '지갑이란? — 주소, 프라이빗 키, 시드 문구 이해', en: 'What is a Wallet? — Addresses, Private Keys, Seed Phrases' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
       { id: 'w1-2', title: { ko: '지갑 클라이언트 비교 — Phantom, Solflare, Backpack', en: 'Comparing Wallet Clients — Phantom, Solflare, Backpack' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
-      { id: 'w1-3', title: { ko: '하드웨어 지갑 & 멀티시그 — 왜 필요한가?', en: 'Hardware Wallets & Multisig — Why Do You Need Them?' }, source: 'S2-L1', type: 'read', mediumUrl: greedArticles['S2-L1'].url },
       { id: 'w1-4', title: { ko: '버너 지갑 만들기 — 가장 안전한 온체인 습관', en: 'Creating a Burner Wallet — The Safest On-chain Habit' }, source: 'S2-L1', type: 'practice', mediumUrl: greedArticles['S2-L1'].url },
       { id: 'w1-5', title: { ko: '키 관리 & 보안 베스트 프랙티스', en: 'Key Management & Security Best Practices' }, source: 'S2-L1', type: 'security', mediumUrl: greedArticles['S2-L1'].url },
     ],
@@ -33,27 +34,51 @@ export const weeks = [
       { id: 'a1-3', title: { ko: '시드 문구 안전 보관 실습', en: 'Seed Phrase Safe Storage Practice' }, guideId: 'seed-backup' },
     ],
     hiddenTopic: {
+      title: { ko: '한국 거래소 vs 해외 DEX — 어디서 거래해야 할까?', en: 'Korean Exchanges vs Overseas DEX — Where Should You Trade?' },
+      desc: { ko: '업비트, 빗썸 같은 한국 거래소와 해외 DEX의 장단점을 비교합니다.', en: 'Comparing pros and cons of Korean exchanges like Upbit, Bithumb vs overseas DEXs.' },
+      readTime: { ko: '10분 읽기', en: '10 min read' },
+      action: { ko: 'DEX에서 첫 스왑', en: 'First Swap on DEX' },
+      forumCount: 23,
+    },
+  },
+  // ── Week 2: 스테이블코인 + 온체인 탐색 ──
+  {
+    id: 2,
+    title: { ko: '스테이블코인 + 온체인 탐색', en: 'Stablecoins + On-chain Exploration' },
+    subtitle: { ko: 'USDT/USDC/DAI · 토큰 스탠다드 · 블록 탐색기 · 온체인 분석', en: 'USDT/USDC/DAI · Token Standards · Block Explorers · On-chain Analysis' },
+    lessons: [
+      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: greedArticles['S2-L7'].url },
+      { id: 'w3-3', title: { ko: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'S2-L2', type: 'read', mediumUrl: greedArticles['S2-L2'].url },
+      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+    ],
+    actions: [
+      { id: 'a4-1', title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' }, guideId: 'stablecoin-transfer' },
+      { id: 'a2-1', title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' }, guideId: 'solscan-tx' },
+    ],
+    hiddenTopic: {
       title: { ko: '왜 스테이블코인이 주목받고 있을까? — 한국에서의 실제 활용 사례', en: 'Why Are Stablecoins Getting Attention? — Real Use Cases in Korea' },
       desc: { ko: '한국에서 스테이블코인은 왜 중요할까요? 해외 송금, P2P 결제, DeFi 진입점으로서의 역할을 알아봅니다.', en: 'Why are stablecoins important in Korea? Explore their role in remittances, P2P payments, and as a DeFi entry point.' },
       readTime: { ko: '10분 읽기', en: '10 min read' },
       action: { ko: 'USDC 전송 체험', en: 'USDC Transfer Experience' },
-      forumCount: 23,
+      forumCount: 0,
     },
   },
+  // ── Week 3: DYOR + DeFi ──
   {
-    id: 2,
-    title: { ko: '온체인 탐색 + 리서치 (DYOR)', en: 'On-chain Exploration + Research (DYOR)' },
-    subtitle: { ko: 'Onchain Explorers · DYOR Part 1 & 2 · 스캠 식별', en: 'Onchain Explorers · DYOR Part 1 & 2 · Scam Identification' },
+    id: 3,
+    title: { ko: 'DYOR + 스캠 방지 + DeFi', en: 'DYOR + Scam Prevention + DeFi' },
+    subtitle: { ko: '리서치 기초/심화 · 스캠 분석 · AMM/LP · DEX 스왑', en: 'Research Basics/Advanced · Scam Analysis · AMM/LP · DEX Swap' },
     lessons: [
-      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
-      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
       { id: 'w2-3', title: { ko: 'DYOR 기초 — 레드플래그 식별법', en: 'DYOR Basics — Identifying Red Flags' }, source: 'S1-L7', type: 'read', mediumUrl: greedArticles['S1-L7'].url },
       { id: 'w2-4', title: { ko: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', en: 'Advanced DYOR — Project & NFT Research Tools' }, source: 'S1-L8', type: 'read', mediumUrl: greedArticles['S1-L8'].url },
       { id: 'w2-5', title: { ko: '실전 스캠 분석 — 실제 사례로 배우기', en: 'Real Scam Analysis — Learning from Actual Cases' }, source: 'S1-L4', type: 'security', mediumUrl: greedArticles['S1-L4'].url },
+      { id: 'w3-1', title: { ko: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', en: 'What is DeFi? — AMM, Liquidity Pools, Fee Structures' }, source: 'S2-L4', type: 'read', mediumUrl: greedArticles['S2-L4'].url },
+      { id: 'w3-2', title: { ko: 'DEX에서 스왑하기 — Orca, Raydium 비교', en: 'Swapping on DEX — Comparing Orca & Raydium' }, source: 'S2-L4', type: 'practice', mediumUrl: greedArticles['S2-L4'].url },
     ],
     actions: [
-      { id: 'a2-1', title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' }, guideId: 'solscan-tx' },
       { id: 'a2-2', title: { ko: '의심 프로젝트 3개 리서치 보고서 작성', en: 'Write Research Report on 3 Suspicious Projects' }, guideId: 'dyor-report' },
+      { id: 'a3-1', title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' }, guideId: 'dex-swap' },
     ],
     hiddenTopic: {
       title: { ko: '트럼프는 왜 비트코인을 밀까? — 미국 크립토 정책이 한국에 미치는 영향', en: 'Why Is Trump Pushing Bitcoin? — How US Crypto Policy Affects Korea' },
@@ -63,49 +88,28 @@ export const weeks = [
       forumCount: 0,
     },
   },
+  // ── Week 4: NFT · 크로스체인 · 스테이킹 · 거버넌스 ──
   {
-    id: 3,
-    title: { ko: 'DeFi · 디지털 에셋 · NFT', en: 'DeFi · Digital Assets · NFT' },
-    subtitle: { ko: 'AMM/LP · Metaplex Core 민팅 · NFT 활용', en: 'AMM/LP · Metaplex Core Minting · NFT Applications' },
+    id: 4,
+    title: { ko: 'NFT · 크로스체인 · 스테이킹', en: 'NFT · Cross-chain · Staking' },
+    subtitle: { ko: 'Metaplex Core · 브릿지 · 밸리데이터 · 거버넌스 & DAO', en: 'Metaplex Core · Bridges · Validators · Governance & DAOs' },
     lessons: [
-      { id: 'w3-1', title: { ko: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', en: 'What is DeFi? — AMM, Liquidity Pools, Fee Structures' }, source: 'S2-L4', type: 'read', mediumUrl: greedArticles['S2-L4'].url },
-      { id: 'w3-2', title: { ko: 'DEX에서 스왑하기 — Orca, Raydium 비교', en: 'Swapping on DEX — Comparing Orca & Raydium' }, source: 'S2-L4', type: 'practice', mediumUrl: greedArticles['S2-L4'].url },
-      { id: 'w3-3', title: { ko: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'S2-L2', type: 'read', mediumUrl: greedArticles['S2-L2'].url },
       { id: 'w3-4', title: { ko: 'NFT 이해하기 — 개념부터 활용까지', en: 'Understanding NFTs — From Concepts to Applications' }, source: 'S1-L6', type: 'read', mediumUrl: greedArticles['S1-L6'].url },
       { id: 'w3-5', title: { ko: 'Metaplex Core로 내 에셋 민팅하기', en: 'Minting Your Asset with Metaplex Core' }, source: 'S1-L6', type: 'practice', mediumUrl: greedArticles['S1-L6'].url },
+      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: greedArticles['S2-L8'].url },
+      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: greedArticles['S1-L1'].url },
+      { id: 'w4-4', title: { ko: '거버넌스 & DAO — 온체인 의사결정', en: 'Governance & DAOs — On-chain Decision Making' }, source: 'S1-L2', type: 'read', mediumUrl: greedArticles['S1-L2'].url },
     ],
     actions: [
-      { id: 'a3-1', title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' }, guideId: 'dex-swap' },
       { id: 'a3-2', title: { ko: 'Metaplex Core로 NFT 민팅', en: 'Mint NFT with Metaplex Core' }, guideId: 'nft-mint' },
+      { id: 'a4-2', title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' }, guideId: 'debridge' },
+      { id: 'a4-3', title: { ko: 'SOL 스테이킹 (Greed Validator)', en: 'SOL Staking (Greed Validator)' }, guideId: 'sol-staking' },
     ],
     hiddenTopic: {
       title: { ko: '한국에서 NFT는 끝났나? — 진짜 유스케이스와 Metaplex Core', en: 'Are NFTs Dead in Korea? — Real Use Cases & Metaplex Core' },
       desc: { ko: '한국 NFT 시장의 현실과 실제 활용 사례, Metaplex Core의 가능성을 탐구합니다.', en: 'Exploring the reality of the Korean NFT market, real use cases, and the potential of Metaplex Core.' },
       readTime: { ko: '10분 읽기', en: '10 min read' },
       action: { ko: '내 NFT 민팅', en: 'Mint My NFT' },
-      forumCount: 0,
-    },
-  },
-  {
-    id: 4,
-    title: { ko: '스테이블코인 · 크로스체인 · 스테이킹', en: 'Stablecoins · Cross-chain · Staking' },
-    subtitle: { ko: 'Stablecoins · Bridging · Validators & Staking', en: 'Stablecoins · Bridging · Validators & Staking' },
-    lessons: [
-      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: greedArticles['S2-L7'].url },
-      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: greedArticles['S2-L8'].url },
-      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: greedArticles['S1-L1'].url },
-      { id: 'w4-4', title: { ko: '거버넌스 & DAO — 온체인 의사결정', en: 'Governance & DAOs — On-chain Decision Making' }, source: 'S1-L2', type: 'read', mediumUrl: greedArticles['S1-L2'].url },
-    ],
-    actions: [
-      { id: 'a4-1', title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' }, guideId: 'stablecoin-transfer' },
-      { id: 'a4-2', title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' }, guideId: 'debridge' },
-      { id: 'a4-3', title: { ko: 'SOL 스테이킹 (Greed Validator)', en: 'SOL Staking (Greed Validator)' }, guideId: 'sol-staking' },
-    ],
-    hiddenTopic: {
-      title: { ko: '한국 거래소 vs 해외 DEX — 어디서 거래해야 할까?', en: 'Korean Exchanges vs Overseas DEX — Where Should You Trade?' },
-      desc: { ko: '업비트, 빗썸 같은 한국 거래소와 해외 DEX의 장단점을 비교합니다.', en: 'Comparing pros and cons of Korean exchanges like Upbit, Bithumb vs overseas DEXs.' },
-      readTime: { ko: '10분 읽기', en: '10 min read' },
-      action: { ko: 'DEX에서 첫 스왑', en: 'First Swap on DEX' },
       forumCount: 0,
     },
   },
@@ -186,7 +190,24 @@ export const actionGuides = [
       en: ['Never take a photo of your seed phrase.', 'Never store on cloud (iCloud, Google Drive).', 'Never show or share with anyone.', 'If you lose your seed phrase, your wallet cannot be recovered.'],
     },
   },
-  // Week 2 guides
+  // Week 2 guides (stablecoins + on-chain exploration)
+  {
+    weekId: 2, id: 'stablecoin-transfer', actionId: 'a4-1',
+    title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' },
+    subtitle: { ko: '약 5분 · 초급', en: '~5 min · Beginner' },
+    icon: 'banknote',
+    description: { ko: 'USDC를 다른 지갑으로 전송해봅니다. 스테이블코인의 실제 사용법을 체험합니다.', en: 'Send USDC to another wallet. Experience how stablecoins are actually used.' },
+    steps: [
+      { text: { ko: 'Phantom에서 USDC 잔액을 확인하세요', en: 'Check your USDC balance in Phantom' }, note: { ko: '업비트에서 USDC를 구매하여 전송하거나, DEX 스왑으로 확보', en: 'Buy USDC on Upbit and transfer, or get via DEX swap' } },
+      { text: { ko: '자신의 버너 지갑 주소를 복사하세요', en: 'Copy your burner wallet address' }, note: { ko: '자기 자신에게 보내는 연습입니다', en: 'This is practice sending to yourself' } },
+      { text: { ko: 'Send → USDC 선택 → 주소 입력 → 소액 전송', en: 'Send → Select USDC → Enter address → Send small amount' }, note: { ko: '$0.5 이하로 시작하세요', en: 'Start with less than $0.5' } },
+      { text: { ko: 'Solscan에서 전송 트랜잭션을 확인하세요', en: 'Verify transfer transaction on Solscan' }, link: 'https://solscan.io', note: { ko: '버너 지갑에 USDC가 도착하면 성공!', en: 'If USDC arrives in burner wallet, success!' } },
+    ],
+    safetyTips: {
+      ko: ['주소를 반드시 두 번 확인하세요.', '잘못된 주소로 보내면 되돌릴 수 없습니다.', '처음에는 소액으로 테스트하세요.'],
+      en: ['Always double-check the address.', 'Sending to wrong address is irreversible.', 'Test with small amounts first.'],
+    },
+  },
   {
     weekId: 2, id: 'solscan-tx', actionId: 'a2-1',
     title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' },
@@ -205,7 +226,7 @@ export const actionGuides = [
     },
   },
   {
-    weekId: 2, id: 'dyor-report', actionId: 'a2-2',
+    weekId: 3, id: 'dyor-report', actionId: 'a2-2',
     title: { ko: '의심 프로젝트 리서치 보고서 작성', en: 'Write a Research Report on Suspicious Projects' },
     subtitle: { ko: '약 20분 · 중급', en: '~20 min · Intermediate' },
     icon: 'file-text',
@@ -221,7 +242,7 @@ export const actionGuides = [
       en: ['Do not connect your wallet during research.', 'Do not click suspicious links.', 'This is analysis only — do not invest.'],
     },
   },
-  // Week 3 guides
+  // Week 3 guides (DYOR + DeFi)
   {
     weekId: 3, id: 'dex-swap', actionId: 'a3-1',
     title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' },
@@ -240,7 +261,7 @@ export const actionGuides = [
     },
   },
   {
-    weekId: 3, id: 'nft-mint', actionId: 'a3-2',
+    weekId: 4, id: 'nft-mint', actionId: 'a3-2',
     title: { ko: 'Metaplex Core로 NFT 민팅', en: 'Mint NFT with Metaplex Core' },
     subtitle: { ko: '약 15분 · 중급', en: '~15 min · Intermediate' },
     icon: 'paintbrush',
@@ -256,24 +277,7 @@ export const actionGuides = [
       en: ['Check minting cost (gas fee) in advance.', 'This is a practice NFT — don\'t expect value.', 'Always verify the official site URL.'],
     },
   },
-  // Week 4 guides
-  {
-    weekId: 4, id: 'stablecoin-transfer', actionId: 'a4-1',
-    title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' },
-    subtitle: { ko: '약 5분 · 초급', en: '~5 min · Beginner' },
-    icon: 'banknote',
-    description: { ko: 'USDC를 다른 지갑으로 전송해봅니다. 스테이블코인의 실제 사용법을 체험합니다.', en: 'Send USDC to another wallet. Experience how stablecoins are actually used.' },
-    steps: [
-      { text: { ko: 'Phantom에서 USDC 잔액을 확인하세요', en: 'Check your USDC balance in Phantom' }, note: { ko: 'Week 3 DEX 스왑에서 받은 USDC를 사용', en: 'Use USDC received from Week 3 DEX swap' } },
-      { text: { ko: '자신의 버너 지갑 주소를 복사하세요', en: 'Copy your burner wallet address' }, note: { ko: '자기 자신에게 보내는 연습입니다', en: 'This is practice sending to yourself' } },
-      { text: { ko: 'Send → USDC 선택 → 주소 입력 → 소액 전송', en: 'Send → Select USDC → Enter address → Send small amount' }, note: { ko: '$0.5 이하로 시작하세요', en: 'Start with less than $0.5' } },
-      { text: { ko: 'Solscan에서 전송 트랜잭션을 확인하세요', en: 'Verify transfer transaction on Solscan' }, link: 'https://solscan.io', note: { ko: '버너 지갑에 USDC가 도착하면 성공!', en: 'If USDC arrives in burner wallet, success!' } },
-    ],
-    safetyTips: {
-      ko: ['주소를 반드시 두 번 확인하세요.', '잘못된 주소로 보내면 되돌릴 수 없습니다.', '처음에는 소액으로 테스트하세요.'],
-      en: ['Always double-check the address.', 'Sending to wrong address is irreversible.', 'Test with small amounts first.'],
-    },
-  },
+  // Week 4 guides (NFT, cross-chain, staking)
   {
     weekId: 4, id: 'debridge', actionId: 'a4-2',
     title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' },
