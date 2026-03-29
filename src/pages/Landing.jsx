@@ -2,7 +2,6 @@ import Nav from '../components/landing/Nav'
 import Hero from '../components/landing/Hero'
 import Stats from '../components/landing/Stats'
 import WhySection from '../components/landing/WhySection'
-import SocialProof from '../components/landing/SocialProof'
 import Testimonials from '../components/landing/Testimonials'
 import Curriculum from '../components/landing/Curriculum'
 import InlineCTA from '../components/landing/InlineCTA'
@@ -18,7 +17,6 @@ export default function Landing() {
       <Nav />
       <Hero />
       <Stats />
-      <SocialProof />
       <WhySection />
       <Curriculum />
       <InlineCTA />

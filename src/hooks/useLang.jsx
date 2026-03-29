@@ -175,8 +175,6 @@ const translations = {
   'fomo.spots': { ko: '명 등록 완료', en: ' enrolled' },
   'fomo.limited': { ko: '선착순 마감 예정', en: 'Limited spots — closing soon' },
   'fomo.live': { ko: '지금 참여자가 학습 중', en: 'Learners active right now' },
-  'fomo.reward': { ko: '리워드 풀', en: 'Reward Pool' },
-  'fomo.partners': { ko: '파트너', en: 'Partners' },
 
   // Auth
   'auth.title': { ko: '로그인', en: 'Sign In' },
