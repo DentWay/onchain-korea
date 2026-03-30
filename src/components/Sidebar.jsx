@@ -42,7 +42,7 @@ export default function Sidebar({ onClose }) {
             <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded bg-accent/10 text-accent-soft uppercase tracking-wider">Beta</span>
           </div>
         </div>
-        <button onClick={onClose} aria-label="메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
+        <button onClick={onClose} aria-label="Close menu / 메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
           <X size={16} className="text-[var(--text-low)]" />
         </button>
       </div>

@@ -195,6 +195,12 @@ const translations = {
   'auth.hasAccount': { ko: '이미 계정이 있으신가요?', en: 'Already have an account?' },
   'auth.signOut': { ko: '로그아웃', en: 'Sign Out' },
 
+  // Error boundary
+  'error.title': { ko: '문제가 발생했습니다', en: 'Something went wrong' },
+  'error.desc': { ko: '페이지를 새로고침하거나 홈으로 돌아가주세요.', en: 'Please refresh the page or go back to home.' },
+  'error.refresh': { ko: '새로고침', en: 'Refresh' },
+  'error.home': { ko: '홈으로', en: 'Go Home' },
+
   // Footer
   'footer.based': { ko: 'Greed Academy 커리큘럼 기반', en: 'Based on Greed Academy Curriculum' },
 
