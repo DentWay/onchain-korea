@@ -65,6 +65,57 @@ export function AuthProvider({ children }) {
     return data
   }, [])
 
+  const signInWithKakao = useCallback(async () => {
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    })
+    if (error) throw error
+    return data
+  }, [])
+
+  const signInWithEthereum = useCallback(async () => {
+    if (!window.ethereum) throw new Error('no_ethereum_wallet')
+    const [address] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+    const nonce = crypto.randomUUID()
+    const message = `Sign in to Onchain Korea\nNonce: ${nonce}\nAddress: ${address}`
+    const signature = await window.ethereum.request({
+      method: 'personal_sign',
+      params: [message, address],
+    })
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.functions.invoke('wallet-auth', {
+      body: { provider: 'ethereum', address, message, signature },
+    })
+    if (error) throw error
+    if (data?.access_token) {
+      await supabase.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token })
+    }
+    return data
+  }, [])
+
+  const signInWithSolana = useCallback(async () => {
+    const provider = window.phantom?.solana || window.solana
+    if (!provider?.isPhantom) throw new Error('no_solana_wallet')
+    const resp = await provider.connect()
+    const address = resp.publicKey.toString()
+    const nonce = crypto.randomUUID()
+    const message = `Sign in to Onchain Korea\nNonce: ${nonce}\nAddress: ${address}`
+    const encoded = new TextEncoder().encode(message)
+    const { signature } = await provider.signMessage(encoded, 'utf8')
+    const sig = btoa(String.fromCharCode(...signature))
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.functions.invoke('wallet-auth', {
+      body: { provider: 'solana', address, message, signature: sig },
+    })
+    if (error) throw error
+    if (data?.access_token) {
+      await supabase.auth.setSession({ access_token: data.access_token, refresh_token: data.refresh_token })
+    }
+    return data
+  }, [])
+
   const signOut = useCallback(async () => {
     if (!supabase) return
     await supabase.auth.signOut()
@@ -73,7 +124,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signInWithEmail, signUpWithEmail, signInWithGoogle, signOut, supabaseEnabled: !!supabase }}>
+    <AuthContext.Provider value={{ user, profile, loading, signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithKakao, signInWithEthereum, signInWithSolana, signOut, supabaseEnabled: !!supabase }}>
       {children}
     </AuthContext.Provider>
   )
