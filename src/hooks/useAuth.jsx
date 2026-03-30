@@ -20,12 +20,18 @@ export function AuthProvider({ children }) {
       return
     }
 
+    let resolved = false
+    const done = () => { if (!resolved) { resolved = true; setLoading(false) } }
+
+    // Safety timeout — never spin longer than 3s
+    const timeout = setTimeout(done, 3000)
+
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user ?? null
       setUser(u)
       try { if (u) setProfile(await fetchProfile(u.id)) } catch {}
-      setLoading(false)
-    }).catch(() => setLoading(false))
+      done()
+    }).catch(done)
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user ?? null
@@ -34,7 +40,7 @@ export function AuthProvider({ children }) {
       if (!u) setProfile(null)
     })
 
-    return () => subscription.unsubscribe()
+    return () => { clearTimeout(timeout); subscription.unsubscribe() }
   }, [fetchProfile])
 
   const signInWithEmail = useCallback(async (email, password) => {
