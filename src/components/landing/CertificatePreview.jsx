@@ -7,7 +7,7 @@ import useLang from '../../hooks/useLang'
 export default function CertificatePreview() {
   const { t, lang } = useLang()
   const [name, setName] = useState('')
-  const displayName = name || (lang === 'ko' ? '홍길동' : 'Your Name')
+  const displayName = name || t('certprev.placeholder')
 
   return (
     <Section className="py-24 px-6">
@@ -25,7 +25,7 @@ export default function CertificatePreview() {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder={lang === 'ko' ? '이름을 입력하면 수료증을 미리 볼 수 있어요' : 'Enter your name to preview the certificate'}
+            placeholder={t('certprev.inputPlaceholder')}
             className="w-full max-w-sm px-4 py-2.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] text-[13px] text-[var(--text-high)] placeholder:text-[var(--text-low)] focus:outline-none focus:border-accent/40 transition-colors text-center"
           />
         </motion.div>
@@ -50,29 +50,27 @@ export default function CertificatePreview() {
             <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">Certificate of Completion</p>
             <p className="text-3xl md:text-4xl font-bold text-[var(--text-high)] mb-2 transition-all">{displayName}</p>
             <p className="text-[13px] text-[var(--text-mid)] mb-8 font-light">
-              {lang === 'ko'
-                ? '4주 블록체인 리터러시 과정을 성공적으로 수료하였습니다.'
-                : 'has successfully completed the 4-week Blockchain Literacy course.'}
+              {t('certprev.completionText')}
             </p>
 
             <div className="flex items-center gap-8 text-[11px] text-[var(--text-low)]">
               <div>
-                <p className="text-[9px] uppercase tracking-wider mb-0.5">{lang === 'ko' ? '커리큘럼' : 'Curriculum'}</p>
+                <p className="text-[9px] uppercase tracking-wider mb-0.5">{t('certprev.curriculum')}</p>
                 <p className="text-[var(--text-mid)] font-medium">Greed Academy</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider mb-0.5">{lang === 'ko' ? '검증' : 'Verified on'}</p>
+                <p className="text-[9px] uppercase tracking-wider mb-0.5">{t('certprev.verified')}</p>
                 <p className="text-[var(--text-mid)] font-medium">Solana Blockchain</p>
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-wider mb-0.5">{lang === 'ko' ? '실습' : 'Actions'}</p>
+                <p className="text-[9px] uppercase tracking-wider mb-0.5">{t('certprev.actions')}</p>
                 <p className="text-[var(--text-mid)] font-medium">10 On-chain</p>
               </div>
             </div>
 
             {/* Share mockup */}
             <div className="mt-8 pt-6 border-t border-[var(--border)] flex items-center gap-3">
-              <span className="text-[10px] text-[var(--text-low)]">{lang === 'ko' ? '공유하기' : 'Share'}</span>
+              <span className="text-[10px] text-[var(--text-low)]">{t('certprev.share')}</span>
               <div className="flex items-center gap-1.5">
                 <div className="w-7 h-7 rounded-full bg-[var(--surface-2)] flex items-center justify-center"><Linkedin size={13} className="text-[var(--text-low)]" /></div>
                 <div className="w-7 h-7 rounded-full bg-[var(--surface-2)] flex items-center justify-center"><Share2 size={13} className="text-[var(--text-low)]" /></div>

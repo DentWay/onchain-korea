@@ -81,7 +81,7 @@ export default function LessonDetail() {
                 className="rounded-xl bg-[var(--accent-surface)] border border-accent/10 p-6 mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <Lightbulb size={16} className="text-accent-soft" />
-                  <h3 className="text-[14px] font-semibold text-[var(--text-high)]">{lang === 'ko' ? '핵심 정리' : 'Key Takeaways'}</h3>
+                  <h3 className="text-[14px] font-semibold text-[var(--text-high)]">{t('lesson.keyTakeaways')}</h3>
                 </div>
                 <ul className="space-y-3">
                   {content.keyTakeaways.map((item, i) => (
@@ -98,12 +98,12 @@ export default function LessonDetail() {
             {lesson.mediumUrl && (
               <div className="flex items-center justify-between ok-card p-4 mb-6">
                 <div>
-                  <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-0.5">{lang === 'ko' ? '원문 출처' : 'Original Source'}</p>
+                  <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-0.5">{t('lesson.originalSource')}</p>
                   <p className="text-[12px] text-[var(--text-mid)]">Greed Academy — {greedArticles[lesson.source]?.title}</p>
                 </div>
                 <a href={lesson.mediumUrl} target="_blank" rel="noopener noreferrer"
                   className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5 shrink-0">
-                  {lang === 'ko' ? '원문 읽기' : 'Read Original'} <ExternalLink size={11} />
+                  {t('lesson.readOriginalShort')} <ExternalLink size={11} />
                 </a>
               </div>
             )}
@@ -133,7 +133,7 @@ export default function LessonDetail() {
             <Link to={`/lesson/${nextLesson.id}`}
               className="flex items-center justify-between w-full ok-card p-4 hover:bg-[var(--surface-2)] transition-colors group">
               <div>
-                <p className="text-[10px] text-[var(--text-low)] mb-0.5">{lang === 'ko' ? '다음 레슨' : 'Next Lesson'}</p>
+                <p className="text-[10px] text-[var(--text-low)] mb-0.5">{t('lesson.nextLesson')}</p>
                 <p className="text-[13px] text-[var(--text-high)] font-medium">{l(nextLesson.title, lang)}</p>
               </div>
               <ChevronRight size={16} className="text-[var(--text-low)] group-hover:text-accent-soft transition-colors" />

@@ -15,12 +15,12 @@ export default function Footer() {
               <span className="text-[13px] font-semibold text-[var(--text-mid)]">Onchain Korea</span>
             </div>
             <p className="text-[11px] text-[var(--text-low)] max-w-xs">
-              {lang === 'ko' ? '블록체인, 처음부터 안전하게. Greed Academy 커리큘럼 기반 무료 교육 프로그램.' : 'Blockchain, safely from the start. Free education based on Greed Academy curriculum.'}
+              {t('footer.desc')}
             </p>
           </div>
           <div className="flex gap-10">
             <div>
-              <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-2">{lang === 'ko' ? '프로그램' : 'Program'}</p>
+              <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-2">{t('footer.program')}</p>
               <div className="space-y-1.5">
                 <a href="#curriculum" className="block text-[12px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors">{t('nav.curriculum')}</a>
                 <a href="#features" className="block text-[12px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors">{t('nav.features')}</a>

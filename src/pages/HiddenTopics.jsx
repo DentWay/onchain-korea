@@ -40,7 +40,7 @@ export default function HiddenTopics() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] text-[var(--text-low)] uppercase tracking-wider font-medium">Week {week.id}</span>
-                      {isCurrent && !isRead && <span className="ok-tag ok-tag-accent">{lang === 'ko' ? '이번 주' : 'This week'}</span>}
+                      {isCurrent && !isRead && <span className="ok-tag ok-tag-accent">{t('hidden.thisWeek')}</span>}
                     </div>
                     {isRead && <span className="text-[10px] text-success flex items-center gap-1"><Check size={12} /> {t('hidden.complete')}</span>}
                   </div>
@@ -57,7 +57,7 @@ export default function HiddenTopics() {
                       <button onClick={() => toggle(week.id)}
                         className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5 flex items-center gap-1">
                         <ChevronDown size={13} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                        {isExpanded ? (lang === 'ko' ? '접기' : 'Collapse') : (lang === 'ko' ? '아티클 읽기' : 'Read Article')}
+                        {isExpanded ? t('hidden.collapse') : t('hidden.readArticle')}
                       </button>
                     )}
                     <button onClick={() => toggleHiddenTopic(week.id)}
@@ -90,7 +90,7 @@ export default function HiddenTopics() {
                           <div className="bg-[var(--accent-surface)] rounded-lg p-4 mt-4">
                             <div className="flex items-center gap-2 mb-2">
                               <Lightbulb size={14} className="text-accent-soft" />
-                              <h4 className="text-[12px] font-semibold text-[var(--text-high)]">{lang === 'ko' ? '핵심 정리' : 'Key Takeaways'}</h4>
+                              <h4 className="text-[12px] font-semibold text-[var(--text-high)]">{t('hidden.keyTakeaways')}</h4>
                             </div>
                             <ul className="space-y-1.5">
                               {content.keyTakeaways.map((item, j) => (

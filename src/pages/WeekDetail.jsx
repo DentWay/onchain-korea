@@ -42,7 +42,7 @@ export default function WeekDetail() {
               <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{progress}%</p>
             </div>
             <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${progress}%` }} /></div>
-            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedLessons}/{week.lessons.length} {lang === 'ko' ? '레슨 완료' : 'lessons done'}</p>
+            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedLessons}/{week.lessons.length} {t('week.lessonsDone')}</p>
           </div>
           <div className="ok-card p-4">
             <div className="flex items-center justify-between mb-2">
@@ -50,7 +50,7 @@ export default function WeekDetail() {
               <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{completedActions}/{week.actions.length}</p>
             </div>
             <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${week.actions.length > 0 ? (completedActions / week.actions.length * 100) : 0}%` }} /></div>
-            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedActions}/{week.actions.length} {lang === 'ko' ? '액션 인증' : 'actions verified'}</p>
+            <p className="text-[10px] text-[var(--text-low)] mt-2">{completedActions}/{week.actions.length} {t('week.actionsVerified')}</p>
           </div>
         </div>
 

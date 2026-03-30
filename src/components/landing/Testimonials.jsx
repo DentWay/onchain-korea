@@ -21,29 +21,29 @@ const testimonials = [
 ]
 
 export default function Testimonials() {
-  const { lang } = useLang()
+  const { t, lang } = useLang()
 
   return (
     <Section className="py-20 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <span className="ok-section-label">{lang === 'ko' ? '수강생 후기' : 'Testimonials'}</span>
+          <span className="ok-section-label">{t('testimonials.label')}</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-[var(--text-high)]">
-            {lang === 'ko' ? '먼저 시작한 분들의 이야기' : 'Stories from those who started first'}
+            {t('testimonials.title')}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {testimonials.map((t, i) => (
+          {testimonials.map((item, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }} className="ok-card p-6">
-              <p className="text-[13px] text-[var(--text-mid)] leading-relaxed mb-5">"{t.quote[lang] || t.quote.ko}"</p>
+              <p className="text-[13px] text-[var(--text-mid)] leading-relaxed mb-5">"{item.quote[lang] || item.quote.ko}"</p>
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-[var(--text-mid)]">{(t.name[lang] || t.name.ko)[0]}</span>
+                  <span className="text-[10px] font-bold text-[var(--text-mid)]">{(item.name[lang] || item.name.ko)[0]}</span>
                 </div>
                 <div>
-                  <p className="text-[12px] font-medium text-[var(--text-high)]">{t.name[lang] || t.name.ko}</p>
-                  <p className="text-[10px] text-[var(--text-low)]">{t.role[lang] || t.role.ko}</p>
+                  <p className="text-[12px] font-medium text-[var(--text-high)]">{item.name[lang] || item.name.ko}</p>
+                  <p className="text-[10px] text-[var(--text-low)]">{item.role[lang] || item.role.ko}</p>
                 </div>
               </div>
             </motion.div>

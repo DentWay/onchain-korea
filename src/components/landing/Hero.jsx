@@ -75,13 +75,13 @@ export default function Hero() {
           {/* Doubt remover */}
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
             className="text-[11px] text-[var(--text-low)]">
-            {lang === 'ko' ? '카드 정보 불필요 · 광고 없음 · 언제든 중단 가능' : 'No credit card · No ads · Quit anytime'}
+            {t('landing.noCard')}
           </motion.p>
 
           {/* Social proof */}
           {stats.total_users > 0 && (
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="text-[12px] text-[var(--text-low)]">
-              {lang === 'ko' ? `${stats.total_users}명이 이미 시작했습니다` : `${stats.total_users} have already started`}
+              {stats.total_users}{t('landing.socialProof')}
             </motion.p>
           )}
         </motion.div>

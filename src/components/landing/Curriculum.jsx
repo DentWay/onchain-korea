@@ -32,7 +32,7 @@ export default function Curriculum() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest">WEEK {week.num}</span>
-                    <span className="text-[9px] text-[var(--text-low)] ok-tabular-nums">{FAKE_PARTICIPANTS[i]}{lang === 'ko' ? '명 완료' : ' completed'}</span>
+                    <span className="text-[9px] text-[var(--text-low)] ok-tabular-nums">{FAKE_PARTICIPANTS[i]}{t('stats.completed')}</span>
                   </div>
                   <div className="w-9 h-9 rounded-lg bg-[var(--accent-surface)] flex items-center justify-center">
                     <Icon size={16} className="text-accent-soft" />

@@ -63,9 +63,9 @@ export default function Dashboard() {
         <div className="flex-1 w-full">
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: lang === 'ko' ? '레슨' : 'Lessons', value: `${completedLessons.length}/${totalLessons}`, sub: lang === 'ko' ? '완료' : 'done' },
-              { label: lang === 'ko' ? '액션' : 'Actions', value: `${completedActions.length}/${totalActions}`, sub: lang === 'ko' ? '인증' : 'verified' },
-              { label: lang === 'ko' ? '히든토픽' : 'Topics', value: `${readHiddenTopics.length}/4`, sub: lang === 'ko' ? '참여' : 'read' },
+              { label: t('dash.lessons'), value: `${completedLessons.length}/${totalLessons}`, sub: t('dash.doneSub') },
+              { label: t('dash.actions'), value: `${completedActions.length}/${totalActions}`, sub: t('dash.verified') },
+              { label: t('dash.topics'), value: `${readHiddenTopics.length}/4`, sub: t('dash.read') },
             ].map((s, i) => (
               <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05 }}
                 className="ok-card p-4 text-center">
@@ -81,7 +81,7 @@ export default function Dashboard() {
             className="mt-3 ok-card p-3 flex items-center gap-3">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1.5">
-                <p className="text-[10px] text-[var(--text-low)]">{lang === 'ko' ? '수료 조건' : 'Certificate'}</p>
+                <p className="text-[10px] text-[var(--text-low)]">{t('dash.certLabel')}</p>
                 <p className="text-[10px] text-[var(--text-low)] ok-tabular-nums">
                   {certificateStatus.lessonsComplete}/{certificateStatus.lessonsRequired} · {certificateStatus.actionsComplete}/{certificateStatus.actionsRequired} · {certificateStatus.hiddenTopicsRead}/{certificateStatus.hiddenTopicsRequired}
                 </p>
@@ -97,7 +97,7 @@ export default function Dashboard() {
       {/* Deadline + Hidden topic */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-10">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="ok-card p-4">
-          <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-2">{lang === 'ko' ? '학기 마감' : 'Semester Deadline'}</p>
+          <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider mb-2">{t('dash.semesterDeadline')}</p>
           <CountdownTimer targetDate={SEMESTER_DEADLINE} />
         </motion.div>
 
@@ -106,7 +106,7 @@ export default function Dashboard() {
             <Link to="/hidden" className="block ok-card p-4 border-accent/10 hover:border-accent/20 transition-colors h-full">
               <div className="flex items-center gap-2 mb-2">
                 <Flame size={13} className="text-accent-soft" />
-                <span className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{lang === 'ko' ? '이번 주 히든 토픽' : "This Week's Hidden Topic"}</span>
+                <span className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('dash.thisWeekHidden')}</span>
               </div>
               <p className="text-[13px] font-medium text-[var(--text-high)] leading-snug">{l(currentWeek.hiddenTopic.title, lang)}</p>
             </Link>

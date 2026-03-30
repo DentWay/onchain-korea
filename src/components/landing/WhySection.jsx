@@ -22,18 +22,18 @@ const pillars = [
 ]
 
 export default function WhySection() {
-  const { lang } = useLang()
+  const { t, lang } = useLang()
 
   return (
     <Section className="py-20 px-6" id="why">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <span className="ok-section-label">{lang === 'ko' ? 'WHY' : 'WHY'}</span>
+          <span className="ok-section-label">{t('why.label')}</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-[var(--text-high)]">
-            {lang === 'ko' ? '왜 Onchain Korea인가?' : 'Why Onchain Korea?'}
+            {t('why.title')}
           </h2>
           <p className="text-[15px] text-[var(--text-mid)] mt-3">
-            {lang === 'ko' ? '블록체인 교육, 아무거나 들으면 안 됩니다.' : 'Not all blockchain education is created equal.'}
+            {t('why.desc')}
           </p>
         </div>
 

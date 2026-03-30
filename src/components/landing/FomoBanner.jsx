@@ -8,7 +8,7 @@ import useLang from '../../hooks/useLang'
 const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 export default function FomoBanner({ onVisibilityChange }) {
-  const { lang } = useLang()
+  const { t, lang } = useLang()
   const { stats } = useStats()
   const [visible, setVisible] = useState(() => {
     try { return sessionStorage.getItem('ok-fomo-dismissed') !== 'true' } catch { return true }
@@ -28,9 +28,7 @@ export default function FomoBanner({ onVisibilityChange }) {
     <div className="fixed top-0 left-0 right-0 z-[60] bg-accent">
       <div className="max-w-5xl mx-auto px-4 h-9 flex items-center justify-between">
         <p className="text-[11px] text-white font-medium truncate flex-1">
-          {lang === 'ko'
-            ? `Semester 3 등록 중 — ${count > 0 ? `${count}/200명` : '200명 한정'} · 4월 30일 마감`
-            : `Semester 3 Open — ${count > 0 ? `${count}/200 spots` : '200 spots'} · Closes Apr 30`}
+          Semester 3 {t('fomo.text')} — {count > 0 ? `${count}/200${t('fomo.bannerSpots')}` : t('fomo.spotsLimit')} · {t('fomo.closes')}
         </p>
         <div className="hidden sm:flex items-center gap-3 shrink-0 ml-3">
           <CountdownTimer targetDate={SEMESTER_DEADLINE} compact />

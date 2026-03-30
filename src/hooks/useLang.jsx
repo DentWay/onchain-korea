@@ -35,6 +35,14 @@ const translations = {
   'dash.done': { ko: '완료 ✓', en: 'Done ✓' },
   'dash.current': { ko: '진행 중', en: 'In Progress' },
   'dash.thisWeekHidden': { ko: '이번 주 히든 토픽', en: "This Week's Hidden Topic" },
+  'dash.lessons': { ko: '레슨', en: 'Lessons' },
+  'dash.actions': { ko: '액션', en: 'Actions' },
+  'dash.topics': { ko: '히든토픽', en: 'Topics' },
+  'dash.doneSub': { ko: '완료', en: 'done' },
+  'dash.verified': { ko: '인증', en: 'verified' },
+  'dash.read': { ko: '참여', en: 'read' },
+  'dash.certLabel': { ko: '수료 조건', en: 'Certificate' },
+  'dash.semesterDeadline': { ko: '학기 마감', en: 'Semester Deadline' },
 
   // Week Detail
   'week.back': { ko: '대시보드', en: 'Dashboard' },
@@ -47,6 +55,8 @@ const translations = {
   'week.hiddenTopic': { ko: '히든 토픽', en: 'Hidden Topic' },
   'week.hotIssue': { ko: '이번 주 핫이슈', en: "This Week's Hot Issue" },
   'week.participating': { ko: '명 참여', en: ' participating' },
+  'week.lessonsDone': { ko: '레슨 완료', en: 'lessons done' },
+  'week.actionsVerified': { ko: '액션 인증', en: 'actions verified' },
 
   // Lesson Detail
   'lesson.preparing': { ko: '한국어 콘텐츠 준비 중', en: 'Korean content coming soon' },
@@ -54,6 +64,10 @@ const translations = {
   'lesson.readOriginal': { ko: 'Greed Academy 원문 읽기 (영어)', en: 'Read Original on Greed Academy' },
   'lesson.markComplete': { ko: '원문 읽기를 완료했다면 — 학습 완료로 표시', en: 'Mark as complete after reading' },
   'lesson.completed': { ko: '학습 완료됨 (클릭하면 취소)', en: 'Completed (click to undo)' },
+  'lesson.keyTakeaways': { ko: '핵심 정리', en: 'Key Takeaways' },
+  'lesson.originalSource': { ko: '원문 출처', en: 'Original Source' },
+  'lesson.readOriginalShort': { ko: '원문 읽기', en: 'Read Original' },
+  'lesson.nextLesson': { ko: '다음 레슨', en: 'Next Lesson' },
 
   // Action Guide
   'action.practice': { ko: '실습', en: 'Practice' },
@@ -76,6 +90,10 @@ const translations = {
   'hidden.readComplete': { ko: '읽기 완료 ✓', en: 'Read ✓' },
   'hidden.complete': { ko: '완료', en: 'Done' },
   'hidden.action': { ko: '액션', en: 'Action' },
+  'hidden.thisWeek': { ko: '이번 주', en: 'This week' },
+  'hidden.collapse': { ko: '접기', en: 'Collapse' },
+  'hidden.readArticle': { ko: '아티클 읽기', en: 'Read Article' },
+  'hidden.keyTakeaways': { ko: '핵심 정리', en: 'Key Takeaways' },
 
   // Certificate
   'cert.title': { ko: '수료증', en: 'Certificate' },
@@ -117,6 +135,18 @@ const translations = {
   'landing.finalTitle2': { ko: '온체인이 익숙해집니다', en: 'you\'ll feel at home on-chain' },
   'landing.finalDesc': { ko: '지갑 만들기부터 스테이킹까지. 완전 무료, 한국어로.', en: 'From wallet setup to staking. Completely free, in Korean.' },
   'landing.noSignup': { ko: '가입 없이 바로 시작할 수 있어요', en: 'No sign-up required — start right away' },
+  'landing.noCard': { ko: '카드 정보 불필요 · 광고 없음 · 언제든 중단 가능', en: 'No credit card · No ads · Quit anytime' },
+  'landing.socialProof': { ko: '명이 이미 시작했습니다', en: ' have already started' },
+  'landing.socialProofEnrolled': { ko: '명이 이미 등록했습니다', en: ' already enrolled' },
+  'landing.startNow': { ko: '지금 바로 시작할 수 있습니다', en: 'You can start right now' },
+  'landing.startNowSub': { ko: '카드 정보 불필요 · 4주 완성 · Solana 수료증', en: 'No credit card · 4 weeks · Solana certificate' },
+  'landing.startWeek1': { ko: 'Week 1 시작하기', en: 'Start Week 1' },
+  'landing.startFromWeek1': { ko: 'Week 1부터 시작하기', en: 'Start from Week 1' },
+  'landing.semesterCloses': { ko: 'Semester 3 마감까지', en: 'Semester 3 closes in' },
+  'landing.priceAnchor': { ko: '유사 블록체인 교육 과정 평균 50~200만원', en: 'Average blockchain course $400~$1,500' },
+  'landing.priceAnchorArrow': { ko: '→ Onchain Korea: ₩0', en: '→ Onchain Korea: $0' },
+  'landing.priceAnchorShort': { ko: '유사 교육 과정 50~200만원', en: 'Similar courses $400~$1,500' },
+  'landing.priceFree': { ko: '₩0 무료', en: '$0 Free' },
 
   // Stats
   'stats.weeks': { ko: '주', en: 'wk' },
@@ -130,6 +160,7 @@ const translations = {
   'stats.theoryPractice': { ko: '이론 + 실습', en: 'Theory + Practice' },
   'stats.handson': { ko: '직접 해보기', en: 'Hands-on' },
   'stats.noCost': { ko: '비용 없음', en: 'No cost' },
+  'stats.completed': { ko: '명 완료', en: ' completed' },
 
   // Curriculum cards (landing)
   'cur.w1.title': { ko: '지갑 + 보안', en: 'Wallets + Security' },
@@ -166,9 +197,38 @@ const translations = {
   'feat.community.tag': { ko: '네트워크', en: 'Network' },
 
   // Certificate preview (landing)
+  'certprev.placeholder': { ko: '홍길동', en: 'Your Name' },
+  'certprev.inputPlaceholder': { ko: '이름을 입력하면 수료증을 미리 볼 수 있어요', en: 'Enter your name to preview the certificate' },
+  'certprev.completionText': { ko: '4주 블록체인 리터러시 과정을 성공적으로 수료하였습니다.', en: 'has successfully completed the 4-week Blockchain Literacy course.' },
+  'certprev.curriculum': { ko: '커리큘럼', en: 'Curriculum' },
+  'certprev.verified': { ko: '검증', en: 'Verified on' },
+  'certprev.actions': { ko: '실습', en: 'Actions' },
+  'certprev.share': { ko: '공유하기', en: 'Share' },
   'certprev.solana': { ko: 'Solana 기반', en: 'Solana-based' },
   'certprev.permanent': { ko: '영구 기록', en: 'Permanent Record' },
   'certprev.linkedin': { ko: '링크드인 공유', en: 'LinkedIn Shareable' },
+
+  // Why Section
+  'why.label': { ko: 'WHY', en: 'WHY' },
+  'why.title': { ko: '왜 Onchain Korea인가?', en: 'Why Onchain Korea?' },
+  'why.desc': { ko: '블록체인 교육, 아무거나 들으면 안 됩니다.', en: 'Not all blockchain education is created equal.' },
+
+  // Testimonials
+  'testimonials.label': { ko: '수강생 후기', en: 'Testimonials' },
+  'testimonials.title': { ko: '먼저 시작한 분들의 이야기', en: 'Stories from those who started first' },
+
+  // FAQ
+  'faq.title': { ko: '자주 묻는 질문', en: 'FAQ' },
+
+  // Footer
+  'footer.program': { ko: '프로그램', en: 'Program' },
+  'footer.desc': { ko: '블록체인, 처음부터 안전하게. Greed Academy 커리큘럼 기반 무료 교육 프로그램.', en: 'Blockchain, safely from the start. Free education based on Greed Academy curriculum.' },
+
+  // Fomo Banner
+  'fomo.text': { ko: '등록 중', en: 'Open' },
+  'fomo.bannerSpots': { ko: '명', en: ' spots' },
+  'fomo.spotsLimit': { ko: '200명 한정', en: '200 spots' },
+  'fomo.closes': { ko: '4월 30일 마감', en: 'Closes Apr 30' },
 
   // FOMO
   'fomo.badge': { ko: 'Semester 3 사전 등록 중', en: 'Semester 3 Pre-registration Open' },
@@ -194,6 +254,13 @@ const translations = {
   'auth.noAccount': { ko: '계정이 없으신가요?', en: "Don't have an account?" },
   'auth.hasAccount': { ko: '이미 계정이 있으신가요?', en: 'Already have an account?' },
   'auth.signOut': { ko: '로그아웃', en: 'Sign Out' },
+  'auth.checkEmail': { ko: '이메일을 확인해주세요', en: 'Check your email' },
+  'auth.confirmEmailSent': { ko: '로 확인 메일을 보냈습니다. 링크를 클릭하면 가입이 완료됩니다.', en: '. Click the link to complete signup.' },
+  'auth.confirmEmailPrefix': { ko: '', en: 'We sent a confirmation email to ' },
+  'auth.backToSignIn': { ko: '로그인으로 돌아가기', en: 'Back to Sign In' },
+  'auth.backToHome': { ko: '홈으로', en: 'Back to Home' },
+  'auth.name': { ko: '이름', en: 'Name' },
+  'auth.processing': { ko: '처리 중...', en: 'Processing...' },
 
   // Error boundary
   'error.title': { ko: '문제가 발생했습니다', en: 'Something went wrong' },

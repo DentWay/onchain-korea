@@ -78,16 +78,14 @@ export default function Auth() {
             <Mail size={24} className="text-success" />
           </div>
           <h2 className="text-lg font-semibold text-[var(--text-high)] mb-2">
-            {lang === 'ko' ? '이메일을 확인해주세요' : 'Check your email'}
+            {t('auth.checkEmail')}
           </h2>
           <p className="text-[13px] text-[var(--text-mid)] mb-4">
-            {lang === 'ko'
-              ? `${email}로 확인 메일을 보냈습니다. 링크를 클릭하면 가입이 완료됩니다.`
-              : `We sent a confirmation email to ${email}. Click the link to complete signup.`}
+            {t('auth.confirmEmailPrefix')}{email}{t('auth.confirmEmailSent')}
           </p>
           <button onClick={() => { setSignupDone(false); setMode('signin') }}
             className="ok-btn ok-btn-ghost text-[13px] px-4 py-2">
-            {lang === 'ko' ? '로그인으로 돌아가기' : 'Back to Sign In'}
+            {t('auth.backToSignIn')}
           </button>
         </motion.div>
       </div>
@@ -99,7 +97,7 @@ export default function Auth() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm w-full">
         <Link to="/" className="flex items-center gap-2 text-[12px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors mb-6">
           <ArrowLeft size={14} />
-          {lang === 'ko' ? '홈으로' : 'Back to Home'}
+          {t('auth.backToHome')}
         </Link>
 
         <div className="flex items-center gap-2.5 mb-6">
@@ -180,7 +178,7 @@ export default function Auth() {
                   <div className="relative">
                     <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-low)]" />
                     <input type="text" value={name} onChange={e => setName(e.target.value)}
-                      placeholder={lang === 'ko' ? '이름' : 'Name'}
+                      placeholder={t('auth.name')}
                       className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-[13px] text-[var(--text-high)] placeholder:text-[var(--text-low)] focus:outline-none focus:border-accent/50 transition-colors" />
                   </div>
                 )}
@@ -199,7 +197,7 @@ export default function Auth() {
                 <button type="submit" disabled={submitting}
                   className="w-full ok-btn ok-btn-primary py-2.5 text-[13px] disabled:opacity-50">
                   {submitting
-                    ? (lang === 'ko' ? '처리 중...' : 'Processing...')
+                    ? t('auth.processing')
                     : mode === 'signin' ? t('auth.title') : t('auth.signup')}
                 </button>
               </form>

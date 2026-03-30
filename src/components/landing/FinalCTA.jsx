@@ -23,7 +23,7 @@ export default function FinalCTA() {
       <div className="relative max-w-xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8">
           <p className="text-[11px] text-[var(--text-low)] uppercase tracking-wider mb-3">
-            {lang === 'ko' ? 'Semester 3 마감까지' : 'Semester 3 closes in'}
+            {t('landing.semesterCloses')}
           </p>
           <div className="flex justify-center"><CountdownTimer targetDate={SEMESTER_DEADLINE} /></div>
         </motion.div>
@@ -37,27 +37,27 @@ export default function FinalCTA() {
         {/* Price anchoring */}
         <div className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--surface-1)] border border-[var(--border)]">
           <span className="text-[13px] text-[var(--text-low)] line-through">
-            {lang === 'ko' ? '유사 교육 과정 50~200만원' : 'Similar courses $400~$1,500'}
+            {t('landing.priceAnchorShort')}
           </span>
           <span className="text-[14px] font-bold text-success">
-            {lang === 'ko' ? '₩0 무료' : '$0 Free'}
+            {t('landing.priceFree')}
           </span>
         </div>
 
         <div className="mt-8">
           <Link to={startLink} className="group ok-btn ok-btn-primary px-9 py-4 text-[16px]">
-            {lang === 'ko' ? 'Week 1부터 시작하기' : 'Start from Week 1'}
+            {t('landing.startFromWeek1')}
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
         {stats.total_users > 0 && (
           <p className="mt-4 text-[12px] text-[var(--text-low)]">
-            {lang === 'ko' ? `${stats.total_users}명이 이미 등록했습니다` : `${stats.total_users} already enrolled`}
+            {stats.total_users}{t('landing.socialProofEnrolled')}
           </p>
         )}
         <p className="mt-2 text-[11px] text-[var(--text-low)]">
-          {lang === 'ko' ? '카드 정보 불필요 · 광고 없음 · 언제든 중단 가능' : 'No credit card · No ads · Quit anytime'}
+          {t('landing.noCard')}
         </p>
       </div>
     </Section>

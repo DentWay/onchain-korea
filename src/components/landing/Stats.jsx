@@ -19,8 +19,8 @@ export default function Stats() {
         {/* Price anchor */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-8">
           <p className="text-[12px] text-[var(--text-low)]">
-            <span className="line-through">{lang === 'ko' ? '유사 블록체인 교육 과정 평균 50~200만원' : 'Average blockchain course $400~$1,500'}</span>
-            <span className="ml-2 text-success font-semibold">{lang === 'ko' ? '→ Onchain Korea: ₩0' : '→ Onchain Korea: $0'}</span>
+            <span className="line-through">{t('landing.priceAnchor')}</span>
+            <span className="ml-2 text-success font-semibold">{t('landing.priceAnchorArrow')}</span>
           </p>
         </motion.div>
 

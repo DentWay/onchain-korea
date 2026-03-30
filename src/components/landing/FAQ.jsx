@@ -32,7 +32,7 @@ const faqs = [
 ]
 
 export default function FAQ() {
-  const { lang } = useLang()
+  const { t, lang } = useLang()
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
@@ -40,7 +40,7 @@ export default function FAQ() {
       <div className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-high)]">
-            {lang === 'ko' ? '자주 묻는 질문' : 'FAQ'}
+            {t('faq.title')}
           </h2>
         </motion.div>
 
