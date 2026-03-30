@@ -23,15 +23,15 @@ export function AuthProvider({ children }) {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       const u = session?.user ?? null
       setUser(u)
-      if (u) setProfile(await fetchProfile(u.id))
+      try { if (u) setProfile(await fetchProfile(u.id)) } catch {}
       setLoading(false)
-    })
+    }).catch(() => setLoading(false))
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const u = session?.user ?? null
       setUser(u)
-      if (u) setProfile(await fetchProfile(u.id))
-      else setProfile(null)
+      try { if (u) setProfile(await fetchProfile(u.id)) } catch {}
+      if (!u) setProfile(null)
     })
 
     return () => subscription.unsubscribe()
