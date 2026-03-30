@@ -6,7 +6,7 @@ import useLang from '../hooks/useLang'
 
 export default function Certificate() {
   const { certificateStatus } = useProgress()
-  const { t, lang } = useLang()
+  const { t } = useLang()
   const { eligible, lessonsComplete, lessonsRequired, lessonsEligible, actionsComplete, actionsRequired, actionsEligible, hiddenTopicsRead, hiddenTopicsRequired, hiddenTopicsEligible } = certificateStatus
 
   const requirements = [
@@ -15,7 +15,7 @@ export default function Certificate() {
     { text: `${hiddenTopicsRequired}${t('cert.hidden2')}`, current: hiddenTopicsRead, total: hiddenTopicsRequired, done: hiddenTopicsEligible },
   ]
 
-  const shareText = encodeURIComponent(lang === 'ko' ? 'Onchain Korea 4주 블록체인 교육 수료! 온체인 인증 완료.' : 'Completed Onchain Korea 4-week blockchain program! On-chain verified.')
+  const shareText = encodeURIComponent(t('cert.shareText'))
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -53,22 +53,22 @@ export default function Certificate() {
         <p className="text-[12px] text-[var(--text-mid)] mb-2">{eligible ? t('cert.issued') : t('cert.preview')}</p>
         <div className={`ok-card overflow-hidden ${!eligible ? 'opacity-40' : ''}`}>
           <div className="bg-[var(--surface-1)] p-8 text-center">
-            <p className="text-[9px] uppercase tracking-[3px] text-[var(--text-low)]">Certificate of completion</p>
+            <p className="text-[9px] uppercase tracking-[3px] text-[var(--text-low)]">{t('cert.certificateOfCompletion')}</p>
             <p className="text-2xl font-semibold mt-2 tracking-tight text-[var(--text-high)]">Onchain Korea</p>
-            <p className="text-[12px] text-[var(--text-mid)] mt-1">Blockchain Literacy & Safety Program</p>
+            <p className="text-[12px] text-[var(--text-mid)] mt-1">{t('cert.programSubtitle')}</p>
             <div className="border-t border-[var(--border)] mt-5 pt-5">
-              <p className="text-[11px] text-[var(--text-low)]">has successfully completed the 4-week program</p>
+              <p className="text-[11px] text-[var(--text-low)]">{t('cert.completionStatement')}</p>
             </div>
             <div className={`inline-block mt-4 px-4 py-1.5 border rounded-full text-[11px] ${eligible ? 'border-success/50 text-success' : 'border-[var(--border)] text-[var(--text-low)]'}`}>
-              {eligible ? '✅ On-chain verified' : '🔗 On-chain verified'}
+              {eligible ? `✅ ${t('cert.onchainVerified')}` : `🔗 ${t('cert.onchainVerified')}`}
             </div>
-            <p className="text-[9px] text-[var(--text-low)] mt-4">Powered by Greed Academy × Elixi Venture Studio Group</p>
+            <p className="text-[9px] text-[var(--text-low)] mt-4">{t('cert.poweredBy')}</p>
           </div>
         </div>
 
         {eligible && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex items-center justify-center gap-3 mt-5">
-            <span className="text-[11px] text-[var(--text-low)] flex items-center gap-1"><Share2 size={12} /> {lang === 'ko' ? '공유하기' : 'Share'}</span>
+            <span className="text-[11px] text-[var(--text-low)] flex items-center gap-1"><Share2 size={12} /> {t('cert.share')}</span>
             <a href={`https://twitter.com/intent/tweet?text=${shareText}`} target="_blank" rel="noopener noreferrer" className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5">Twitter / X</a>
             <a href={`https://www.linkedin.com/sharing/share-offsite/?text=${shareText}`} target="_blank" rel="noopener noreferrer" className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5">LinkedIn</a>
           </motion.div>

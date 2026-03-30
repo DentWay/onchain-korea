@@ -29,7 +29,7 @@ export default function ActionGuide() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-lg font-semibold text-[var(--text-high)]">{t('action.practice')}: {l(guide.title, lang)}</h1>
-          <Link to={`/week/${guide.weekId}`} className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> Week {guide.weekId}</Link>
+          <Link to={`/week/${guide.weekId}`} className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> {t('common.week')} {guide.weekId}</Link>
         </div>
 
         <div className="ok-card p-5 mb-4">

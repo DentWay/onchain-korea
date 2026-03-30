@@ -37,9 +37,9 @@ export default function LessonDetail() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-low)] mb-8">
-          <Link to="/dashboard" className="hover:text-[var(--text-mid)] transition-colors">Dashboard</Link>
+          <Link to="/dashboard" className="hover:text-[var(--text-mid)] transition-colors">{t('breadcrumb.dashboard')}</Link>
           <ChevronRight size={10} />
-          <Link to={`/week/${lesson.weekId}`} className="hover:text-[var(--text-mid)] transition-colors">Week {lesson.weekId}</Link>
+          <Link to={`/week/${lesson.weekId}`} className="hover:text-[var(--text-mid)] transition-colors">{t('common.week')} {lesson.weekId}</Link>
           <ChevronRight size={10} />
           <span className="text-[var(--text-mid)]">{l(lesson.title, lang).split(' — ')[0]}</span>
         </div>

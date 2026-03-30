@@ -73,7 +73,7 @@ export default function Sidebar({ onClose }) {
             <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{overallProgress}%</p>
           </div>
           <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${overallProgress}%` }} /></div>
-          <p className="text-[9px] text-[var(--text-low)] mt-1.5">Week {activeWeek} {t('sidebar.weekProgress')}</p>
+          <p className="text-[9px] text-[var(--text-low)] mt-1.5">{t('common.week')} {activeWeek} {t('sidebar.weekProgress')}</p>
         </div>
         {supabaseEnabled && user && (
           <div className="px-2.5 pt-2 mt-1 border-t border-[var(--border)] flex items-center justify-between">

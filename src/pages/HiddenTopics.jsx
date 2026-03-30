@@ -39,7 +39,7 @@ export default function HiddenTopics() {
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-[var(--text-low)] uppercase tracking-wider font-medium">Week {week.id}</span>
+                      <span className="text-[9px] text-[var(--text-low)] uppercase tracking-wider font-medium">{t('common.week')} {week.id}</span>
                       {isCurrent && !isRead && <span className="ok-tag ok-tag-accent">{t('hidden.thisWeek')}</span>}
                     </div>
                     {isRead && <span className="text-[10px] text-success flex items-center gap-1"><Check size={12} /> {t('hidden.complete')}</span>}

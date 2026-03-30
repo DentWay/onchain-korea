@@ -29,7 +29,7 @@ export default function WeekDetail() {
         </div>
 
         <div className="mb-8">
-          <p className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase mb-2">Week {week.id}</p>
+          <p className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase mb-2">{t('common.week')} {week.id}</p>
           <h1 className="text-xl font-bold text-[var(--text-high)] mb-1">{l(week.title, lang)}</h1>
           <p className="text-[12px] text-[var(--text-mid)]">{l(week.subtitle, lang)}</p>
         </div>

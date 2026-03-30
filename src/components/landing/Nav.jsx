@@ -6,7 +6,7 @@ import useAuth from '../../hooks/useAuth'
 import useLang from '../../hooks/useLang'
 
 export default function Nav() {
-  const { t, lang } = useLang()
+  const { t } = useLang()
   const { user, supabaseEnabled } = useAuth()
   const startLink = supabaseEnabled && !user ? '/auth' : '/dashboard'
   const [bannerVisible, setBannerVisible] = useState(true)
@@ -25,7 +25,7 @@ export default function Nav() {
             <div className="hidden sm:flex items-center gap-1.5 ml-3">
               <div className="w-1.5 h-1.5 rounded-full bg-success ok-pulse-dot" />
               <span className="text-[10px] text-[var(--text-low)]">
-                {lang === 'ko' ? '학습 진행 중' : 'Live'}
+                {t('nav.live')}
               </span>
             </div>
           </div>

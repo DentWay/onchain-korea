@@ -4,7 +4,7 @@ import useLang from '../hooks/useLang'
 function pad(n) { return String(n).padStart(2, '0') }
 
 export default function CountdownTimer({ targetDate, compact = false }) {
-  const { lang } = useLang()
+  const { t } = useLang()
   const [time, setTime] = useState(getTimeLeft(targetDate))
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function CountdownTimer({ targetDate, compact = false }) {
   if (time.total <= 0) {
     return (
       <span className="text-[12px] text-white/40 font-medium">
-        {lang === 'ko' ? '마감됨' : 'Closed'}
+        {t('countdown.closed')}
       </span>
     )
   }
@@ -33,10 +33,10 @@ export default function CountdownTimer({ targetDate, compact = false }) {
   }
 
   const units = [
-    { value: time.days, label: lang === 'ko' ? '일' : 'Days' },
-    { value: pad(time.hours), label: lang === 'ko' ? '시간' : 'Hrs' },
-    { value: pad(time.minutes), label: lang === 'ko' ? '분' : 'Min' },
-    { value: pad(time.seconds), label: lang === 'ko' ? '초' : 'Sec' },
+    { value: time.days, label: t('countdown.days') },
+    { value: pad(time.hours), label: t('countdown.hours') },
+    { value: pad(time.minutes), label: t('countdown.minutes') },
+    { value: pad(time.seconds), label: t('countdown.seconds') },
   ]
 
   return (

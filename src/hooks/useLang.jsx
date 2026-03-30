@@ -271,6 +271,31 @@ const translations = {
   // Footer
   'footer.based': { ko: 'Greed Academy 커리큘럼 기반', en: 'Based on Greed Academy Curriculum' },
 
+  // Common
+  'common.week': { ko: '주차', en: 'Week' },
+
+  // CountdownTimer
+  'countdown.closed': { ko: '마감됨', en: 'Closed' },
+  'countdown.days': { ko: '일', en: 'Days' },
+  'countdown.hours': { ko: '시간', en: 'Hrs' },
+  'countdown.minutes': { ko: '분', en: 'Min' },
+  'countdown.seconds': { ko: '초', en: 'Sec' },
+
+  // Certificate (certificate card text)
+  'cert.certificateOfCompletion': { ko: '수료 인증서', en: 'Certificate of completion' },
+  'cert.programSubtitle': { ko: '블록체인 리터러시 & 안전 프로그램', en: 'Blockchain Literacy & Safety Program' },
+  'cert.completionStatement': { ko: '4주 프로그램을 성공적으로 수료하였습니다', en: 'has successfully completed the 4-week program' },
+  'cert.onchainVerified': { ko: '온체인 인증 완료', en: 'On-chain verified' },
+  'cert.poweredBy': { ko: 'Powered by Greed Academy × Elixi Venture Studio Group', en: 'Powered by Greed Academy × Elixi Venture Studio Group' },
+  'cert.share': { ko: '공유하기', en: 'Share' },
+  'cert.shareText': { ko: 'Onchain Korea 4주 블록체인 교육 수료! 온체인 인증 완료.', en: 'Completed Onchain Korea 4-week blockchain program! On-chain verified.' },
+
+  // Nav (landing)
+  'nav.live': { ko: '학습 진행 중', en: 'Live' },
+
+  // Breadcrumb
+  'breadcrumb.dashboard': { ko: '대시보드', en: 'Dashboard' },
+
   // Community channels
   'ch.kakao.title': { ko: '카카오톡 오픈채팅', en: 'KakaoTalk Open Chat' },
   'ch.kakao.desc': { ko: '실시간 질문, 이번 주 수업 논의, 스터디 모집', en: 'Live Q&A, weekly lesson discussion, study group recruitment' },

@@ -11,6 +11,7 @@ import CountdownTimer from '../components/CountdownTimer'
 const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 function WeekCard({ week, progress, lang, index, locked }) {
+  const { t } = useLang()
   const isDone = progress >= 100
   const isStarted = progress > 0
 
@@ -18,7 +19,7 @@ function WeekCard({ week, progress, lang, index, locked }) {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + index * 0.08 }}>
       <div className={`ok-card p-5 h-full ${locked ? 'opacity-40' : ''} ${isDone ? 'border-success/15' : isStarted ? 'border-accent/15' : ''}`}>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase">Week {week.id}</span>
+          <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase">{t('common.week')} {week.id}</span>
           {locked && <Lock size={13} className="text-[var(--text-low)]" />}
           {isDone && <span className="ok-tag ok-tag-done">Done</span>}
           {isStarted && !isDone && <span className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{progress}%</span>}
