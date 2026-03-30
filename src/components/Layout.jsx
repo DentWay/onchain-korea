@@ -26,17 +26,18 @@ export default function Layout() {
           <Link to="/" className="text-[13px] font-semibold flex items-center gap-1.5">Onchain Korea <span className="text-[8px] font-semibold px-1 py-0.5 rounded bg-accent/10 text-accent-soft uppercase tracking-wider">Beta</span></Link>
           <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
         </div>
-        <div className="hidden md:flex fixed top-3 right-6 z-40 items-center gap-3">
+        <div className="hidden md:flex fixed top-3 right-6 z-40 items-center gap-2 bg-[var(--surface-1)]/80 backdrop-blur-xl border border-[var(--border)] rounded-lg px-3 py-1.5">
           {supabaseEnabled && user && (
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-[var(--text-low)]">{displayName}</span>
-              <button onClick={signOut} className="flex items-center gap-1 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors px-2 py-1 rounded-md hover:bg-[var(--surface-2)]">
-                <LogOut size={12} />
-                {t('auth.signOut')}
+            <>
+              <span className="text-[11px] text-[var(--text-mid)] font-medium">{displayName}</span>
+              <div className="w-px h-3.5 bg-[var(--border)]" />
+              <button onClick={signOut} className="flex items-center gap-1 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors">
+                <LogOut size={11} />
               </button>
-            </div>
+              <div className="w-px h-3.5 bg-[var(--border)]" />
+            </>
           )}
-          <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)]" />
+          <LangToggle className="text-[var(--text-mid)] hover:text-[var(--text-high)] text-[11px]" />
         </div>
         <div className="p-4 md:p-6 ok-page-enter"><Outlet /></div>
       </main>

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, MessageCircle, Bell, Flame, BookOpen } from 'lucide-react'
 import useLang from '../hooks/useLang'
 import useStats from '../hooks/useStats'
-import ActivityFeed from '../components/ActivityFeed'
 
 export default function Community() {
   const { t, lang } = useLang()
@@ -63,10 +62,6 @@ export default function Community() {
                 </div>
               ))}
             </div>
-          </div>
-          <div>
-            <h2 className="text-sm font-semibold text-[var(--text-high)] mb-2">{t('community.recentActivity')}</h2>
-            <div className="ok-card p-3"><ActivityFeed maxItems={4} /></div>
           </div>
         </div>
       </motion.div>

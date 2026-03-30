@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './hooks/useAuth'
 import { ProgressProvider } from './hooks/useProgress'
 import { LangProvider } from './hooks/useLang'
-import { FomoToastProvider } from './components/FomoToast'
 import ErrorBoundary from './components/ErrorBoundary'
 import App from './App'
 import './index.css'
@@ -16,9 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <LangProvider>
           <AuthProvider>
             <ProgressProvider>
-              <FomoToastProvider>
-                <App />
-              </FomoToastProvider>
+              <App />
             </ProgressProvider>
           </AuthProvider>
         </LangProvider>
