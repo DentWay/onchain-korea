@@ -2,6 +2,7 @@
 export const greedArticles = {
   'S1-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-staking-and-validators-378beb4b3624', title: 'Staking and Validators' },
   'S1-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-governance-4e6f42381104', title: 'Governance' },
+  'S1-L3': { url: 'https://medium.com/@GreedAcademy/lesson-3-defi-72fdd4a15a8b', title: 'DeFi (S1)' },
   'S1-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-hype-6b5911ae077b', title: 'Hype' },
   'S1-L5': { url: 'https://medium.com/@GreedAcademy/lesson-5-wallets-533940862aa6', title: 'Wallets' },
   'S1-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-nfts-5d6d968b0ffe', title: 'NFTs' },
@@ -9,28 +10,34 @@ export const greedArticles = {
   'S1-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-dyor-part-2-8f491539bdbd', title: 'DYOR Part 2' },
   'S2-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-wallets-and-wallet-hygiene-8eaf26a62269', title: 'Wallets & Wallet Hygiene' },
   'S2-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-digital-assets-b325f0fcc0a1', title: 'Digital Assets' },
+  'S2-L3': { url: 'https://medium.com/@GreedAcademy/governance-623612c5707d', title: 'Governance and DAOs' },
   'S2-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-defi-29f03eb73f00', title: 'DeFi' },
+  'S2-L5': { url: 'https://medium.com/@GreedAcademy/lesson-5-perpetual-futures-trading-3e63b4491510', title: 'Perpetual Futures Trading' },
   'S2-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-onchain-explorers-bc61de7d3250', title: 'Onchain Explorers' },
   'S2-L7': { url: 'https://medium.com/@GreedAcademy/lesson-7-stablecoins-22ef6be6c003', title: 'Stablecoins' },
   'S2-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-cross-chain-and-bridging-7af924e1016d', title: 'Cross-chain & Bridging' },
+  'TK-1': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-1-9fb892c64878', title: 'Intro to Tokens 1' },
+  'TK-2': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-2-3d2483a65e94', title: 'Intro to Tokens 2' },
+  'TK-4': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-4-905f1b7a0145', title: 'Intro to Tokens 4' },
+  'TK-B': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-bonus-lesson-bca2a358917e', title: 'Create Your Own Token' },
+  'DF-1': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-1-d232b521577d', title: 'Intro to DeFi 1' },
+  'DF-3': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-3-f693ae3b8d20', title: 'Intro to DeFi 3' },
+  'DF-4': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-4-219598c22cf1', title: 'Intro to DeFi 4' },
 }
 
 export const weeks = [
-  // ── Week 1: 크립토 기초 + 지갑 설정 ──
+  // ── Week 1: 처음 시작하기 ──
   {
     id: 1,
-    title: { ko: '크립토 기초 + 지갑 설정', en: 'Crypto Basics + Wallet Setup' },
-    subtitle: { ko: '거래소에서 온체인으로 · 지갑 · 시드 문구 · 버너 지갑 · 보안', en: 'From Exchange to On-chain · Wallets · Seed Phrases · Burner · Security' },
+    title: { ko: '처음 시작하기', en: 'Getting Started' },
+    subtitle: { ko: '크립토란 무엇인가 · 거래소에서 온체인으로 · 지갑 기초', en: 'What is Crypto · From Exchange to On-chain · Wallet Basics' },
     lessons: [
       { id: 'w1-0', title: { ko: '한국 거래소에서 온체인으로 — 업비트에서 시작해서 지갑까지', en: 'From Korean Exchange to On-chain — Starting from Upbit to Your Wallet' }, source: null, type: 'read', mediumUrl: null },
       { id: 'w1-1', title: { ko: '지갑이란? — 주소, 프라이빗 키, 시드 문구 이해', en: 'What is a Wallet? — Addresses, Private Keys, Seed Phrases' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
       { id: 'w1-2', title: { ko: '지갑 클라이언트 비교 — Phantom, Solflare, Backpack', en: 'Comparing Wallet Clients — Phantom, Solflare, Backpack' }, source: 'S1-L5', type: 'read', mediumUrl: greedArticles['S1-L5'].url },
-      { id: 'w1-4', title: { ko: '버너 지갑 만들기 — 가장 안전한 온체인 습관', en: 'Creating a Burner Wallet — The Safest On-chain Habit' }, source: 'S2-L1', type: 'practice', mediumUrl: greedArticles['S2-L1'].url },
-      { id: 'w1-5', title: { ko: '키 관리 & 보안 베스트 프랙티스', en: 'Key Management & Security Best Practices' }, source: 'S2-L1', type: 'security', mediumUrl: greedArticles['S2-L1'].url },
     ],
     actions: [
       { id: 'a1-1', title: { ko: 'Phantom 지갑 설치 + 생성', en: 'Install + Create Phantom Wallet' }, guideId: 'phantom-setup' },
-      { id: 'a1-2', title: { ko: 'Solflare 버너 지갑 만들기 + 비우기', en: 'Create + Empty Solflare Burner Wallet' }, guideId: 'burner-wallet' },
       { id: 'a1-3', title: { ko: '시드 문구 안전 보관 실습', en: 'Seed Phrase Safe Storage Practice' }, guideId: 'seed-backup' },
     ],
     hiddenTopic: {
@@ -41,20 +48,82 @@ export const weeks = [
       forumCount: 23,
     },
   },
-  // ── Week 2: 스테이블코인 + 온체인 탐색 ──
+  // ── Week 2: 지갑 보안 ──
   {
     id: 2,
-    title: { ko: '스테이블코인 + 온체인 탐색', en: 'Stablecoins + On-chain Exploration' },
-    subtitle: { ko: 'USDT/USDC/DAI · 토큰 스탠다드 · 블록 탐색기 · 온체인 분석', en: 'USDT/USDC/DAI · Token Standards · Block Explorers · On-chain Analysis' },
+    title: { ko: '지갑 보안', en: 'Wallet Security' },
+    subtitle: { ko: '버너 지갑 · 키 관리 · 보안 베스트 프랙티스', en: 'Burner Wallets · Key Management · Security Best Practices' },
     lessons: [
-      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: greedArticles['S2-L7'].url },
-      { id: 'w3-3', title: { ko: '디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'S2-L2', type: 'read', mediumUrl: greedArticles['S2-L2'].url },
-      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
-      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w1-4', title: { ko: '버너 지갑 만들기 — 가장 안전한 온체인 습관', en: 'Creating a Burner Wallet — The Safest On-chain Habit' }, source: 'S2-L1', type: 'practice', mediumUrl: greedArticles['S2-L1'].url },
+      { id: 'w1-5', title: { ko: '키 관리 & 보안 베스트 프랙티스', en: 'Key Management & Security Best Practices' }, source: 'S2-L1', type: 'security', mediumUrl: greedArticles['S2-L1'].url },
+      { id: 'w2-0', title: { ko: '지갑 위생 관리 — 서명 요청, 권한 해제, 피싱 방지', en: 'Wallet Hygiene — Signature Requests, Revoking Permissions, Anti-Phishing' }, source: 'S2-L1', type: 'security', mediumUrl: greedArticles['S2-L1'].url },
     ],
     actions: [
-      { id: 'a4-1', title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' }, guideId: 'stablecoin-transfer' },
+      { id: 'a1-2', title: { ko: 'Solflare 버너 지갑 만들기 + 비우기', en: 'Create + Empty Solflare Burner Wallet' }, guideId: 'burner-wallet' },
+    ],
+    hiddenTopic: {
+      title: { ko: '크립토 해킹 사례 분석 — 실제 피해에서 배우는 보안', en: 'Crypto Hack Case Studies — Learning Security from Real Losses' },
+      desc: { ko: '실제 지갑 해킹 사례를 분석하고, 내 자산을 지키는 방법을 배웁니다.', en: 'Analyze real wallet hack cases and learn how to protect your assets.' },
+      readTime: { ko: '12분 읽기', en: '12 min read' },
+      action: { ko: '내 지갑 보안 점검', en: 'Audit My Wallet Security' },
+      forumCount: 0,
+    },
+  },
+  // ── Week 3: 토큰 ──
+  {
+    id: 3,
+    title: { ko: '토큰', en: 'Tokens' },
+    subtitle: { ko: '디지털 에셋 · 토큰 스탠다드 · SPL · ERC-20 · 토큰 이코노미', en: 'Digital Assets · Token Standards · SPL · ERC-20 · Tokenomics' },
+    lessons: [
+      { id: 'w3-t1', title: { ko: '토큰이란? — 디지털 에셋 & 토큰 스탠다드 (SPL, ERC-20)', en: 'What are Tokens? — Digital Assets & Token Standards (SPL, ERC-20)' }, source: 'TK-1', type: 'read', mediumUrl: greedArticles['TK-1'].url },
+      { id: 'w3-t2', title: { ko: '토큰 이코노미 — 공급, 분배, 가치 구조', en: 'Tokenomics — Supply, Distribution, Value Structure' }, source: 'TK-2', type: 'read', mediumUrl: greedArticles['TK-2'].url },
+      { id: 'w3-t3', title: { ko: '나만의 토큰 만들기 — SPL 토큰 실습', en: 'Create Your Own Token — SPL Token Practice' }, source: 'TK-B', type: 'practice', mediumUrl: greedArticles['TK-B'].url },
+    ],
+    actions: [
+      { id: 'a3-t1', title: { ko: 'SPL 토큰 민팅 실습', en: 'SPL Token Minting Practice' }, guideId: 'token-mint' },
+    ],
+    hiddenTopic: {
+      title: { ko: '한국의 토큰 규제 — 무엇이 허용되고 무엇이 금지될까?', en: 'Token Regulation in Korea — What Is Allowed and What Is Banned?' },
+      desc: { ko: '한국에서 토큰 발행과 거래에 관한 규제 현황을 알아봅니다.', en: 'Learn about current regulations on token issuance and trading in Korea.' },
+      readTime: { ko: '10분 읽기', en: '10 min read' },
+      action: { ko: '규제 뉴스 팔로우', en: 'Follow Regulatory News' },
+      forumCount: 0,
+    },
+  },
+  // ── Week 4: DYOR ──
+  {
+    id: 4,
+    title: { ko: 'DYOR', en: 'DYOR (Do Your Own Research)' },
+    subtitle: { ko: '리서치 기초 · 심화 · 실전 스캠 분석', en: 'Research Basics · Advanced · Real Scam Analysis' },
+    lessons: [
+      { id: 'w2-3', title: { ko: 'DYOR 기초 — 레드플래그 식별법', en: 'DYOR Basics — Identifying Red Flags' }, source: 'S1-L7', type: 'read', mediumUrl: greedArticles['S1-L7'].url },
+      { id: 'w2-4', title: { ko: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', en: 'Advanced DYOR — Project & NFT Research Tools' }, source: 'S1-L8', type: 'read', mediumUrl: greedArticles['S1-L8'].url },
+      { id: 'w2-5', title: { ko: '실전 스캠 분석 — 실제 사례로 배우기', en: 'Real Scam Analysis — Learning from Actual Cases' }, source: 'S1-L4', type: 'security', mediumUrl: greedArticles['S1-L4'].url },
+    ],
+    actions: [
+      { id: 'a2-2', title: { ko: '의심 프로젝트 3개 리서치 보고서 작성', en: 'Write Research Report on 3 Suspicious Projects' }, guideId: 'dyor-report' },
+    ],
+    hiddenTopic: {
+      title: { ko: '크립토 사기 연대기 — 역대 주요 스캠과 교훈', en: 'Crypto Scam Chronicle — Major Scams and Lessons Learned' },
+      desc: { ko: '테라-루나, FTX 등 역대 주요 크립토 사기 사건을 분석하고 교훈을 배웁니다.', en: 'Analyze major crypto scam events like Terra-Luna, FTX and learn their lessons.' },
+      readTime: { ko: '15분 읽기', en: '15 min read' },
+      action: { ko: '스캠 감별 퀴즈', en: 'Scam Detection Quiz' },
+      forumCount: 0,
+    },
+  },
+  // ── Week 5: 온체인 + 스테이블코인 ──
+  {
+    id: 5,
+    title: { ko: '온체인 + 스테이블코인', en: 'On-chain + Stablecoins' },
+    subtitle: { ko: '블록 탐색기 · 온체인 분석 · USDT/USDC/DAI · 스테이블코인', en: 'Block Explorers · On-chain Analysis · USDT/USDC/DAI · Stablecoins' },
+    lessons: [
+      { id: 'w2-1', title: { ko: '블록 탐색기란? — Solscan으로 트랜잭션 읽기', en: 'What is a Block Explorer? — Reading Transactions with Solscan' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w2-2', title: { ko: '온체인 활동 추적 — 지갑 분석과 토큰 흐름', en: 'Tracking On-chain Activity — Wallet Analysis & Token Flows' }, source: 'S2-L6', type: 'read', mediumUrl: greedArticles['S2-L6'].url },
+      { id: 'w4-1', title: { ko: '스테이블코인 작동 원리 — USDT vs USDC vs DAI', en: 'How Stablecoins Work — USDT vs USDC vs DAI' }, source: 'S2-L7', type: 'read', mediumUrl: greedArticles['S2-L7'].url },
+    ],
+    actions: [
       { id: 'a2-1', title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' }, guideId: 'solscan-tx' },
+      { id: 'a4-1', title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' }, guideId: 'stablecoin-transfer' },
     ],
     hiddenTopic: {
       title: { ko: '왜 스테이블코인이 주목받고 있을까? — 한국에서의 실제 활용 사례', en: 'Why Are Stablecoins Getting Attention? — Real Use Cases in Korea' },
@@ -64,46 +133,39 @@ export const weeks = [
       forumCount: 0,
     },
   },
-  // ── Week 3: DYOR + DeFi ──
+  // ── Week 6: DeFi ──
   {
-    id: 3,
-    title: { ko: 'DYOR + 스캠 방지 + DeFi', en: 'DYOR + Scam Prevention + DeFi' },
-    subtitle: { ko: '리서치 기초/심화 · 스캠 분석 · AMM/LP · DEX 스왑', en: 'Research Basics/Advanced · Scam Analysis · AMM/LP · DEX Swap' },
+    id: 6,
+    title: { ko: 'DeFi', en: 'DeFi (Decentralized Finance)' },
+    subtitle: { ko: 'DeFi 입문 · AMM · 유동성 풀 · DEX 스왑', en: 'DeFi Intro · AMM · Liquidity Pools · DEX Swap' },
     lessons: [
-      { id: 'w2-3', title: { ko: 'DYOR 기초 — 레드플래그 식별법', en: 'DYOR Basics — Identifying Red Flags' }, source: 'S1-L7', type: 'read', mediumUrl: greedArticles['S1-L7'].url },
-      { id: 'w2-4', title: { ko: 'DYOR 심화 — 프로젝트 & NFT 리서치 툴', en: 'Advanced DYOR — Project & NFT Research Tools' }, source: 'S1-L8', type: 'read', mediumUrl: greedArticles['S1-L8'].url },
-      { id: 'w2-5', title: { ko: '실전 스캠 분석 — 실제 사례로 배우기', en: 'Real Scam Analysis — Learning from Actual Cases' }, source: 'S1-L4', type: 'security', mediumUrl: greedArticles['S1-L4'].url },
+      { id: 'w6-d1', title: { ko: 'DeFi 입문 — 탈중앙 금융이란 무엇인가', en: 'DeFi Introduction — What is Decentralized Finance' }, source: 'DF-1', type: 'read', mediumUrl: greedArticles['DF-1'].url },
       { id: 'w3-1', title: { ko: 'DeFi란? — AMM, 유동성 풀, 수수료 구조', en: 'What is DeFi? — AMM, Liquidity Pools, Fee Structures' }, source: 'S2-L4', type: 'read', mediumUrl: greedArticles['S2-L4'].url },
       { id: 'w3-2', title: { ko: 'DEX에서 스왑하기 — Orca, Raydium 비교', en: 'Swapping on DEX — Comparing Orca & Raydium' }, source: 'S2-L4', type: 'practice', mediumUrl: greedArticles['S2-L4'].url },
     ],
     actions: [
-      { id: 'a2-2', title: { ko: '의심 프로젝트 3개 리서치 보고서 작성', en: 'Write Research Report on 3 Suspicious Projects' }, guideId: 'dyor-report' },
       { id: 'a3-1', title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' }, guideId: 'dex-swap' },
     ],
     hiddenTopic: {
-      title: { ko: '트럼프는 왜 비트코인을 밀까? — 미국 크립토 정책이 한국에 미치는 영향', en: 'Why Is Trump Pushing Bitcoin? — How US Crypto Policy Affects Korea' },
-      desc: { ko: '미국 정치와 크립토의 관계, 그리고 한국 시장에 미치는 파급효과를 분석합니다.', en: 'Analyzing the relationship between US politics and crypto, and its ripple effects on the Korean market.' },
+      title: { ko: 'DeFi 규제의 미래 — 한국과 글로벌 동향', en: 'The Future of DeFi Regulation — Korea and Global Trends' },
+      desc: { ko: 'DeFi에 대한 한국과 글로벌 규제 동향, 그리고 사용자에게 미치는 영향을 분석합니다.', en: 'Analyze DeFi regulatory trends in Korea and globally, and their impact on users.' },
       readTime: { ko: '12분 읽기', en: '12 min read' },
-      action: { ko: '비트코인 가격 추적 실습', en: 'Bitcoin Price Tracking Practice' },
+      action: { ko: 'DeFi 프로토콜 비교', en: 'Compare DeFi Protocols' },
       forumCount: 0,
     },
   },
-  // ── Week 4: NFT · 크로스체인 · 스테이킹 · 거버넌스 ──
+  // ── Week 7: NFT + DAO ──
   {
-    id: 4,
-    title: { ko: 'NFT · 크로스체인 · 스테이킹', en: 'NFT · Cross-chain · Staking' },
-    subtitle: { ko: 'Metaplex Core · 브릿지 · 밸리데이터 · 거버넌스 & DAO', en: 'Metaplex Core · Bridges · Validators · Governance & DAOs' },
+    id: 7,
+    title: { ko: 'NFT + DAO', en: 'NFT + DAO' },
+    subtitle: { ko: 'NFT 개념 · Metaplex Core · 거버넌스 · DAO', en: 'NFT Concepts · Metaplex Core · Governance · DAOs' },
     lessons: [
       { id: 'w3-4', title: { ko: 'NFT 이해하기 — 개념부터 활용까지', en: 'Understanding NFTs — From Concepts to Applications' }, source: 'S1-L6', type: 'read', mediumUrl: greedArticles['S1-L6'].url },
       { id: 'w3-5', title: { ko: 'Metaplex Core로 내 에셋 민팅하기', en: 'Minting Your Asset with Metaplex Core' }, source: 'S1-L6', type: 'practice', mediumUrl: greedArticles['S1-L6'].url },
-      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: greedArticles['S2-L8'].url },
-      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: greedArticles['S1-L1'].url },
-      { id: 'w4-4', title: { ko: '거버넌스 & DAO — 온체인 의사결정', en: 'Governance & DAOs — On-chain Decision Making' }, source: 'S1-L2', type: 'read', mediumUrl: greedArticles['S1-L2'].url },
+      { id: 'w7-g1', title: { ko: '거버넌스 & DAO — 온체인 의사결정과 참여', en: 'Governance & DAOs — On-chain Decision Making & Participation' }, source: 'S2-L3', type: 'read', mediumUrl: greedArticles['S2-L3'].url },
     ],
     actions: [
       { id: 'a3-2', title: { ko: 'Metaplex Core로 NFT 민팅', en: 'Mint NFT with Metaplex Core' }, guideId: 'nft-mint' },
-      { id: 'a4-2', title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' }, guideId: 'debridge' },
-      { id: 'a4-3', title: { ko: 'SOL 스테이킹 (Greed Validator)', en: 'SOL Staking (Greed Validator)' }, guideId: 'sol-staking' },
     ],
     hiddenTopic: {
       title: { ko: '한국에서 NFT는 끝났나? — 진짜 유스케이스와 Metaplex Core', en: 'Are NFTs Dead in Korea? — Real Use Cases & Metaplex Core' },
@@ -113,11 +175,33 @@ export const weeks = [
       forumCount: 0,
     },
   },
+  // ── Week 8: 졸업 ──
+  {
+    id: 8,
+    title: { ko: '졸업', en: 'Graduation' },
+    subtitle: { ko: '크로스체인 · 스테이킹 · 졸업 프로젝트', en: 'Cross-chain · Staking · Graduation Project' },
+    lessons: [
+      { id: 'w4-2', title: { ko: '크로스체인 & 브릿지 — L2, 롤업, deBridge', en: 'Cross-chain & Bridges — L2, Rollups, deBridge' }, source: 'S2-L8', type: 'read', mediumUrl: greedArticles['S2-L8'].url },
+      { id: 'w4-3', title: { ko: '밸리데이터 & 스테이킹 — 원리와 참여 방법', en: 'Validators & Staking — Principles & How to Participate' }, source: 'S1-L1', type: 'read', mediumUrl: greedArticles['S1-L1'].url },
+      { id: 'w8-p1', title: { ko: '졸업 프로젝트 — 나만의 온체인 포트폴리오 만들기', en: 'Graduation Project — Build Your On-chain Portfolio' }, source: null, type: 'project', mediumUrl: null },
+    ],
+    actions: [
+      { id: 'a4-2', title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' }, guideId: 'debridge' },
+      { id: 'a4-3', title: { ko: 'SOL 스테이킹 (Greed Validator)', en: 'SOL Staking (Greed Validator)' }, guideId: 'sol-staking' },
+    ],
+    hiddenTopic: {
+      title: { ko: '트럼프는 왜 비트코인을 밀까? — 미국 크립토 정책이 한국에 미치는 영향', en: 'Why Is Trump Pushing Bitcoin? — How US Crypto Policy Affects Korea' },
+      desc: { ko: '미국 정치와 크립토의 관계, 그리고 한국 시장에 미치는 파급효과를 분석합니다.', en: 'Analyzing the relationship between US politics and crypto, and its ripple effects on the Korean market.' },
+      readTime: { ko: '12분 읽기', en: '12 min read' },
+      action: { ko: '비트코인 가격 추적 실습', en: 'Bitcoin Price Tracking Practice' },
+      forumCount: 0,
+    },
+  },
 ]
 
 export const actionGuides = [
   {
-    weekId: 1,
+    weekId: 2,
     id: 'burner-wallet',
     actionId: 'a1-2',
     title: { ko: 'Solflare 버너 지갑 만들기', en: 'Create a Solflare Burner Wallet' },
@@ -190,26 +274,45 @@ export const actionGuides = [
       en: ['Never take a photo of your seed phrase.', 'Never store on cloud (iCloud, Google Drive).', 'Never show or share with anyone.', 'If you lose your seed phrase, your wallet cannot be recovered.', 'If you\'re on mobile, write down your seed phrase on paper, not in a notes app. Screenshots are also not recommended.'],
     },
   },
-  // Week 2 guides (stablecoins + on-chain exploration)
+  // Week 3 guide (token mint)
   {
-    weekId: 2, id: 'stablecoin-transfer', actionId: 'a4-1',
-    title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' },
-    subtitle: { ko: '약 5분 · 초급', en: '~5 min · Beginner' },
-    icon: 'banknote',
-    description: { ko: 'USDC를 다른 지갑으로 전송해봅니다. 스테이블코인의 실제 사용법을 체험합니다.', en: 'Send USDC to another wallet. Experience how stablecoins are actually used.' },
+    weekId: 3, id: 'token-mint', actionId: 'a3-t1',
+    title: { ko: 'SPL 토큰 민팅 실습', en: 'SPL Token Minting Practice' },
+    subtitle: { ko: '약 15분 · 중급', en: '~15 min · Intermediate' },
+    icon: 'coins',
+    description: { ko: 'Solana에서 나만의 SPL 토큰을 직접 만들어봅니다. 토큰 생성 과정을 체험합니다.', en: 'Create your own SPL token on Solana. Experience the token creation process firsthand.' },
     steps: [
-      { text: { ko: 'Phantom에서 USDC 잔액을 확인하세요', en: 'Check your USDC balance in Phantom' }, note: { ko: '업비트에서 USDC를 구매하여 전송하거나, DEX 스왑으로 확보', en: 'Buy USDC on Upbit and transfer, or get via DEX swap' } },
-      { text: { ko: '자신의 버너 지갑 주소를 복사하세요', en: 'Copy your burner wallet address' }, note: { ko: '자기 자신에게 보내는 연습입니다', en: 'This is practice sending to yourself' } },
-      { text: { ko: 'Send → USDC 선택 → 주소 입력 → 소액 전송', en: 'Send → Select USDC → Enter address → Send small amount' }, note: { ko: '$0.5 이하로 시작하세요', en: 'Start with less than $0.5' } },
-      { text: { ko: 'Solscan에서 전송 트랜잭션을 확인하세요', en: 'Verify transfer transaction on Solscan' }, link: 'https://solscan.io', note: { ko: '버너 지갑에 USDC가 도착하면 성공!', en: 'If USDC arrives in burner wallet, success!' } },
+      { text: { ko: 'SPL Token Creator 페이지에 접속하세요', en: 'Visit SPL Token Creator page' }, note: { ko: 'Solana에서 가장 간단한 토큰 생성 도구입니다', en: 'Simplest token creation tool on Solana' } },
+      { text: { ko: 'Phantom 지갑을 연결하세요', en: 'Connect your Phantom wallet' }, note: { ko: 'SOL 잔액이 필요합니다 (가스비용)', en: 'You need SOL balance (for gas fees)' } },
+      { text: { ko: '토큰 이름, 심볼, 공급량을 설정하세요', en: 'Set token name, symbol, and supply' }, note: { ko: '연습용이므로 자유롭게 설정하세요', en: 'This is practice — set freely' } },
+      { text: { ko: 'Create Token을 클릭하고 트랜잭션을 승인하세요', en: 'Click Create Token and approve the transaction' }, note: { ko: '생성 후 Solscan에서 토큰을 확인할 수 있습니다', en: 'After creation, verify token on Solscan' } },
     ],
     safetyTips: {
-      ko: ['주소를 반드시 두 번 확인하세요.', '잘못된 주소로 보내면 되돌릴 수 없습니다.', '처음에는 소액으로 테스트하세요.'],
-      en: ['Always double-check the address.', 'Sending to wrong address is irreversible.', 'Test with small amounts first.'],
+      ko: ['토큰 생성 비용(가스비)을 미리 확인하세요.', '연습용 토큰이므로 가치를 기대하지 마세요.', '공식 사이트 URL을 반드시 확인하세요.'],
+      en: ['Check token creation cost (gas fee) in advance.', 'This is a practice token — don\'t expect value.', 'Always verify the official site URL.'],
     },
   },
+  // Week 4 guide (DYOR)
   {
-    weekId: 2, id: 'solscan-tx', actionId: 'a2-1',
+    weekId: 4, id: 'dyor-report', actionId: 'a2-2',
+    title: { ko: '의심 프로젝트 리서치 보고서 작성', en: 'Write a Research Report on Suspicious Projects' },
+    subtitle: { ko: '약 20분 · 중급', en: '~20 min · Intermediate' },
+    icon: 'file-text',
+    description: { ko: '실제 프로젝트 3개를 골라 DYOR(Do Your Own Research) 체크리스트로 분석하고, 레드플래그를 식별하는 연습을 합니다.', en: 'Pick 3 real projects, analyze them using a DYOR checklist, and practice identifying red flags.' },
+    steps: [
+      { text: { ko: 'CoinGecko 또는 CoinMarketCap에서 프로젝트 3개를 고르세요', en: 'Pick 3 projects from CoinGecko or CoinMarketCap' }, link: 'https://www.coingecko.com', note: { ko: '시가총액이 낮은 것도 포함해보세요', en: 'Include some with low market cap' } },
+      { text: { ko: '각 프로젝트의 공식 웹사이트, Twitter, Discord를 확인하세요', en: 'Check each project\'s official website, Twitter, Discord' }, note: { ko: '활동이 있는지, 팀이 공개되어 있는지 확인', en: 'Check for activity and whether team is doxxed' } },
+      { text: { ko: '레드플래그 체크리스트로 평가하세요: 익명 팀? 코드 감사 없음? 비현실적 수익률?', en: 'Evaluate with red flag checklist: Anonymous team? No code audit? Unrealistic returns?' }, note: { ko: 'DYOR Part 1 수업 내용을 참고하세요', en: 'Refer to DYOR Part 1 lesson' } },
+      { text: { ko: '각 프로젝트에 대해 Green/Yellow/Red 등급을 매기세요', en: 'Rate each project as Green/Yellow/Red' }, note: { ko: '왜 그렇게 판단했는지 이유를 적어보세요', en: 'Write down your reasoning' } },
+    ],
+    safetyTips: {
+      ko: ['리서치 중 지갑을 연결하지 마세요.', '의심스러운 링크를 클릭하지 마세요.', '이 실습은 분석만 합니다 — 투자하지 마세요.'],
+      en: ['Do not connect your wallet during research.', 'Do not click suspicious links.', 'This is analysis only — do not invest.'],
+    },
+  },
+  // Week 5 guides (on-chain + stablecoins)
+  {
+    weekId: 5, id: 'solscan-tx', actionId: 'a2-1',
     title: { ko: 'Solscan에서 내 트랜잭션 찾기', en: 'Find My Transactions on Solscan' },
     subtitle: { ko: '약 10분 · 초급', en: '~10 min · Beginner' },
     icon: 'search',
@@ -226,25 +329,25 @@ export const actionGuides = [
     },
   },
   {
-    weekId: 3, id: 'dyor-report', actionId: 'a2-2',
-    title: { ko: '의심 프로젝트 리서치 보고서 작성', en: 'Write a Research Report on Suspicious Projects' },
-    subtitle: { ko: '약 20분 · 중급', en: '~20 min · Intermediate' },
-    icon: 'file-text',
-    description: { ko: '실제 프로젝트 3개를 골라 DYOR(Do Your Own Research) 체크리스트로 분석하고, 레드플래그를 식별하는 연습을 합니다.', en: 'Pick 3 real projects, analyze them using a DYOR checklist, and practice identifying red flags.' },
+    weekId: 5, id: 'stablecoin-transfer', actionId: 'a4-1',
+    title: { ko: '스테이블코인 전송 실습', en: 'Stablecoin Transfer Practice' },
+    subtitle: { ko: '약 5분 · 초급', en: '~5 min · Beginner' },
+    icon: 'banknote',
+    description: { ko: 'USDC를 다른 지갑으로 전송해봅니다. 스테이블코인의 실제 사용법을 체험합니다.', en: 'Send USDC to another wallet. Experience how stablecoins are actually used.' },
     steps: [
-      { text: { ko: 'CoinGecko 또는 CoinMarketCap에서 프로젝트 3개를 고르세요', en: 'Pick 3 projects from CoinGecko or CoinMarketCap' }, link: 'https://www.coingecko.com', note: { ko: '시가총액이 낮은 것도 포함해보세요', en: 'Include some with low market cap' } },
-      { text: { ko: '각 프로젝트의 공식 웹사이트, Twitter, Discord를 확인하세요', en: 'Check each project\'s official website, Twitter, Discord' }, note: { ko: '활동이 있는지, 팀이 공개되어 있는지 확인', en: 'Check for activity and whether team is doxxed' } },
-      { text: { ko: '레드플래그 체크리스트로 평가하세요: 익명 팀? 코드 감사 없음? 비현실적 수익률?', en: 'Evaluate with red flag checklist: Anonymous team? No code audit? Unrealistic returns?' }, note: { ko: 'DYOR Part 1 수업 내용을 참고하세요', en: 'Refer to DYOR Part 1 lesson' } },
-      { text: { ko: '각 프로젝트에 대해 Green/Yellow/Red 등급을 매기세요', en: 'Rate each project as Green/Yellow/Red' }, note: { ko: '왜 그렇게 판단했는지 이유를 적어보세요', en: 'Write down your reasoning' } },
+      { text: { ko: 'Phantom에서 USDC 잔액을 확인하세요', en: 'Check your USDC balance in Phantom' }, note: { ko: '업비트에서 USDC를 구매하여 전송하거나, DEX 스왑으로 확보', en: 'Buy USDC on Upbit and transfer, or get via DEX swap' } },
+      { text: { ko: '자신의 버너 지갑 주소를 복사하세요', en: 'Copy your burner wallet address' }, note: { ko: '자기 자신에게 보내는 연습입니다', en: 'This is practice sending to yourself' } },
+      { text: { ko: 'Send → USDC 선택 → 주소 입력 → 소액 전송', en: 'Send → Select USDC → Enter address → Send small amount' }, note: { ko: '$0.5 이하로 시작하세요', en: 'Start with less than $0.5' } },
+      { text: { ko: 'Solscan에서 전송 트랜잭션을 확인하세요', en: 'Verify transfer transaction on Solscan' }, link: 'https://solscan.io', note: { ko: '버너 지갑에 USDC가 도착하면 성공!', en: 'If USDC arrives in burner wallet, success!' } },
     ],
     safetyTips: {
-      ko: ['리서치 중 지갑을 연결하지 마세요.', '의심스러운 링크를 클릭하지 마세요.', '이 실습은 분석만 합니다 — 투자하지 마세요.'],
-      en: ['Do not connect your wallet during research.', 'Do not click suspicious links.', 'This is analysis only — do not invest.'],
+      ko: ['주소를 반드시 두 번 확인하세요.', '잘못된 주소로 보내면 되돌릴 수 없습니다.', '처음에는 소액으로 테스트하세요.'],
+      en: ['Always double-check the address.', 'Sending to wrong address is irreversible.', 'Test with small amounts first.'],
     },
   },
-  // Week 3 guides (DYOR + DeFi)
+  // Week 6 guide (DeFi)
   {
-    weekId: 3, id: 'dex-swap', actionId: 'a3-1',
+    weekId: 6, id: 'dex-swap', actionId: 'a3-1',
     title: { ko: 'DEX에서 첫 스왑 실행', en: 'Execute First Swap on DEX' },
     subtitle: { ko: '약 10분 · 중급', en: '~10 min · Intermediate' },
     icon: 'arrow-left-right',
@@ -260,8 +363,9 @@ export const actionGuides = [
       en: ['Always practice with small amounts first.', 'Always verify URLs (beware phishing sites).', 'Don\'t set slippage too high.', 'Make it a habit to compare prices before swapping.'],
     },
   },
+  // Week 7 guide (NFT)
   {
-    weekId: 4, id: 'nft-mint', actionId: 'a3-2',
+    weekId: 7, id: 'nft-mint', actionId: 'a3-2',
     title: { ko: 'Metaplex Core로 NFT 민팅', en: 'Mint NFT with Metaplex Core' },
     subtitle: { ko: '약 15분 · 중급', en: '~15 min · Intermediate' },
     icon: 'paintbrush',
@@ -277,9 +381,9 @@ export const actionGuides = [
       en: ['Check minting cost (gas fee) in advance.', 'This is a practice NFT — don\'t expect value.', 'Always verify the official site URL.'],
     },
   },
-  // Week 4 guides (NFT, cross-chain, staking)
+  // Week 8 guides (cross-chain, staking)
   {
-    weekId: 4, id: 'debridge', actionId: 'a4-2',
+    weekId: 8, id: 'debridge', actionId: 'a4-2',
     title: { ko: 'deBridge로 크로스체인 브릿지', en: 'Cross-chain Bridge via deBridge' },
     subtitle: { ko: '약 10분 · 중급', en: '~10 min · Intermediate' },
     icon: 'git-branch',
@@ -296,7 +400,7 @@ export const actionGuides = [
     },
   },
   {
-    weekId: 4, id: 'sol-staking', actionId: 'a4-3',
+    weekId: 8, id: 'sol-staking', actionId: 'a4-3',
     title: { ko: 'SOL 스테이킹 (Greed Validator)', en: 'SOL Staking (Greed Validator)' },
     subtitle: { ko: '약 10분 · 초급', en: '~10 min · Beginner' },
     icon: 'landmark',
