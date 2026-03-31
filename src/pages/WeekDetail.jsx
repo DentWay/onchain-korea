@@ -1,5 +1,5 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Check, BookOpen, Zap, Shield, ChevronRight, Flame, Lock } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import useProgress from '../hooks/useProgress'
@@ -21,6 +21,7 @@ export default function WeekDetail() {
   const completedActions = week.actions.filter(a => getActionStatus(a.id) === 'done').length
   const actionsOpen = isActionsUnlocked(week.id)
   const hiddenOpen = isHiddenTopicUnlocked(week.id)
+  const allLessonsDone = completedLessons === week.lessons.length
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -30,14 +31,31 @@ export default function WeekDetail() {
           <Link to="/dashboard" className="text-[11px] text-accent-soft flex items-center gap-1 hover:text-accent transition-colors"><ArrowLeft size={12} /> {t('week.back')}</Link>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-6">
           <p className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase mb-2">{t('common.week')} {week.id}</p>
           <h1 className="text-xl font-bold text-[var(--text-high)] mb-1">{l(week.title, lang)}</h1>
           <p className="text-[12px] text-[var(--text-mid)]">{l(week.subtitle, lang)}</p>
         </div>
 
-        {/* Progress overview */}
-        <div className="grid grid-cols-2 gap-3 mb-8">
+        {/* Stepper */}
+        <div className="flex items-center gap-1 mb-8">
+          {['lessons', 'actions', 'hidden'].map((step, i) => {
+            const stepDone = step === 'lessons' ? allLessonsDone : step === 'actions' ? completedActions > 0 : hiddenOpen && week.hiddenTopic
+            const stepActive = step === 'lessons' ? !allLessonsDone : step === 'actions' ? allLessonsDone && completedActions === 0 : false
+            return (
+              <div key={step} className="flex items-center gap-1 flex-1">
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-medium transition-colors ${stepDone ? 'bg-[var(--success-surface)] text-success' : stepActive ? 'bg-[var(--accent-surface)] text-accent-soft' : 'bg-[var(--surface-2)] text-[var(--text-low)]'}`}>
+                  {stepDone ? <Check size={10} /> : <span>{i + 1}</span>}
+                  <span className="hidden sm:inline">{step === 'lessons' ? t('dash.lessons') : step === 'actions' ? t('dash.actions') : t('dash.topics')}</span>
+                </div>
+                {i < 2 && <div className={`flex-1 h-px ${stepDone ? 'bg-success/30' : 'bg-[var(--border)]'}`} />}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Progress cards */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
           <div className="ok-card p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] text-[var(--text-low)] uppercase tracking-wider">{t('week.learningProgress')}</p>
@@ -56,17 +74,18 @@ export default function WeekDetail() {
           </div>
         </div>
 
-        {/* Lessons — sequential unlock */}
+        {/* Lessons — sequential unlock with blur preview */}
         <h2 className="text-sm font-semibold text-[var(--text-high)] mb-3">{t('week.lessons')}</h2>
-        <div className="space-y-1.5 mb-8">
+        <div className="space-y-1.5 mb-6">
           {week.lessons.map((lesson, i) => {
             const status = getLessonStatus(lesson.id)
             const locked = status === 'locked'
             const done = status === 'done'
             const TypeIcon = typeIcons[lesson.type]
+            const isNext = !done && !locked && i > 0 && getLessonStatus(week.lessons[i - 1]?.id) === 'done'
             return (
               <motion.div key={lesson.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
-                <div className={`ok-card flex items-center gap-3 px-4 py-3 group transition-colors ${locked ? 'opacity-40' : 'hover:bg-[var(--surface-2)]'}`}>
+                <div className={`ok-card flex items-center gap-3 px-4 py-3 group transition-all ${locked ? 'opacity-50' : 'hover:bg-[var(--surface-2)]'} ${isNext ? 'border-accent/15' : ''}`}>
                   {locked ? (
                     <div className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center border-2 border-[var(--border)]">
                       <Lock size={9} className="text-[var(--text-low)]" />
@@ -78,13 +97,13 @@ export default function WeekDetail() {
                   )}
                   {TypeIcon && <TypeIcon size={13} className={`shrink-0 ${locked ? 'text-[var(--text-low)]' : 'text-accent-soft'}`} />}
                   {locked ? (
-                    <span className="flex-1 text-[13px] text-[var(--text-low)]">{l(lesson.title, lang)}</span>
+                    <span className="flex-1 text-[13px] text-[var(--text-low)]" style={{ filter: 'blur(3px)' }}>{l(lesson.title, lang)}</span>
                   ) : (
                     <Link to={`/lesson/${lesson.id}`} className={`flex-1 text-[13px] group-hover:text-accent-soft transition-colors ${done ? 'text-[var(--text-low)] line-through' : 'text-[var(--text-high)]'}`}>
                       {l(lesson.title, lang)}
                     </Link>
                   )}
-                  {locked && <span className="text-[9px] text-[var(--text-low)]">{t('week.completePrevLesson')}</span>}
+                  {isNext && <span className="text-[9px] text-accent-soft font-medium">Next</span>}
                   {!locked && <ChevronRight size={14} className="text-[var(--text-low)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />}
                 </div>
               </motion.div>
@@ -92,7 +111,22 @@ export default function WeekDetail() {
           })}
         </div>
 
-        {/* Actions — locked until all lessons done */}
+        {/* Actions unlock banner */}
+        <AnimatePresence>
+          {allLessonsDone && !actionsOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="ok-card p-4 border-success/15 mb-3 text-center"
+            >
+              <Check size={16} className="text-success mx-auto mb-1" />
+              <p className="text-[12px] text-success font-medium">{t('week.lessonsDone')}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Actions */}
         <div className="flex items-center gap-2 mb-3">
           <h2 className="text-sm font-semibold text-[var(--text-high)]">{t('week.actions')}</h2>
           {!actionsOpen && <Lock size={12} className="text-[var(--text-low)]" />}
@@ -100,7 +134,7 @@ export default function WeekDetail() {
         {!actionsOpen && (
           <p className="text-[11px] text-[var(--text-low)] mb-3">{t('week.completeLessonsForActions')}</p>
         )}
-        <div className={`space-y-1.5 mb-8 ${!actionsOpen ? 'opacity-40 pointer-events-none' : ''}`}>
+        <div className={`space-y-1.5 mb-6 transition-opacity ${!actionsOpen ? 'opacity-35 pointer-events-none' : ''}`}>
           {week.actions.map((action, i) => {
             const done = getActionStatus(action.id) === 'done'
             return (
@@ -120,7 +154,7 @@ export default function WeekDetail() {
           })}
         </div>
 
-        {/* Hidden Topic — locked until 1+ action done */}
+        {/* Hidden Topic */}
         {week.hiddenTopic && (
           <>
             <div className="flex items-center gap-2 mb-3">
@@ -130,7 +164,7 @@ export default function WeekDetail() {
             {!hiddenOpen && (
               <p className="text-[11px] text-[var(--text-low)] mb-3">{t('week.completeActionForHidden')}</p>
             )}
-            <div className={!hiddenOpen ? 'opacity-40 pointer-events-none' : ''}>
+            <div className={`transition-opacity ${!hiddenOpen ? 'opacity-35 pointer-events-none' : ''}`}>
               <Link to="/hidden" className="block ok-card p-5 border-accent/10 hover:border-accent/20 transition-colors">
                 <div className="flex items-center gap-2 mb-2">
                   <Flame size={13} className="text-accent-soft" />
