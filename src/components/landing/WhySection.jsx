@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ShieldCheck, GraduationCap, Users } from 'lucide-react'
 import Section from './Section'
 import useLang from '../../hooks/useLang'
@@ -21,8 +22,39 @@ const pillars = [
   },
 ]
 
+/* Word-by-word reveal: each word's opacity is mapped to a segment of scroll progress */
+function WordReveal({ text }) {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'start 0.4'] })
+  const words = text.split(' ')
+
+  return (
+    <span ref={ref} className="inline">
+      {words.map((word, i) => (
+        <WordOpacity key={i} progress={scrollYProgress} index={i} total={words.length}>
+          {word}
+        </WordOpacity>
+      ))}
+    </span>
+  )
+}
+
+function WordOpacity({ progress, index, total, children }) {
+  const start = index / total
+  const end = start + 1 / total
+  const opacity = useTransform(progress, [start, end], [0.15, 1])
+  return (
+    <motion.span style={{ opacity }} className="inline-block mr-[0.3em]">
+      {children}
+    </motion.span>
+  )
+}
+
 export default function WhySection() {
   const { t, lang } = useLang()
+  const accentRef = useRef(null)
+  const { scrollYProgress: accentProgress } = useScroll({ target: accentRef, offset: ['start end', 'end start'] })
+  const accentY = useTransform(accentProgress, [0, 1], [10, -10])
 
   return (
     <Section className="py-32 px-6" id="why">
@@ -38,14 +70,18 @@ export default function WhySection() {
             <span className="ok-section-label">{t('why.label')}</span>
             <h2 className="text-[40px] md:text-[56px] font-bold mt-4 tracking-tight leading-[1.08] text-[var(--text-high)]">
               <span className="bg-gradient-to-r from-[var(--accent)] to-purple-400 bg-clip-text text-transparent">
-                {t('why.title')}
+                <WordReveal text={t('why.title')} />
               </span>
             </h2>
             <p className="text-[16px] md:text-[18px] text-[var(--text-mid)] mt-5 leading-relaxed font-light">
               {t('why.desc')}
             </p>
-            {/* Gradient accent line */}
-            <div className="h-1 w-24 mt-8 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-accent" />
+            {/* Gradient accent line with parallax */}
+            <motion.div
+              ref={accentRef}
+              style={{ y: accentY }}
+              className="h-1 w-24 mt-8 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-accent"
+            />
           </motion.div>
 
           {/* Right — 3 stacked benefit cards */}
@@ -55,10 +91,10 @@ export default function WhySection() {
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, x: 30 }}
+                  initial={{ opacity: 0, x: 60 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.15, duration: 0.6 }}
+                  transition={{ delay: i * 0.15, duration: 0.6, ease: [0.25, 0.1, 0, 1] }}
                   className="ok-card p-6 flex items-start gap-5"
                 >
                   <div className="w-12 h-12 rounded-xl bg-[var(--accent-surface)] flex items-center justify-center shrink-0">

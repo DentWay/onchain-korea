@@ -21,10 +21,10 @@ export default function Stats() {
           {stats.map((s, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, scale: 0.8 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.6 }}
+              transition={{ delay: i * 0.12, duration: 0.6, ease: [0.25, 0.1, 0, 1] }}
               className="text-center"
             >
               <p className="text-[48px] md:text-[64px] font-bold text-[var(--text-high)] ok-tabular-nums leading-none">

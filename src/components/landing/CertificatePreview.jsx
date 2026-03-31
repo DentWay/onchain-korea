@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Award, Linkedin, Share2 } from 'lucide-react'
 import Section from './Section'
@@ -8,6 +8,24 @@ export default function CertificatePreview() {
   const { t, lang } = useLang()
   const [name, setName] = useState('')
   const displayName = name || t('certprev.placeholder')
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    setTilt({ x: y * 10, y: -x * 10 })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ x: 0, y: 0 })
+  }, [])
+
+  const trustBadges = [
+    { label: t('certprev.solana') },
+    { label: t('certprev.permanent') },
+    { label: t('certprev.linkedin') },
+  ]
 
   return (
     <Section className="py-32 px-6">
@@ -39,11 +57,21 @@ export default function CertificatePreview() {
               />
             </div>
 
-            {/* Trust badges */}
+            {/* Trust badges with stagger fade-in */}
             <div className="mt-8 flex flex-wrap items-center gap-5 text-[13px] text-[var(--text-low)]">
-              <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent/50" />{t('certprev.solana')}</span>
-              <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent/50" />{t('certprev.permanent')}</span>
-              <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-accent/50" />{t('certprev.linkedin')}</span>
+              {trustBadges.map((badge, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
+                  className="flex items-center gap-2"
+                >
+                  <div className="w-2 h-2 rounded-full bg-accent/50" />
+                  {badge.label}
+                </motion.span>
+              ))}
             </div>
           </motion.div>
 
@@ -54,7 +82,22 @@ export default function CertificatePreview() {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
           >
-            <motion.div whileHover={{ scale: 1.01 }} transition={{ type: 'spring', stiffness: 300 }} className="relative rounded-3xl overflow-hidden">
+            <motion.div
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              animate={{
+                y: [0, -6, 0],
+                rotateX: tilt.x,
+                rotateY: tilt.y,
+              }}
+              transition={{
+                y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                rotateX: { duration: 0.3, ease: 'easeOut' },
+                rotateY: { duration: 0.3, ease: 'easeOut' },
+              }}
+              style={{ perspective: 800, transformStyle: 'preserve-3d' }}
+              className="relative rounded-3xl overflow-hidden"
+            >
               <div className="absolute inset-0 bg-[var(--surface-1)]" />
               <div className="absolute top-0 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[100px]" />
               <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />

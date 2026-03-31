@@ -38,11 +38,12 @@ export default function Testimonials() {
           {testimonials.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.5 }}
-              className="ok-card p-7 flex flex-col justify-between min-h-[220px]"
+              transition={{ delay: i * 0.15, duration: 0.6, ease: [0.25, 0.1, 0, 1] }}
+              whileHover={{ y: -4, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
+              className="ok-card p-7 flex flex-col justify-between min-h-[220px] transition-shadow"
             >
               <div>
                 <Quote size={20} className="text-accent/30 mb-4" />

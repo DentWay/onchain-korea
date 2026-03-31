@@ -1,3 +1,4 @@
+import { useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Zap, Flame, Award, Users, ArrowUpRight } from 'lucide-react'
 import Section from './Section'
@@ -9,6 +10,41 @@ const cardStyles = [
   { gradient: 'from-green-600/20 via-green-500/10 to-transparent', iconBg: 'bg-green-500/15', iconColor: 'text-green-400' },
   { gradient: 'from-amber-600/20 via-amber-500/10 to-transparent', iconBg: 'bg-amber-500/15', iconColor: 'text-amber-400' },
 ]
+
+function TiltCard({ children, index, style: cardStyle }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    setTilt({ x: y * 8, y: -x * 8 })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setTilt({ x: 0, y: 0 })
+  }, [])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5, ease: [0.25, 0.1, 0, 1] }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ rotateX: tilt.x, rotateY: tilt.y }}
+      style={{ perspective: 800, transformStyle: 'preserve-3d' }}
+      whileHover={{ scale: 1.02 }}
+      className="group relative rounded-2xl border border-[var(--border)] overflow-hidden min-h-[240px] flex flex-col justify-between p-7 hover:border-white/12 transition-colors"
+    >
+      {/* Gradient background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${cardStyle.gradient} pointer-events-none`} />
+      <div className="absolute inset-0 bg-[var(--surface-1)]/60 pointer-events-none" />
+      {children}
+    </motion.div>
+  )
+}
 
 export default function Features() {
   const { t } = useLang()
@@ -36,18 +72,7 @@ export default function Features() {
             const Icon = f.icon
             const style = cardStyles[i]
             return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="group relative rounded-2xl border border-[var(--border)] overflow-hidden min-h-[240px] flex flex-col justify-between p-7 hover:border-white/12 transition-all"
-              >
-                {/* Gradient background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${style.gradient} pointer-events-none`} />
-                <div className="absolute inset-0 bg-[var(--surface-1)]/60 pointer-events-none" />
-
+              <TiltCard key={i} index={i} style={style}>
                 <div className="relative">
                   <div className={`w-12 h-12 rounded-xl ${style.iconBg} flex items-center justify-center mb-5`}>
                     <Icon size={22} className={style.iconColor} />
@@ -58,9 +83,15 @@ export default function Features() {
 
                 <div className="relative flex items-center justify-between mt-6">
                   <span className="ok-tag ok-tag-accent text-[11px]">{f.tag}</span>
-                  <ArrowUpRight size={18} className="text-[var(--text-low)] group-hover:text-[var(--text-mid)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <motion.span
+                    className="inline-block"
+                    whileHover={{ rotate: 45 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                  >
+                    <ArrowUpRight size={18} className="text-[var(--text-low)] group-hover:text-[var(--text-mid)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </motion.span>
                 </div>
-              </motion.div>
+              </TiltCard>
             )
           })}
         </div>

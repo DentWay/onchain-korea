@@ -10,6 +10,26 @@ import useLang from '../../hooks/useLang'
 // Real semester deadline — same as FomoBanner
 const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
+/* Floating glow orb */
+function GlowOrb({ className, delay = 0, duration = 12 }) {
+  return (
+    <motion.div
+      className={`absolute rounded-full pointer-events-none ${className}`}
+      animate={{
+        x: [0, 30, -20, 10, 0],
+        y: [0, -20, 15, -10, 0],
+        scale: [1, 1.1, 0.95, 1.05, 1],
+      }}
+      transition={{
+        duration,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        delay,
+      }}
+    />
+  )
+}
+
 export default function FinalCTA() {
   const { t, lang } = useLang()
   const { user, supabaseEnabled } = useAuth()
@@ -18,9 +38,10 @@ export default function FinalCTA() {
 
   return (
     <section className="relative py-32 md:py-40 px-6 bg-black overflow-hidden">
-      {/* Ambient glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-accent/5 rounded-full blur-[160px]" />
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-purple-500/5 rounded-full blur-[120px]" />
+      {/* Ambient floating glow orbs */}
+      <GlowOrb className="bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-accent/5 blur-[160px]" delay={0} duration={14} />
+      <GlowOrb className="top-1/4 left-1/4 w-[300px] h-[300px] bg-purple-500/5 blur-[120px]" delay={2} duration={10} />
+      <GlowOrb className="top-1/3 right-1/5 w-[200px] h-[200px] bg-cyan-500/4 blur-[100px]" delay={4} duration={16} />
 
       <div className="relative max-w-3xl mx-auto text-center">
         {/* Countdown */}
@@ -31,19 +52,32 @@ export default function FinalCTA() {
           <div className="flex justify-center"><CountdownTimer targetDate={SEMESTER_DEADLINE} /></div>
         </motion.div>
 
-        {/* Huge headline */}
+        {/* Huge headline — each line reveals on scroll */}
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.1, duration: 0.7, ease: [0.25, 0.1, 0, 1] }}
           className="text-[40px] md:text-[64px] font-bold tracking-tight leading-[1.05]"
         >
-          <span className="text-[var(--text-high)]">{t('landing.finalTitle1')}</span>
-          <br />
-          <span className="bg-gradient-to-r from-[var(--accent)] via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <motion.span
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="block text-[var(--text-high)]"
+          >
+            {t('landing.finalTitle1')}
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="block bg-gradient-to-r from-[var(--accent)] via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+          >
             {t('landing.finalTitle2')}
-          </span>
+          </motion.span>
         </motion.h2>
 
         <motion.p
@@ -79,7 +113,7 @@ export default function FinalCTA() {
           transition={{ delay: 0.4 }}
           className="mt-10"
         >
-          <Link to={startLink} className="group ok-btn ok-btn-primary px-12 py-5 text-[17px]">
+          <Link to={startLink} className="ok-final-cta-btn group ok-btn ok-btn-primary px-12 py-5 text-[17px]">
             {t('landing.startFromWeek1')}
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
