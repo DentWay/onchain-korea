@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, Suspense, lazy } from 'react'
 import { ArrowRight } from 'lucide-react'
-import BlockchainCanvas from './BlockchainCanvas'
-import FloatingBlocks from './FloatingBlocks'
 import useAuth from '../../hooks/useAuth'
 import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
+
+const Spline = lazy(() => import('@splinetool/react-spline'))
 
 export default function Hero() {
   const heroRef = useRef(null)
@@ -29,16 +29,14 @@ export default function Hero() {
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
       className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-32"
     >
-      <BlockchainCanvas />
-      <FloatingBlocks />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--surface-0)]" style={{ zIndex: 1 }} />
-
-      {/* Glowing orb — pure CSS */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[900px] md:h-[900px]">
-        <div className="absolute inset-0 rounded-full bg-accent/8 blur-[160px] animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute inset-[15%] rounded-full bg-purple-500/6 blur-[120px] animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
-        <div className="absolute inset-[30%] rounded-full bg-accent/10 blur-[80px] animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
+      {/* Spline 3D Background */}
+      <div className="absolute inset-0 z-0">
+        <Suspense fallback={null}>
+          <Spline scene="https://prod.spline.design/TbhR60wAFXrHjFrW/scene.splinecode" />
+        </Suspense>
       </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--surface-0)]/30 via-transparent to-[var(--surface-0)]" style={{ zIndex: 1 }} />
+      <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface-0)] via-transparent to-transparent" style={{ zIndex: 1 }} />
 
       <div className="relative z-10 text-center max-w-4xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
