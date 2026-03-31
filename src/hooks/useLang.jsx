@@ -129,8 +129,8 @@ const translations = {
   'landing.features': { ko: 'Features', en: 'Features' },
   'landing.featuresTitle': { ko: '읽기만 하는 교육은 끝', en: 'No More Read-Only Education' },
   'landing.featuresDesc': { ko: '직접 해봐야 내 것이 됩니다.', en: 'You have to do it to learn it.' },
-  'landing.certTitle': { ko: '온체인 수료증', en: 'On-chain Certificate' },
-  'landing.certDesc': { ko: '레슨 80% 이상 + 온체인 액션 3개 + 히든 토픽 2개 완료 시\n블록체인에 영구 기록되는 수료증을 발급합니다.', en: '80%+ lessons + 3 on-chain actions + 2 hidden topics.\nA certificate permanently recorded on the blockchain.' },
+  'landing.certTitle': { ko: '온체인 참여 인증서', en: 'On-chain Proof of Attendance' },
+  'landing.certDesc': { ko: '레슨 80% 이상 + 온체인 액션 3개 + 히든 토픽 2개 완료 시\nSolana 블록체인에 기록되는 참여 인증 NFT를 발급합니다.', en: '80%+ lessons + 3 on-chain actions + 2 hidden topics.\nReceive a Proof of Attendance NFT recorded on Solana blockchain.' },
   'landing.finalTitle1': { ko: '4주 뒤,', en: 'After 4 weeks,' },
   'landing.finalTitle2': { ko: '온체인이 익숙해집니다', en: 'you\'ll feel at home on-chain' },
   'landing.finalDesc': { ko: '지갑 만들기부터 스테이킹까지. 완전 무료, 한국어로.', en: 'From wallet setup to staking. Completely free, in Korean.' },
@@ -139,7 +139,7 @@ const translations = {
   'landing.socialProof': { ko: '명이 이미 시작했습니다', en: ' have already started' },
   'landing.socialProofEnrolled': { ko: '명이 이미 등록했습니다', en: ' already enrolled' },
   'landing.startNow': { ko: '지금 바로 시작할 수 있습니다', en: 'You can start right now' },
-  'landing.startNowSub': { ko: '카드 정보 불필요 · 4주 완성 · Solana 수료증', en: 'No credit card · 4 weeks · Solana certificate' },
+  'landing.startNowSub': { ko: '카드 정보 불필요 · 4주 완성 · Solana 참여 인증', en: 'No credit card · 4 weeks · Solana PoA' },
   'landing.startWeek1': { ko: 'Week 1 시작하기', en: 'Start Week 1' },
   'landing.startFromWeek1': { ko: 'Week 1부터 시작하기', en: 'Start from Week 1' },
   'landing.semesterCloses': { ko: 'Semester 3 마감까지', en: 'Semester 3 closes in' },
@@ -189,8 +189,8 @@ const translations = {
   'feat.hidden.title': { ko: '히든 토픽', en: 'Hidden Topics' },
   'feat.hidden.desc': { ko: '한국 시장에 맞는 주간 핫토픽. 스테이블코인부터 한국 거래소 비교까지.', en: 'Weekly hot topics for the Korean market. From stablecoins to Korean exchange comparisons.' },
   'feat.hidden.tag': { ko: '매주 공개', en: 'Weekly' },
-  'feat.cert.title': { ko: '온체인 수료증', en: 'On-chain Certificate' },
-  'feat.cert.desc': { ko: '블록체인에 영구 기록되는 수료증. 링크드인에 공유할 수 있어요.', en: 'A certificate permanently recorded on the blockchain. Shareable on LinkedIn.' },
+  'feat.cert.title': { ko: '참여 인증 (PoA)', en: 'Proof of Attendance' },
+  'feat.cert.desc': { ko: 'Solana 블록체인에 기록되는 참여 인증 NFT. 링크드인에 공유할 수 있어요.', en: 'A Proof of Attendance NFT recorded on Solana blockchain. Shareable on LinkedIn.' },
   'feat.cert.tag': { ko: 'Solana 기반', en: 'Solana-based' },
   'feat.community.title': { ko: '카카오톡 커뮤니티', en: 'KakaoTalk Community' },
   'feat.community.desc': { ko: '같이 배우는 동기들과 카카오톡으로 소통. 졸업 후 스터디 그룹까지.', en: 'Connect with fellow learners via KakaoTalk. Post-graduation study groups included.' },
@@ -199,13 +199,13 @@ const translations = {
   // Certificate preview (landing)
   'certprev.placeholder': { ko: '홍길동', en: 'Your Name' },
   'certprev.inputPlaceholder': { ko: '이름을 입력하면 수료증을 미리 볼 수 있어요', en: 'Enter your name to preview the certificate' },
-  'certprev.completionText': { ko: '4주 블록체인 리터러시 과정을 성공적으로 수료하였습니다.', en: 'has successfully completed the 4-week Blockchain Literacy course.' },
+  'certprev.completionText': { ko: '4주 블록체인 리터러시 과정에 참여하였음을 인증합니다.', en: 'has successfully participated in the 4-week Blockchain Literacy course.' },
   'certprev.curriculum': { ko: '커리큘럼', en: 'Curriculum' },
   'certprev.verified': { ko: '검증', en: 'Verified on' },
   'certprev.actions': { ko: '실습', en: 'Actions' },
   'certprev.share': { ko: '공유하기', en: 'Share' },
   'certprev.solana': { ko: 'Solana 기반', en: 'Solana-based' },
-  'certprev.permanent': { ko: '영구 기록', en: 'Permanent Record' },
+  'certprev.permanent': { ko: '온체인 기록', en: 'On-chain Record' },
   'certprev.linkedin': { ko: '링크드인 공유', en: 'LinkedIn Shareable' },
 
   // Why Section
@@ -282,13 +282,13 @@ const translations = {
   'countdown.seconds': { ko: '초', en: 'Sec' },
 
   // Certificate (certificate card text)
-  'cert.certificateOfCompletion': { ko: '수료 인증서', en: 'Certificate of completion' },
+  'cert.certificateOfCompletion': { ko: '참여 인증서 (Proof of Attendance)', en: 'Certificate of Attendance' },
   'cert.programSubtitle': { ko: '블록체인 리터러시 & 안전 프로그램', en: 'Blockchain Literacy & Safety Program' },
   'cert.completionStatement': { ko: '4주 프로그램을 성공적으로 수료하였습니다', en: 'has successfully completed the 4-week program' },
   'cert.onchainVerified': { ko: '온체인 인증 완료', en: 'On-chain verified' },
   'cert.poweredBy': { ko: 'Powered by Greed Academy × Elixi Venture Studio Group', en: 'Powered by Greed Academy × Elixi Venture Studio Group' },
   'cert.share': { ko: '공유하기', en: 'Share' },
-  'cert.shareText': { ko: 'Onchain Korea 4주 블록체인 교육 수료! 온체인 인증 완료.', en: 'Completed Onchain Korea 4-week blockchain program! On-chain verified.' },
+  'cert.shareText': { ko: 'Onchain Korea 4주 블록체인 교육 참여 완료! Proof of Attendance NFT 발급.', en: 'Completed Onchain Korea 4-week blockchain program! Proof of Attendance NFT issued.' },
 
   // Nav (landing)
   'nav.live': { ko: '학습 진행 중', en: 'Live' },

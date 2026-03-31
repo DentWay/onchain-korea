@@ -47,7 +47,7 @@ export default function CertificatePreview() {
               <span className="text-[10px] text-[var(--text-low)] font-mono">Semester 3 · 2026</span>
             </div>
 
-            <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">Certificate of Completion</p>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">Certificate of Attendance</p>
             <p className="text-3xl md:text-4xl font-bold text-[var(--text-high)] mb-2 transition-all">{displayName}</p>
             <p className="text-[13px] text-[var(--text-mid)] mb-8 font-light">
               {t('certprev.completionText')}
