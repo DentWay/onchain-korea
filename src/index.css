@@ -174,25 +174,6 @@ body {
 
 .animate-gradient-x { animation: gradient-x 3s ease infinite; }
 
-/* ─── Scroll-triggered animation helpers ─── */
-@keyframes ok-gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-.ok-gradient-shift { animation: ok-gradient-shift 6s ease infinite; }
-
-@keyframes ok-glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1); }
-  50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(59, 130, 246, 0.2); }
-}
-.ok-inline-cta-btn { animation: ok-glow-pulse-white 3s ease-in-out infinite; }
-.ok-final-cta-btn { animation: ok-glow-pulse 3s ease-in-out infinite; }
-
-@keyframes ok-glow-pulse-white {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 40px rgba(255, 255, 255, 0.05); }
-  50% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.35), 0 0 60px rgba(255, 255, 255, 0.1); }
-}
 .ok-fade-in { animation: ok-fade-in 0.3s ease-out both; }
 .ok-slide-up { animation: ok-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .ok-page-enter { animation: ok-page-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }

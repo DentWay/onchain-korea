@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Award, Linkedin, Share2 } from 'lucide-react'
+import { Linkedin, Share2 } from 'lucide-react'
 import Section from './Section'
 import useLang from '../../hooks/useLang'
 
@@ -8,18 +8,6 @@ export default function CertificatePreview() {
   const { t, lang } = useLang()
   const [name, setName] = useState('')
   const displayName = name || t('certprev.placeholder')
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
-
-  const handleMouseMove = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    setTilt({ x: y * 10, y: -x * 10 })
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    setTilt({ x: 0, y: 0 })
-  }, [])
 
   const trustBadges = [
     { label: t('certprev.solana') },
@@ -31,18 +19,18 @@ export default function CertificatePreview() {
     <Section className="py-32 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-          {/* Left — Big text + trust badges */}
+          {/* Left -- text + trust badges */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.6 }}
           >
             <span className="ok-section-label">Certificate</span>
-            <h2 className="text-[40px] md:text-[56px] font-bold mt-4 tracking-tight leading-[1.08] text-[var(--text-high)]">
+            <h2 className="text-[32px] md:text-[40px] font-bold mt-4 tracking-tight leading-[1.1] text-[var(--text-high)]">
               {t('landing.certTitle')}
             </h2>
-            <p className="text-[15px] md:text-[17px] text-[var(--text-mid)] mt-5 leading-relaxed font-light max-w-md">
+            <p className="text-[14px] text-[var(--text-mid)] mt-4 leading-relaxed max-w-md">
               {t('landing.certDesc').split('\n').map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}
             </p>
 
@@ -57,7 +45,7 @@ export default function CertificatePreview() {
               />
             </div>
 
-            {/* Trust badges with stagger fade-in */}
+            {/* Trust badges */}
             <div className="mt-8 flex flex-wrap items-center gap-5 text-[13px] text-[var(--text-low)]">
               {trustBadges.map((badge, i) => (
                 <motion.span
@@ -65,42 +53,25 @@ export default function CertificatePreview() {
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
+                  transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
                   className="flex items-center gap-2"
                 >
-                  <div className="w-2 h-2 rounded-full bg-accent/50" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent/50" />
                   {badge.label}
                 </motion.span>
               ))}
             </div>
           </motion.div>
 
-          {/* Right — Certificate mockup card */}
+          {/* Right -- Certificate mockup card */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
           >
-            <motion.div
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              animate={{
-                y: [0, -6, 0],
-                rotateX: tilt.x,
-                rotateY: tilt.y,
-              }}
-              transition={{
-                y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-                rotateX: { duration: 0.3, ease: 'easeOut' },
-                rotateY: { duration: 0.3, ease: 'easeOut' },
-              }}
-              style={{ perspective: 800, transformStyle: 'preserve-3d' }}
-              className="relative rounded-3xl overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-[var(--surface-1)]" />
-              <div className="absolute top-0 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[100px]" />
-              <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+            <div className="ok-card relative rounded-2xl overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-accent/5 rounded-full blur-[80px]" />
 
               <div className="relative p-8 md:p-10">
                 <div className="flex items-center justify-between mb-8">
@@ -114,7 +85,7 @@ export default function CertificatePreview() {
                 </div>
 
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">Certificate of Completion</p>
-                <p className="text-[28px] md:text-[32px] font-bold text-[var(--text-high)] mb-2 transition-all leading-tight">{displayName}</p>
+                <p className="text-[24px] md:text-[28px] font-bold text-[var(--text-high)] mb-2 transition-all leading-tight">{displayName}</p>
                 <p className="text-[13px] text-[var(--text-mid)] mb-8 font-light">
                   {t('certprev.completionText')}
                 </p>
@@ -142,8 +113,7 @@ export default function CertificatePreview() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-0 rounded-3xl border border-[var(--border)] pointer-events-none" />
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>

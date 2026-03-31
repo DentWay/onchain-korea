@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import Section from './Section'
 import useLang from '../../hooks/useLang'
@@ -31,34 +31,6 @@ const faqs = [
   },
 ]
 
-/* Word-by-word reveal for the FAQ title */
-function TitleWordReveal({ text }) {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.9', 'start 0.5'] })
-  const words = text.split(' ')
-
-  return (
-    <span ref={ref} className="inline">
-      {words.map((word, i) => (
-        <TitleWord key={i} progress={scrollYProgress} index={i} total={words.length}>
-          {word}
-        </TitleWord>
-      ))}
-    </span>
-  )
-}
-
-function TitleWord({ progress, index, total, children }) {
-  const start = index / total
-  const end = start + 1 / total
-  const opacity = useTransform(progress, [start, end], [0.15, 1])
-  return (
-    <motion.span style={{ opacity }} className="inline-block mr-[0.3em]">
-      {children}
-    </motion.span>
-  )
-}
-
 export default function FAQ() {
   const { t, lang } = useLang()
   const [openIndex, setOpenIndex] = useState(null)
@@ -66,9 +38,15 @@ export default function FAQ() {
   return (
     <Section className="py-32 px-6">
       <div className="max-w-3xl mx-auto">
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-14">
-          <h2 className="text-[40px] md:text-[56px] font-bold text-[var(--text-high)] tracking-tight">
-            <TitleWordReveal text={t('faq.title')} />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14"
+        >
+          <h2 className="text-[32px] md:text-[40px] font-bold text-[var(--text-high)] tracking-tight">
+            {t('faq.title')}
           </h2>
         </motion.div>
 
@@ -78,20 +56,20 @@ export default function FAQ() {
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.06, duration: 0.5, ease: [0.25, 0.1, 0, 1] }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
               >
                 <button onClick={() => setOpenIndex(isOpen ? null : i)}
                   className="w-full ok-card px-6 py-5 flex items-center justify-between gap-4 text-left hover:bg-[var(--surface-2)] transition-colors">
-                  <span className="text-[15px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
-                  <ChevronDown size={18} className={`shrink-0 text-[var(--text-low)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                  <span className="text-[14px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
+                  <ChevronDown size={16} className={`shrink-0 text-[var(--text-low)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <div className="px-6 py-4 text-[14px] text-[var(--text-mid)] leading-relaxed bg-[var(--surface-1)] rounded-b-xl border-x border-b border-[var(--border)] -mt-1">
+                      <div className="px-6 py-4 text-[13px] text-[var(--text-mid)] leading-relaxed bg-[var(--surface-1)] rounded-b-xl border-x border-b border-[var(--border)] -mt-1">
                         {faq.a[lang] || faq.a.ko}
                       </div>
                     </motion.div>

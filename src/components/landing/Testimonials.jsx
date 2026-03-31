@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { Quote } from 'lucide-react'
 import Section from './Section'
 import useLang from '../../hooks/useLang'
 
@@ -17,7 +16,7 @@ const testimonials = [
   {
     name: { ko: '박준혁', en: 'Junhyuk P.' },
     role: { ko: '직장인, 수료 완료', en: 'Office worker, Graduated' },
-    quote: { ko: '매일 30분씩 출퇴근 시간에 했어요. 온체인 수료증 받고 링크드인에 올렸더니 반응이 좋았습니다.', en: '30 minutes during my commute each day. Got the on-chain certificate and posted on LinkedIn — great response.' },
+    quote: { ko: '매일 30분씩 출퇴근 시간에 했어요. 온체인 수료증 받고 링크드인에 올렸더니 반응이 좋았습니다.', en: '30 minutes during my commute each day. Got the on-chain certificate and posted on LinkedIn -- great response.' },
   },
 ]
 
@@ -29,7 +28,7 @@ export default function Testimonials() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
           <span className="ok-section-label">{t('testimonials.label')}</span>
-          <h2 className="text-[40px] md:text-[56px] font-bold mt-4 tracking-tight text-[var(--text-high)]">
+          <h2 className="text-[32px] md:text-[40px] font-bold mt-4 tracking-tight text-[var(--text-high)]">
             {t('testimonials.title')}
           </h2>
         </div>
@@ -38,21 +37,17 @@ export default function Testimonials() {
           {testimonials.map((item, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15, duration: 0.6, ease: [0.25, 0.1, 0, 1] }}
-              whileHover={{ y: -4, boxShadow: '0 8px 30px rgba(0,0,0,0.3)' }}
-              className="ok-card p-7 flex flex-col justify-between min-h-[220px] transition-shadow"
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className="ok-card p-6 flex flex-col justify-between min-h-[200px]"
             >
-              <div>
-                <Quote size={20} className="text-accent/30 mb-4" />
-                <p className="text-[14px] text-[var(--text-mid)] leading-relaxed">
-                  {item.quote[lang] || item.quote.ko}
-                </p>
-              </div>
+              <p className="text-[13px] text-[var(--text-mid)] leading-relaxed">
+                {item.quote[lang] || item.quote.ko}
+              </p>
               <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[var(--border)]">
-                <div className="w-9 h-9 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
                   <span className="text-[11px] font-bold text-[var(--text-mid)]">{(item.name[lang] || item.name.ko)[0]}</span>
                 </div>
                 <div>
