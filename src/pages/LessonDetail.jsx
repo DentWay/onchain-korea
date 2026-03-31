@@ -15,11 +15,12 @@ const typeConfig = {
 export default function LessonDetail() {
   const { lessonId } = useParams()
   const lesson = findLesson(lessonId)
-  const { getLessonStatus, toggleLesson, isWeekUnlocked } = useProgress()
+  const { getLessonStatus, toggleLesson, isWeekUnlocked, isLessonUnlocked } = useProgress()
   const { t, lang } = useLang()
 
   if (!lesson) return <Navigate to="/dashboard" replace />
   if (!isWeekUnlocked(lesson.weekId)) return <Navigate to="/dashboard" replace />
+  if (!isLessonUnlocked(lesson.id)) return <Navigate to={`/week/${lesson.weekId}`} replace />
 
   const done = getLessonStatus(lesson.id) === 'done'
   const content = lessonContents[lesson.id]

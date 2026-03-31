@@ -172,13 +172,46 @@ export function ProgressProvider({ children }) {
     return (done / prevWeek.lessons.length) >= 0.6
   }, [progress.completedLessons])
 
-  const getLessonStatus = useCallback((lessonId) => {
-    return progress.completedLessons.includes(lessonId) ? 'done' : 'available'
+  // Sequential unlock: lesson N requires lesson N-1 completed
+  const isLessonUnlocked = useCallback((lessonId) => {
+    for (const week of weekData) {
+      const idx = week.lessons.findIndex(l => l.id === lessonId)
+      if (idx === -1) continue
+      if (idx === 0) return true // first lesson always unlocked
+      return progress.completedLessons.includes(week.lessons[idx - 1].id)
+    }
+    return true
   }, [progress.completedLessons])
 
-  const getActionStatus = useCallback((actionId) => {
-    return progress.completedActions.includes(actionId) ? 'done' : 'available'
+  // Actions unlock after all lessons in that week are completed
+  const isActionsUnlocked = useCallback((weekId) => {
+    const week = weekData.find(w => w.id === weekId)
+    if (!week) return false
+    return week.lessons.every(l => progress.completedLessons.includes(l.id))
+  }, [progress.completedLessons])
+
+  // Hidden topic unlocks after at least 1 action in that week is completed
+  const isHiddenTopicUnlocked = useCallback((weekId) => {
+    const week = weekData.find(w => w.id === weekId)
+    if (!week) return false
+    return week.actions.some(a => progress.completedActions.includes(a.id))
   }, [progress.completedActions])
+
+  const getLessonStatus = useCallback((lessonId) => {
+    if (progress.completedLessons.includes(lessonId)) return 'done'
+    return isLessonUnlocked(lessonId) ? 'available' : 'locked'
+  }, [progress.completedLessons, isLessonUnlocked])
+
+  const getActionStatus = useCallback((actionId) => {
+    if (progress.completedActions.includes(actionId)) return 'done'
+    // Find which week this action belongs to
+    for (const week of weekData) {
+      if (week.actions.some(a => a.id === actionId)) {
+        return isActionsUnlocked(week.id) ? 'available' : 'locked'
+      }
+    }
+    return 'available'
+  }, [progress.completedActions, isActionsUnlocked])
 
   const getWeekProgress = useCallback((weekId) => {
     const week = weekData.find(w => w.id === weekId)
@@ -232,6 +265,9 @@ export function ProgressProvider({ children }) {
     toggleAction,
     toggleHiddenTopic,
     isWeekUnlocked,
+    isLessonUnlocked,
+    isActionsUnlocked,
+    isHiddenTopicUnlocked,
     getLessonStatus,
     getActionStatus,
     getWeekProgress,

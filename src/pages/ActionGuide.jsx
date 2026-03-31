@@ -15,10 +15,11 @@ export default function ActionGuide() {
   const { actionId } = useParams()
   const guide = actionGuides.find(g => g.id === actionId)
   const nextGuide = guide && actionGuides.find(g => g.id !== guide.id && g.weekId === guide.weekId)
-  const { toggleAction, getActionStatus } = useProgress()
+  const { toggleAction, getActionStatus, isActionsUnlocked } = useProgress()
   const { t, lang } = useLang()
 
   if (!guide) return <Navigate to="/dashboard" replace />
+  if (!isActionsUnlocked(guide.weekId)) return <Navigate to={`/week/${guide.weekId}`} replace />
 
   const actionDone = guide.actionId ? getActionStatus(guide.actionId) === 'done' : false
   const handleComplete = () => { if (guide.actionId) toggleAction(guide.actionId) }

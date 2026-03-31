@@ -57,6 +57,9 @@ const translations = {
   'week.participating': { ko: '명 참여', en: ' participating' },
   'week.lessonsDone': { ko: '레슨 완료', en: 'lessons done' },
   'week.actionsVerified': { ko: '액션 인증', en: 'actions verified' },
+  'week.completePrevLesson': { ko: '이전 레슨을 먼저 완료하세요', en: 'Complete the previous lesson first' },
+  'week.completeLessonsForActions': { ko: '모든 레슨을 완료하면 열립니다', en: 'Complete all lessons to unlock' },
+  'week.completeActionForHidden': { ko: '액션 1개 이상 완료하면 열립니다', en: 'Complete at least 1 action to unlock' },
 
   // Lesson Detail
   'lesson.preparing': { ko: '한국어 콘텐츠 준비 중', en: 'Korean content coming soon' },
