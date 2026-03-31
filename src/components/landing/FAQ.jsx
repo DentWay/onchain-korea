@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: { ko: '실습에 돈이 드나요?', en: 'Does the practice cost money?' },
-    a: { ko: '대부분의 실습은 무료이며, 일부 온체인 액션(DEX 스왑, NFT 민팅 등)에 소액의 네트워크 수수료(0.01달러 미만)가 필요합니다. SOL 기준 0.1개(약 2,000원) 정도면 모든 실습을 완료할 수 있습니다.', en: 'Most practice is free. Some on-chain actions (DEX swap, NFT minting) require small network fees (less than $0.01). About 0.1 SOL (~$2) is enough to complete all practices.' },
+    a: { ko: '실습 비용은 Week 2부터 필요합니다. Week 1은 완전 무료로 진행됩니다. 대부분의 실습은 무료이며, 일부 온체인 액션(DEX 스왑, NFT 민팅 등)에 소액의 네트워크 수수료(0.01달러 미만)가 필요합니다. SOL 기준 0.1개(약 2,000원) 정도면 모든 실습을 완료할 수 있습니다. 업비트나 빗썸에서 SOL을 구매한 후 Phantom 지갑으로 출금하면 됩니다. 자세한 방법은 Week 1 레슨에서 안내합니다.', en: 'Practice costs only apply from Week 2 onwards. Week 1 is completely free. Most practice is free. Some on-chain actions (DEX swap, NFT minting) require small network fees (less than $0.01). About 0.1 SOL (~$2) is enough to complete all practices. You can buy SOL on an exchange like Coinbase or Binance and withdraw to your Phantom wallet. Detailed instructions are provided in Week 1 lessons.' },
   },
   {
     q: { ko: '수료증은 어떻게 받나요?', en: 'How do I get the certificate?' },
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: { ko: '다음 기수는 언제인가요?', en: 'When is the next cohort?' },
-    a: { ko: 'Semester 3 등록은 2026년 4월 30일에 마감됩니다. 다음 기수(Semester 4)는 2026년 7월 예정입니다. 이번 기수를 놓치면 약 2개월을 기다려야 합니다.', en: 'Semester 3 registration closes April 30, 2026. The next cohort (Semester 4) is planned for July 2026. If you miss this one, you\'ll wait about 2 months.' },
+    a: { ko: 'Semester는 Greed Academy의 학기 단위입니다. 현재 3기(Semester 3)가 진행 중이며, 등록은 2026년 4월 30일에 마감됩니다. 다음 기수(Semester 4)는 2026년 7월 예정입니다. 이번 기수를 놓치면 약 2개월을 기다려야 합니다.', en: 'Semester refers to Greed Academy\'s cohort system. We\'re currently running Semester 3 (the 3rd cohort), and registration closes April 30, 2026. The next cohort (Semester 4) is planned for July 2026. If you miss this one, you\'ll wait about 2 months.' },
   },
 ]
 

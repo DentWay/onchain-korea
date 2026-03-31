@@ -84,7 +84,7 @@ export default function CertificatePreview() {
                   <span className="text-[10px] text-[var(--text-low)] font-mono">Semester 3</span>
                 </div>
 
-                <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">Certificate of Completion</p>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">{t('cert.certificateOfCompletion')}</p>
                 <p className="text-[24px] md:text-[28px] font-bold text-[var(--text-high)] mb-2 transition-all leading-tight">{displayName}</p>
                 <p className="text-[13px] text-[var(--text-mid)] mb-8 font-light">
                   {t('certprev.completionText')}
@@ -114,6 +114,7 @@ export default function CertificatePreview() {
                 </div>
               </div>
             </div>
+            <p className="text-[11px] text-[var(--text-low)] mt-3 text-center italic">{t('cert.disclaimer')}</p>
           </motion.div>
         </div>
       </div>

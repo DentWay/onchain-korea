@@ -66,6 +66,8 @@ export default function Certificate() {
           </div>
         </div>
 
+        <p className="text-[11px] text-[var(--text-low)] mt-3 text-center italic">{t('cert.disclaimer')}</p>
+
         {eligible && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex items-center justify-center gap-3 mt-5">
             <span className="text-[11px] text-[var(--text-low)] flex items-center gap-1"><Share2 size={12} /> {t('cert.share')}</span>

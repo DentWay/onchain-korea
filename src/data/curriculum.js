@@ -186,8 +186,8 @@ export const actionGuides = [
       { text: { ko: '두 장을 서로 다른 안전한 장소에 보관하세요', en: 'Store the two sheets in separate secure locations' }, note: { ko: '예: 서랍 + 금고, 또는 자택 + 부모님 댁', en: 'e.g., drawer + safe, or your home + parents\' home' } },
     ],
     safetyTips: {
-      ko: ['시드 문구를 절대 사진 찍지 마세요.', '클라우드(iCloud, Google Drive)에 절대 저장하지 마세요.', '다른 사람에게 보여주거나 공유하지 마세요.', '시드 문구를 잃어버리면 지갑을 복구할 수 없습니다.'],
-      en: ['Never take a photo of your seed phrase.', 'Never store on cloud (iCloud, Google Drive).', 'Never show or share with anyone.', 'If you lose your seed phrase, your wallet cannot be recovered.'],
+      ko: ['시드 문구를 절대 사진 찍지 마세요.', '클라우드(iCloud, Google Drive)에 절대 저장하지 마세요.', '다른 사람에게 보여주거나 공유하지 마세요.', '시드 문구를 잃어버리면 지갑을 복구할 수 없습니다.', '모바일에서 진행하는 경우, 시드 문구를 메모 앱이 아닌 종이에 직접 적어주세요. 스크린샷도 금지입니다.'],
+      en: ['Never take a photo of your seed phrase.', 'Never store on cloud (iCloud, Google Drive).', 'Never show or share with anyone.', 'If you lose your seed phrase, your wallet cannot be recovered.', 'If you\'re on mobile, write down your seed phrase on paper, not in a notes app. Screenshots are also not recommended.'],
     },
   },
   // Week 2 guides (stablecoins + on-chain exploration)
