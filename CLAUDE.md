@@ -114,7 +114,7 @@ src/
 │   ├── ActionGuide.jsx        # Step-by-step practice guides
 │   ├── HiddenTopics.jsx       # Weekly editorial articles
 │   ├── Community.jsx          # KakaoTalk, newsletter, forum
-│   └── Certificate.jsx        # Certificate eligibility tracker
+│   └── Certificate.jsx        # Proof of Attendance (PoAP) eligibility tracker
 ├── components/
 │   ├── Layout.jsx             # App shell (sidebar + outlet)
 │   ├── Sidebar.jsx            # Navigation + progress + Beta badge
@@ -123,7 +123,7 @@ src/
 │   └── landing/               # 17 landing page components
 │       ├── Hero.jsx, Nav.jsx, Stats.jsx
 │       ├── Curriculum.jsx, Features.jsx
-│       ├── CertificatePreview.jsx (interactive name input)
+│       ├── CertificatePreview.jsx (interactive PoAP name input)
 │       ├── FAQ.jsx (6 questions)
 │       ├── InlineCTA.jsx (mid-page conversion)
 │       ├── FomoBanner.jsx (top bar with real deadline)
@@ -156,6 +156,8 @@ Environment variables (Vercel + .env.local):
 3. **Hidden topic keys = week IDs** — `hiddenTopicContents[weekId]` must be re-keyed when weeks are reordered.
 4. **Supabase is optional** — app works without credentials (falls back to localStorage only).
 5. **No fake data** — all countdown timers use real semester deadline (2026-04-30), stats come from DB.
+6. **"Proof of Attendance (PoAP)" not "Certificate"** — Bojana feedback: avoid implying official credential. All user-facing copy uses "Proof of Attendance" instead of "Certificate".
+7. **"Semester" = Greed Academy cohort** — Each semester is a Greed Academy cohort cycle (e.g., Semester 3 = third cohort). Explained in FAQ.
 
 ## Content Factcheck Status (as of 2026-03-27)
 All 20 lessons and 4 hidden topic articles have been verified against primary sources.

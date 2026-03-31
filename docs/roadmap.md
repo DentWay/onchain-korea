@@ -23,7 +23,7 @@
 ### 디자인 + 전환율 최적화
 - [x] 디자인 리뉴얼 (LessonDetail, Dashboard, WeekDetail)
 - [x] 이모지 → Lucide 아이콘 전환
-- [x] 랜딩 전환율 최적화 (앵커링, FAQ, InlineCTA, 인터랙티브 수료증)
+- [x] 랜딩 전환율 최적화 (앵커링, FAQ, InlineCTA, 인터랙티브 Proof of Attendance 미리보기)
 - [x] 가짜 데이터 전면 제거
 - [x] 커리큘럼 한국 시장 최적화 (순서 재구성)
 - [x] Beta 뱃지 + 홈 링크
@@ -32,12 +32,12 @@
 
 ## 미완료
 
-### Phase 3: 온체인 수료증 (다음 우선순위)
-- [ ] Solana NFT 수료증 민팅 기능
+### Phase 3: 온체인 Proof of Attendance (다음 우선순위)
+- [ ] Solana NFT Proof of Attendance 민팅 기능
 - [ ] 수료 조건 달성 시 지갑 연결 → Metaplex Core 민팅
-- [ ] 수료증 디자인 (온체인 메타데이터)
+- [ ] Proof of Attendance 디자인 (온체인 메타데이터)
 - [ ] Twitter/LinkedIn 공유 기능
-- [ ] Certificate 페이지 완성 (현재 미리보기만)
+- [ ] Certificate 페이지 완성 (현재 미리보기만) — 용어는 "Proof of Attendance"로 통일
 
 ### Phase 4: 커뮤니티
 - [ ] 히든토픽 댓글/토론 기능
@@ -62,7 +62,7 @@
 
 ## 장기 비전
 - 백엔드 API로 실제 유저 인증 + 진도 동기화
-- 온체인 수료증 실제 발급 (Solana NFT)
+- 온체인 Proof of Attendance 실제 발급 (Solana NFT)
 - 커뮤니티 포럼 (댓글, 토론, 투표)
 - 모바일 앱 (React Native)
 - 고급 과정 (Semester 4+)

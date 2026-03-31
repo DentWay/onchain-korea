@@ -38,7 +38,7 @@
 
 ### 7. 일관성 (Commitment & Consistency)
 - **위치**: CertificatePreview (이름 입력)
-- **구현**: 이름을 입력하면 수료증에 자기 이름이 보임
+- **구현**: 이름을 입력하면 Proof of Attendance에 자기 이름이 보임
 - **효과**: Endowed Progress Effect — 이미 시작한 것처럼 느끼게
 
 ### 8. 통합 (Unity — Cialdini 7th)
@@ -72,7 +72,7 @@ Hero (가치 제안)
 → Curriculum (무엇을 배우나)
 → InlineCTA ← 전환 의도 피크
 → Features (어떻게 다른가)
-→ CertificatePreview (보상 시각화)
+→ CertificatePreview (Proof of Attendance 시각화)
 → Testimonials (실제 후기)
 → FAQ (마지막 의심 해소)
 → FinalCTA ← 최종 전환

@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-03-31
+
+### Bojana 피드백 반영
+- "Certificate" → "Proof of Attendance (PoAP)" 전체 용어 변경 (공식 자격증 오해 방지)
+- FAQ 업데이트: SOL 구매 가이드 추가, Semester = Greed Academy 코호트 설명 추가
+- 모바일 시드 문구 안전 팁 추가
+- Proof of Attendance 면책 문구 추가 ("공식 자격증이 아닌 학습 완료 증명")
+
+### 랜딩 페이지 리디자인
+- VeriChain 영감 디자인 → 디자인 시스템에 맞게 톤 다운
+- Sequential content reveal 시스템 (레슨 → 액션 → 히든토픽)
+
+### 인증 + 백엔드
+- Google / Kakao / Wallet 인증 추가
+- Supabase 통합 강화
+
+### QA 감사
+- P0 / P1 / P2 이슈 수정
+
+### i18n 마이그레이션
+- 100+ 번역 키 추가 (ko/en)
+
+---
+
 ## 2026-03-27
 
 ### 커리큘럼 재구성
@@ -27,7 +51,7 @@
 - Hero: 의심 해소 문구 추가
 - InlineCTA 컴포넌트 (Curriculum 뒤)
 - FAQ 섹션 추가 (6개 질문)
-- CertificatePreview: 인터랙티브 이름 입력
+- CertificatePreview: 인터랙티브 이름 입력 (→ 이후 Proof of Attendance로 용어 변경)
 - FomoBanner: "선착순" → "N/200명 · 4월 30일 마감"
 - LiveTicker 제거 (FomoToast만 유지)
 - 섹션 순서 재배치

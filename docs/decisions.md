@@ -100,12 +100,12 @@
 
 ---
 
-## 9. 인터랙티브 수료증 미리보기 (2026-03-27)
+## 9. 인터랙티브 Proof of Attendance 미리보기 (2026-03-27, updated 2026-03-31)
 
-**결정**: CertificatePreview에 이름 입력 필드 추가 → 실시간 수료증 미리보기.
+**결정**: CertificatePreview에 이름 입력 필드 추가 → 실시간 Proof of Attendance 미리보기.
 
 **근거**:
-- Goal Gradient Effect: 목표(수료증)에 이미 이름이 적혀있으면 완료 동기 상승
+- Goal Gradient Effect: 목표(Proof of Attendance)에 이미 이름이 적혀있으면 완료 동기 상승
 - Endowment Effect: "내 것"이라고 느끼기 시작하면 포기하기 어려움
 - LinkedIn 공유 mockup: 사회적 화폐 동기 (한국 직장인 타겟)
 - 구현: 간단한 useState input → 플레이스홀더 "홍길동" → 실시간 반영
@@ -122,5 +122,29 @@
 **근거**:
 - SocialProof를 위로 이동: 파트너 로고/리워드가 "이 과정이 진짜"라는 신뢰를 먼저 구축
 - Curriculum 뒤에 InlineCTA: 커리큘럼을 보고 "괜찮네" 느낀 순간이 전환 의도 최고점
-- Testimonials를 Cert 뒤로 이동: 수료증 열망 → 실제 수료자 후기 순서가 더 설득력
+- Testimonials를 Cert 뒤로 이동: Proof of Attendance 열망 → 실제 수료자 후기 순서가 더 설득력
 - FAQ를 FinalCTA 직전: 마지막 의심 해소 후 바로 CTA
+
+---
+
+## 11. Certificate → Proof of Attendance (PoAP) 용어 변경 (2026-03-31)
+
+**결정**: 모든 유저 대면 텍스트에서 "Certificate" / "수료증"을 "Proof of Attendance (PoAP)"로 변경.
+
+**근거**:
+- Bojana 피드백: "Certificate"는 공인 자격증을 암시할 수 있음
+- 우리 프로그램은 공인 교육기관이 아니므로 법적/윤리적 오해 방지 필요
+- "Proof of Attendance"는 학습 참여 증명이라는 정확한 의미 전달
+- 면책 문구 추가: "본 Proof of Attendance는 공식 자격증이 아닌 학습 완료 증명입니다"
+
+---
+
+## 12. Sequential Content Reveal 시스템 (2026-03-31)
+
+**결정**: 콘텐츠 잠금 해제 순서를 레슨 → 액션 → 히든토픽으로 강제.
+
+**근거**:
+- 유저가 히든토픽을 먼저 읽고 레슨을 건너뛰는 패턴 방지
+- 학습 퍼널: 이론(레슨) → 실습(액션) → 심화(히든토픽) 순서가 교육학적으로 효과적
+- 각 단계 완료율이 다음 단계 잠금 해제 조건으로 작동
+- 진도 추적(useProgress)과 자연스럽게 연동
