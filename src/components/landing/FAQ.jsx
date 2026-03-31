@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: { ko: '다음 기수는 언제인가요?', en: 'When is the next cohort?' },
-    a: { ko: 'Semester는 Greed Academy의 학기 단위입니다. 현재 3기(Semester 3)가 진행 중이며, 등록은 2026년 4월 30일에 마감됩니다. 다음 기수(Semester 4)는 2026년 7월 예정입니다. 이번 기수를 놓치면 약 2개월을 기다려야 합니다.', en: 'Semester refers to Greed Academy\'s cohort system. We\'re currently running Semester 3 (the 3rd cohort), and registration closes April 30, 2026. The next cohort (Semester 4) is planned for July 2026. If you miss this one, you\'ll wait about 2 months.' },
+    a: { ko: 'Semester는 Greed Academy의 학기 단위입니다. 현재 Semester 1과 2를 합쳐서 진행 중이며, 등록은 2026년 4월 30일에 마감됩니다. 다음 기수(Semester 3)는 2026년 7월 예정입니다. 이번 기수를 놓치면 약 2개월을 기다려야 합니다.', en: 'Semester refers to Greed Academy\'s cohort system. We\'re currently running Semester 1 + 2 combined, and registration closes April 30, 2026. The next cohort (Semester 3) is planned for July 2026. If you miss this one, you\'ll wait about 2 months.' },
   },
 ]
 

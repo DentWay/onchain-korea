@@ -43,7 +43,7 @@
 
 ### 8. 통합 (Unity — Cialdini 7th)
 - **위치**: FomoBanner, WhySection
-- **구현**: "Semester 3", "함께 배우기", 코호트 개념
+- **구현**: "Semester 1 + 2", "함께 배우기", 코호트 개념
 - **효과**: 같은 기수 동기라는 집단 정체성
 
 ---

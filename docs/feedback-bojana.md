@@ -18,8 +18,8 @@
 
 **Resolution:**
 - Updated FAQ Q6 answer in `src/components/landing/FAQ.jsx` to prepend:
-  - KO: "Semester는 Greed Academy의 학기 단위입니다. 현재 3기(Semester 3)가 진행 중이며,"
-  - EN: "Semester refers to Greed Academy's cohort system. We're currently running Semester 3 (the 3rd cohort),"
+  - KO: "Semester는 Greed Academy의 학기 단위입니다. 현재 Semester 1과 2를 합쳐서 진행 중이며,"
+  - EN: "Semester refers to Greed Academy's cohort system. We're currently running Semester 1 + 2 combined,"
 
 ---
 

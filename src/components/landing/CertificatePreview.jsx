@@ -81,7 +81,7 @@ export default function CertificatePreview() {
                     </div>
                     <span className="text-[12px] font-semibold text-[var(--text-mid)]">Onchain Korea</span>
                   </div>
-                  <span className="text-[10px] text-[var(--text-low)] font-mono">Semester 3</span>
+                  <span className="text-[10px] text-[var(--text-low)] font-mono">Semester 1 + 2</span>
                 </div>
 
                 <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--text-low)] mb-3">{t('cert.certificateOfCompletion')}</p>

@@ -145,7 +145,7 @@ const translations = {
   'landing.startNowSub': { ko: '카드 정보 불필요 · 4주 완성 · Solana 수료 증명', en: 'No credit card · 4 weeks · Solana Proof of Attendance' },
   'landing.startWeek1': { ko: 'Week 1 시작하기', en: 'Start Week 1' },
   'landing.startFromWeek1': { ko: 'Week 1부터 시작하기', en: 'Start from Week 1' },
-  'landing.semesterCloses': { ko: 'Semester 3 마감까지', en: 'Semester 3 closes in' },
+  'landing.semesterCloses': { ko: 'Semester 1 + 2 마감까지', en: 'Semester 1 + 2 closes in' },
   'landing.priceAnchor': { ko: '유사 블록체인 교육 과정 평균 50~200만원', en: 'Average blockchain course $400~$1,500' },
   'landing.priceAnchorArrow': { ko: '→ Onchain Korea: ₩0', en: '→ Onchain Korea: $0' },
   'landing.priceAnchorShort': { ko: '유사 교육 과정 50~200만원', en: 'Similar courses $400~$1,500' },
@@ -234,7 +234,7 @@ const translations = {
   'fomo.closes': { ko: '4월 30일 마감', en: 'Closes Apr 30' },
 
   // FOMO
-  'fomo.badge': { ko: 'Semester 3 사전 등록 중', en: 'Semester 3 Pre-registration Open' },
+  'fomo.badge': { ko: 'Semester 1 + 2 등록 중', en: 'Semester 1 + 2 Registration Open' },
   'fomo.spots': { ko: '명 등록 완료', en: ' enrolled' },
   'fomo.limited': { ko: '선착순 마감 예정', en: 'Limited spots — closing soon' },
   'fomo.live': { ko: '지금 참여자가 학습 중', en: 'Learners active right now' },

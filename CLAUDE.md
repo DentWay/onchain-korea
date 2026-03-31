@@ -157,7 +157,7 @@ Environment variables (Vercel + .env.local):
 4. **Supabase is optional** — app works without credentials (falls back to localStorage only).
 5. **No fake data** — all countdown timers use real semester deadline (2026-04-30), stats come from DB.
 6. **"Proof of Attendance (PoAP)" not "Certificate"** — Bojana feedback: avoid implying official credential. All user-facing copy uses "Proof of Attendance" instead of "Certificate".
-7. **"Semester" = Greed Academy cohort** — Each semester is a Greed Academy cohort cycle (e.g., Semester 3 = third cohort). Explained in FAQ.
+7. **"Semester" = Greed Academy cohort** — Current offering is Semester 1 + 2 combined (Greed Academy S1 & S2 curriculum merged). Explained in FAQ.
 
 ## Content Factcheck Status (as of 2026-03-27)
 All 20 lessons and 4 hidden topic articles have been verified against primary sources.
@@ -173,6 +173,6 @@ Key regulatory facts verified:
 - 스테이블코인 시장 $300B+
 
 ## Semester Info
-- Semester 3 deadline: 2026-04-30T23:59:59+09:00
-- Next cohort (Semester 4): July 2026
+- Semester 1 + 2 (combined) deadline: 2026-04-30T23:59:59+09:00
+- Next cohort (Semester 3): July 2026
 - Capacity: 200 spots per semester

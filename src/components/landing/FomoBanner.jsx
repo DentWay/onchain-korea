@@ -4,7 +4,7 @@ import CountdownTimer from '../CountdownTimer'
 import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
 
-// Semester 3 deadline: 2026-04-30 KST
+// Semester 1 + 2 deadline: 2026-04-30 KST
 const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 export default function FomoBanner({ onVisibilityChange }) {
@@ -28,7 +28,7 @@ export default function FomoBanner({ onVisibilityChange }) {
     <div className="fixed top-0 left-0 right-0 z-[60] bg-accent">
       <div className="max-w-5xl mx-auto px-4 h-9 flex items-center justify-between">
         <p className="text-[11px] text-white font-medium truncate flex-1">
-          Semester 3 {t('fomo.text')} — {count > 0 ? `${count}/200${t('fomo.bannerSpots')}` : t('fomo.spotsLimit')} · {t('fomo.closes')}
+          Semester 1 + 2 {t('fomo.text')} — {count > 0 ? `${count}/200${t('fomo.bannerSpots')}` : t('fomo.spotsLimit')} · {t('fomo.closes')}
         </p>
         <div className="hidden sm:flex items-center gap-3 shrink-0 ml-3">
           <CountdownTimer targetDate={SEMESTER_DEADLINE} compact />

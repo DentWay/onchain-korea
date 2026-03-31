@@ -65,5 +65,5 @@
 - 온체인 Proof of Attendance 실제 발급 (Solana NFT)
 - 커뮤니티 포럼 (댓글, 토론, 투표)
 - 모바일 앱 (React Native)
-- 고급 과정 (Semester 4+)
+- 고급 과정 (Semester 3+)
 - 파트너 확대 (한국 거래소, DeFi 프로토콜)
