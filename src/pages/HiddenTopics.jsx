@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Check, ChevronDown, Lightbulb } from 'lucide-react'
+import { ArrowLeft, Check, ChevronDown, Lightbulb, Lock } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import { hiddenTopicContents } from '../data/content'
 import useProgress from '../hooks/useProgress'
 import useLang from '../hooks/useLang'
 
 export default function HiddenTopics() {
-  const { readHiddenTopics, toggleHiddenTopic } = useProgress()
+  const { readHiddenTopics, toggleHiddenTopic, isHiddenTopicUnlocked, isWeekUnlocked } = useProgress()
   const { t, lang } = useLang()
   const [expandedWeek, setExpandedWeek] = useState(null)
 
@@ -32,39 +32,51 @@ export default function HiddenTopics() {
             const isCurrent = i === 0
             const isExpanded = expandedWeek === week.id
             const content = hiddenTopicContents[week.id]
+            const weekOpen = isWeekUnlocked(week.id)
+            const unlocked = weekOpen && isHiddenTopicUnlocked(week.id)
+            const locked = !unlocked && !isRead
 
             return (
               <motion.div key={week.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}
-                className={`ok-card overflow-hidden ${isRead ? 'border-success/20' : isCurrent ? 'border-accent/20' : ''}`}>
+                className={`ok-card overflow-hidden ${locked ? 'opacity-40' : ''} ${isRead ? 'border-success/20' : isCurrent && !locked ? 'border-accent/20' : ''}`}>
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] text-[var(--text-low)] uppercase tracking-wider font-medium">{t('common.week')} {week.id}</span>
-                      {isCurrent && !isRead && <span className="ok-tag ok-tag-accent">{t('hidden.thisWeek')}</span>}
+                      {locked && <Lock size={11} className="text-[var(--text-low)]" />}
+                      {isCurrent && !isRead && !locked && <span className="ok-tag ok-tag-accent">{t('hidden.thisWeek')}</span>}
                     </div>
                     {isRead && <span className="text-[10px] text-success flex items-center gap-1"><Check size={12} /> {t('hidden.complete')}</span>}
                   </div>
                   <p className="text-[14px] font-semibold text-[var(--text-high)]">{l(ht.title, lang)}</p>
-                  {ht.desc && <p className="text-[11px] text-[var(--text-mid)] mt-2 leading-relaxed">{l(ht.desc, lang)}</p>}
-                  <div className="flex gap-3 mt-2 text-[10px] text-[var(--text-low)]">
-                    <span>{l(ht.readTime, lang)}</span>
-                    {ht.forumCount > 0 && <span>{ht.forumCount}{t('week.participating')}</span>}
-                    <span>{t('hidden.action')}: {l(ht.action, lang)}</span>
-                  </div>
+                  {locked ? (
+                    <p className="text-[11px] text-[var(--text-low)] mt-2">
+                      {!weekOpen ? t('week.completePrevLesson') : t('week.completeActionForHidden')}
+                    </p>
+                  ) : (
+                    <>
+                      {ht.desc && <p className="text-[11px] text-[var(--text-mid)] mt-2 leading-relaxed">{l(ht.desc, lang)}</p>}
+                      <div className="flex gap-3 mt-2 text-[10px] text-[var(--text-low)]">
+                        <span>{l(ht.readTime, lang)}</span>
+                        {ht.forumCount > 0 && <span>{ht.forumCount}{t('week.participating')}</span>}
+                        <span>{t('hidden.action')}: {l(ht.action, lang)}</span>
+                      </div>
 
-                  <div className="flex items-center gap-2 mt-3">
-                    {content && (
-                      <button onClick={() => toggle(week.id)}
-                        className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5 flex items-center gap-1">
-                        <ChevronDown size={13} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                        {isExpanded ? t('hidden.collapse') : t('hidden.readArticle')}
-                      </button>
-                    )}
-                    <button onClick={() => toggleHiddenTopic(week.id)}
-                      className={`ok-btn text-[11px] px-3 py-1.5 ${isRead ? 'ok-btn-ghost border-success/20 text-success' : 'ok-btn-primary'}`}>
-                      {isRead ? t('hidden.readComplete') : t('hidden.markRead')}
-                    </button>
-                  </div>
+                      <div className="flex items-center gap-2 mt-3">
+                        {content && (
+                          <button onClick={() => toggle(week.id)}
+                            className="ok-btn ok-btn-ghost text-[11px] px-3 py-1.5 flex items-center gap-1">
+                            <ChevronDown size={13} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                            {isExpanded ? t('hidden.collapse') : t('hidden.readArticle')}
+                          </button>
+                        )}
+                        <button onClick={() => toggleHiddenTopic(week.id)}
+                          className={`ok-btn text-[11px] px-3 py-1.5 ${isRead ? 'ok-btn-ghost border-success/20 text-success' : 'ok-btn-primary'}`}>
+                          {isRead ? t('hidden.readComplete') : t('hidden.markRead')}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <AnimatePresence>
