@@ -36,28 +36,28 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
-    <Section className="py-24 px-6">
-      <div className="max-w-2xl mx-auto">
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-high)]">
+    <Section className="py-32 px-6">
+      <div className="max-w-3xl mx-auto">
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-14">
+          <h2 className="text-[40px] md:text-[56px] font-bold text-[var(--text-high)] tracking-tight">
             {t('faq.title')}
           </h2>
         </motion.div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i
             return (
               <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
                 <button onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full ok-card px-5 py-4 flex items-center justify-between gap-4 text-left hover:bg-[var(--surface-2)] transition-colors">
-                  <span className="text-[14px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
-                  <ChevronDown size={16} className={`shrink-0 text-[var(--text-low)] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  className="w-full ok-card px-6 py-5 flex items-center justify-between gap-4 text-left hover:bg-[var(--surface-2)] transition-colors">
+                  <span className="text-[15px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
+                  <ChevronDown size={18} className={`shrink-0 text-[var(--text-low)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <div className="px-5 py-3 text-[13px] text-[var(--text-mid)] leading-relaxed bg-[var(--surface-1)] rounded-b-xl border-x border-b border-[var(--border)] -mt-1">
+                      <div className="px-6 py-4 text-[14px] text-[var(--text-mid)] leading-relaxed bg-[var(--surface-1)] rounded-b-xl border-x border-b border-[var(--border)] -mt-1">
                         {faq.a[lang] || faq.a.ko}
                       </div>
                     </motion.div>

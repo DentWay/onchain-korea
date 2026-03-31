@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Quote } from 'lucide-react'
 import Section from './Section'
 import useLang from '../../hooks/useLang'
 
@@ -24,26 +25,38 @@ export default function Testimonials() {
   const { t, lang } = useLang()
 
   return (
-    <Section className="py-20 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+    <Section className="py-32 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-14">
           <span className="ok-section-label">{t('testimonials.label')}</span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-[var(--text-high)]">
+          <h2 className="text-[40px] md:text-[56px] font-bold mt-4 tracking-tight text-[var(--text-high)]">
             {t('testimonials.title')}
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {testimonials.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12 }} className="ok-card p-6">
-              <p className="text-[13px] text-[var(--text-mid)] leading-relaxed mb-5">"{item.quote[lang] || item.quote.ko}"</p>
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-[var(--text-mid)]">{(item.name[lang] || item.name.ko)[0]}</span>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.12, duration: 0.5 }}
+              className="ok-card p-7 flex flex-col justify-between min-h-[220px]"
+            >
+              <div>
+                <Quote size={20} className="text-accent/30 mb-4" />
+                <p className="text-[14px] text-[var(--text-mid)] leading-relaxed">
+                  {item.quote[lang] || item.quote.ko}
+                </p>
+              </div>
+              <div className="flex items-center gap-3 mt-6 pt-5 border-t border-[var(--border)]">
+                <div className="w-9 h-9 rounded-full bg-[var(--surface-2)] flex items-center justify-center">
+                  <span className="text-[11px] font-bold text-[var(--text-mid)]">{(item.name[lang] || item.name.ko)[0]}</span>
                 </div>
                 <div>
-                  <p className="text-[12px] font-medium text-[var(--text-high)]">{item.name[lang] || item.name.ko}</p>
-                  <p className="text-[10px] text-[var(--text-low)]">{item.role[lang] || item.role.ko}</p>
+                  <p className="text-[13px] font-medium text-[var(--text-high)]">{item.name[lang] || item.name.ko}</p>
+                  <p className="text-[11px] text-[var(--text-low)]">{item.role[lang] || item.role.ko}</p>
                 </div>
               </div>
             </motion.div>

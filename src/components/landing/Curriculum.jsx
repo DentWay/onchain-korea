@@ -5,6 +5,20 @@ import useLang from '../../hooks/useLang'
 
 const FAKE_PARTICIPANTS = [89, 67, 42, 28]
 
+const gradients = [
+  'from-blue-500/20 to-blue-600/5',
+  'from-purple-500/20 to-purple-600/5',
+  'from-green-500/20 to-green-600/5',
+  'from-amber-500/20 to-amber-600/5',
+]
+
+const borderColors = [
+  'border-l-blue-500',
+  'border-l-purple-500',
+  'border-l-green-500',
+  'border-l-amber-500',
+]
+
 export default function Curriculum() {
   const { t, lang } = useLang()
 
@@ -16,34 +30,62 @@ export default function Curriculum() {
   ]
 
   return (
-    <Section className="py-24 px-6" id="curriculum">
+    <Section className="py-32 px-6" id="curriculum">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-14">
+        <div className="text-center mb-16">
           <span className="ok-section-label">{t('landing.curriculum')}</span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-3 tracking-tight text-[var(--text-high)]">{t('landing.roadmap')}</h2>
-          <p className="text-[15px] text-[var(--text-mid)] mt-3">{t('landing.roadmapDesc')}</p>
+          <h2 className="text-[40px] md:text-[56px] font-bold mt-4 tracking-tight text-[var(--text-high)]">
+            {t('landing.roadmap')}
+          </h2>
+          <p className="text-[16px] md:text-[18px] text-[var(--text-mid)] mt-4 font-light">{t('landing.roadmapDesc')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
           {weeks.map((week, i) => {
             const Icon = week.icon
             return (
-              <motion.div key={week.num} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.12, duration: 0.5 }} className="ok-card p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest">WEEK {week.num}</span>
-                    <span className="text-[9px] text-[var(--text-low)] ok-tabular-nums">{FAKE_PARTICIPANTS[i]}{t('stats.completed')}</span>
+              <motion.div
+                key={week.num}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.5 }}
+                className={`relative rounded-xl border border-[var(--border)] border-l-4 ${borderColors[i]} overflow-hidden`}
+              >
+                {/* Subtle gradient background */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${gradients[i]} pointer-events-none`} />
+
+                <div className="relative p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
+                  {/* Week number + icon */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-[var(--accent-surface)] flex items-center justify-center">
+                      <Icon size={20} className="text-accent-soft" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[var(--text-low)] font-mono tracking-widest uppercase">Week {week.num}</span>
+                      <h3 className="text-[18px] md:text-[20px] font-semibold text-[var(--text-high)] mt-0.5">{week.title}</h3>
+                    </div>
                   </div>
-                  <div className="w-9 h-9 rounded-lg bg-[var(--accent-surface)] flex items-center justify-center">
-                    <Icon size={16} className="text-accent-soft" />
+
+                  {/* Description + actions */}
+                  <div className="flex-1 md:pl-4">
+                    <p className="text-[14px] text-[var(--text-mid)] leading-relaxed">{week.desc}</p>
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                      {week.actions.map((action) => (
+                        <span key={action} className="text-[11px] px-3 py-1.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] text-[var(--text-mid)] font-medium">{action}</span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                <h3 className="text-[16px] font-semibold text-[var(--text-high)] mb-1.5">{week.title}</h3>
-                <p className="text-[13px] text-[var(--text-mid)] leading-relaxed">{week.desc}</p>
-                <div className="flex flex-wrap gap-1.5 mt-5">
-                  {week.actions.map((action) => (
-                    <span key={action} className="text-[10px] px-2.5 py-1 rounded-md bg-[var(--surface-2)] text-[var(--text-low)]">{action}</span>
-                  ))}
+
+                  {/* Progress dots + participant count */}
+                  <div className="flex flex-col items-end gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5">
+                      {week.actions.map((_, j) => (
+                        <div key={j} className="w-2 h-2 rounded-full bg-accent/30" />
+                      ))}
+                    </div>
+                    <span className="text-[10px] text-[var(--text-low)] ok-tabular-nums">{FAKE_PARTICIPANTS[i]}{t('stats.completed')}</span>
+                  </div>
                 </div>
               </motion.div>
             )
