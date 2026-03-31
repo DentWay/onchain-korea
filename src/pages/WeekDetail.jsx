@@ -1,8 +1,10 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Check, BookOpen, Zap, Shield, ChevronRight, Flame, Lock } from 'lucide-react'
+import { ArrowLeft, Check, BookOpen, Zap, Shield, ChevronRight, Flame, Lock, Award, ClipboardCheck } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
+import { articleQuizzes, weeklyTests } from '../data/quizzes'
 import useProgress from '../hooks/useProgress'
+import useQuiz from '../hooks/useQuiz'
 import useLang from '../hooks/useLang'
 
 const typeIcons = { read: BookOpen, practice: Zap, security: Shield }
@@ -11,6 +13,7 @@ export default function WeekDetail() {
   const { weekId } = useParams()
   const week = weeks.find(w => w.id === Number(weekId))
   const { isWeekUnlocked, isActionsUnlocked, isHiddenTopicUnlocked, toggleLesson, toggleAction, getLessonStatus, getActionStatus, getWeekProgress } = useProgress()
+  const { isArticlePassed, areAllArticleQuizzesPassed, isWeeklyTestPassed } = useQuiz()
   const { t, lang } = useLang()
 
   if (!week) return <Navigate to="/dashboard" replace />
@@ -104,6 +107,19 @@ export default function WeekDetail() {
                     </Link>
                   )}
                   {isNext && <span className="text-[9px] text-accent-soft font-medium">Next</span>}
+                  {done && articleQuizzes[lesson.id] && (
+                    <Link
+                      to={`/quiz/article/${lesson.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className={`text-[10px] font-medium shrink-0 ok-btn px-2 py-0.5 ${
+                        isArticlePassed(lesson.id)
+                          ? 'ok-btn-ghost text-success border-success/20'
+                          : 'ok-btn-ghost text-accent-soft'
+                      }`}
+                    >
+                      {isArticlePassed(lesson.id) ? <><Check size={10} /> {t('quiz.takeQuiz')}</> : <><Award size={10} /> {t('quiz.takeQuiz')}</>}
+                    </Link>
+                  )}
                   {!locked && <ChevronRight size={14} className="text-[var(--text-low)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />}
                 </div>
               </motion.div>
@@ -172,6 +188,44 @@ export default function WeekDetail() {
                 </div>
                 <p className="text-[14px] font-semibold text-[var(--text-high)] leading-snug">{l(week.hiddenTopic.title, lang)}</p>
                 <p className="text-[11px] text-[var(--text-mid)] mt-1">{l(week.hiddenTopic.readTime, lang)}</p>
+              </Link>
+            </div>
+          </>
+        )}
+
+        {/* Weekly Test */}
+        {weeklyTests[week.id] && (
+          <>
+            <div className="flex items-center gap-2 mb-3 mt-8">
+              <h2 className="text-sm font-semibold text-[var(--text-high)]">{t('quiz.weeklyTestTitle')}</h2>
+              {!areAllArticleQuizzesPassed(week.id) && <Lock size={12} className="text-[var(--text-low)]" />}
+            </div>
+            {!areAllArticleQuizzesPassed(week.id) && (
+              <p className="text-[11px] text-[var(--text-low)] mb-3">{t('quiz.passAllArticles')}</p>
+            )}
+            <div className={`transition-opacity ${!areAllArticleQuizzesPassed(week.id) ? 'opacity-35 pointer-events-none' : ''}`}>
+              <Link to={`/quiz/weekly/${week.id}`} className="block ok-card p-5 border-accent/10 hover:border-accent/20 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center ${
+                    isWeeklyTestPassed(week.id) ? 'bg-[var(--success-surface)]' : 'bg-[var(--accent-surface)]'
+                  }`}>
+                    {isWeeklyTestPassed(week.id)
+                      ? <Check size={18} className="text-success" />
+                      : <ClipboardCheck size={18} className="text-accent-soft" />
+                    }
+                  </div>
+                  <div className="flex-1">
+                    <p className={`text-[14px] font-semibold leading-snug ${
+                      isWeeklyTestPassed(week.id) ? 'text-success' : 'text-[var(--text-high)]'
+                    }`}>
+                      Week {week.id} {t('quiz.weeklyTest')}
+                    </p>
+                    <p className="text-[11px] text-[var(--text-mid)] mt-0.5">
+                      {weeklyTests[week.id].length} {t('quiz.question')} · {t('quiz.passThreshold')} {Math.ceil(weeklyTests[week.id].length * 0.8)}/{weeklyTests[week.id].length}
+                    </p>
+                  </div>
+                  <ChevronRight size={16} className="text-[var(--text-low)] shrink-0" />
+                </div>
               </Link>
             </div>
           </>

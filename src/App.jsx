@@ -11,6 +11,7 @@ import HiddenTopics from './pages/HiddenTopics'
 import Community from './pages/Community'
 import Certificate from './pages/Certificate'
 import LessonDetail from './pages/LessonDetail'
+import Quiz from './pages/Quiz'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/week/:weekId" element={<WeekDetail />} />
         <Route path="/lesson/:lessonId" element={<LessonDetail />} />
+        <Route path="/quiz/:type/:id" element={<Quiz />} />
         <Route path="/action/:actionId" element={<ActionGuide />} />
         <Route path="/hidden" element={<HiddenTopics />} />
         <Route path="/community" element={<Community />} />

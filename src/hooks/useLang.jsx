@@ -277,6 +277,27 @@ const translations = {
   // Common
   'common.week': { ko: '주차', en: 'Week' },
 
+  // Quiz
+  'quiz.start': { ko: '퀴즈 시작', en: 'Start Quiz' },
+  'quiz.question': { ko: '문제', en: 'Question' },
+  'quiz.next': { ko: '다음', en: 'Next' },
+  'quiz.submit': { ko: '제출', en: 'Submit' },
+  'quiz.score': { ko: '점수', en: 'Score' },
+  'quiz.passed': { ko: '통과!', en: 'Passed!' },
+  'quiz.failed': { ko: '재도전 필요', en: 'Try Again' },
+  'quiz.retry': { ko: '다시 도전', en: 'Retry' },
+  'quiz.continue': { ko: '계속하기', en: 'Continue' },
+  'quiz.bestScore': { ko: '최고 점수', en: 'Best Score' },
+  'quiz.attempts': { ko: '시도 횟수', en: 'Attempts' },
+  'quiz.articleQuiz': { ko: '레슨 퀴즈', en: 'Lesson Quiz' },
+  'quiz.weeklyTest': { ko: '주간 테스트', en: 'Weekly Test' },
+  'quiz.passThreshold': { ko: '통과 기준', en: 'Pass Threshold' },
+  'quiz.of': { ko: '/', en: ' of ' },
+  'quiz.takeQuiz': { ko: '퀴즈', en: 'Quiz' },
+  'quiz.weeklyTestTitle': { ko: '주간 테스트', en: 'Weekly Test' },
+  'quiz.weeklyTestDesc': { ko: '이번 주 학습 내용을 종합적으로 테스트합니다', en: 'Comprehensive test of this week\'s learning content' },
+  'quiz.passAllArticles': { ko: '모든 레슨 퀴즈를 통과하면 열립니다', en: 'Pass all lesson quizzes to unlock' },
+
   // CountdownTimer
   'countdown.closed': { ko: '마감됨', en: 'Closed' },
   'countdown.days': { ko: '일', en: 'Days' },

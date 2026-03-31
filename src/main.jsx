@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './hooks/useAuth'
 import { ProgressProvider } from './hooks/useProgress'
+import { QuizProvider } from './hooks/useQuiz'
 import { LangProvider } from './hooks/useLang'
 import ErrorBoundary from './components/ErrorBoundary'
 import App from './App'
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <LangProvider>
           <AuthProvider>
             <ProgressProvider>
-              <App />
+              <QuizProvider>
+                <App />
+              </QuizProvider>
             </ProgressProvider>
           </AuthProvider>
         </LangProvider>
