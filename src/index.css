@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide Spline watermark */
+#spline-watermark,
+[data-spline-watermark],
+canvas + div[style*="position: absolute"][style*="bottom"] a[href*="spline"] {
+  display: none !important;
+}
+
 /* ─── Design Tokens (see design-guidelines.md §8) ─── */
 :root {
   /* Surface Elevation (§8.2) */
