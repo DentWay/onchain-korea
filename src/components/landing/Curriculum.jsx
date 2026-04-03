@@ -13,18 +13,20 @@ export default function Curriculum() {
 
   return (
     <Section className="py-20 px-6" id="curriculum">
-      <div className="mx-auto max-w-4xl">
-        <div className="text-center">
-          <span className="ok-section-label">{t('landing.curriculum')}</span>
-          <h2 className="mt-4 text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[44px]">
-            {t('landing.roadmap')}
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--text-mid)]">
-            {pick(lang, '퀴즈를 통과하면 다음이 열려요. Week 4까지 마치면 심화 트랙이 시작돼요.', 'Pass each quiz to unlock the next. Complete Week 4 to start the advanced track.')}
-          </p>
-        </div>
+      <div className="mx-auto max-w-5xl">
+        <div className="ok-readable-panel-soft p-6 md:p-8">
+          <div className="relative z-10">
+            <div className="text-center">
+              <span className="ok-section-label">{t('landing.curriculum')}</span>
+              <h2 className="mt-4 text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[44px]">
+                {t('landing.roadmap')}
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--text-mid)]">
+                {pick(lang, '퀴즈를 통과하면 다음이 열려요. Week 4까지 마치면 심화 트랙이 시작돼요.', 'Pass each quiz to unlock the next. Complete Week 4 to start the advanced track.')}
+              </p>
+            </div>
 
-        <div className="mt-12 grid gap-3 sm:grid-cols-2">
+            <div className="mt-10 grid gap-3 sm:grid-cols-2">
           {programWeeks.map((week, index) => {
             const isLocked = week.id > 4
 
@@ -70,9 +72,11 @@ export default function Curriculum() {
           })}
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-6 text-[12px] text-[var(--text-low)]">
-          <span>{pick(lang, 'Article 3개 · Action Lab · Hidden Topic · Weekly Test', '3 articles · action lab · hidden topic · weekly test')}</span>
-          <span className="text-[var(--text-mid)]">{pick(lang, '매주 같은 리듬', 'Same rhythm every week')}</span>
+            <div className="mt-6 flex items-center justify-center gap-6 text-[12px] text-[var(--text-low)]">
+              <span>{pick(lang, 'Article 3개 · Action Lab · Hidden Topic · Weekly Test', '3 articles · action lab · hidden topic · weekly test')}</span>
+              <span className="text-[var(--text-mid)]">{pick(lang, '매주 같은 리듬', 'Same rhythm every week')}</span>
+            </div>
+          </div>
         </div>
       </div>
     </Section>

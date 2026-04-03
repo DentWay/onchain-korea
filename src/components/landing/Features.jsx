@@ -74,7 +74,7 @@ export default function Features() {
 
   return (
     <Section className="py-24 px-6" id="features">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <span className="ok-section-label">{t('landing.features')}</span>
           <h2 className="mt-4 text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[42px]">

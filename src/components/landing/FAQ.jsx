@@ -36,8 +36,10 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
-    <Section className="py-24 px-6">
-      <div className="max-w-3xl mx-auto">
+    <Section className="py-20 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="ok-readable-panel-soft p-6 md:p-8">
+          <div className="relative z-10 mx-auto max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -83,6 +85,8 @@ export default function FAQ() {
               </motion.div>
             )
           })}
+        </div>
+          </div>
         </div>
       </div>
     </Section>
