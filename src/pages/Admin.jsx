@@ -545,6 +545,7 @@ export default function Admin() {
 
   return (
     <div className="mx-auto max-w-7xl">
+      <div style={{ color: 'red', fontSize: 40, padding: 40, position: 'relative', zIndex: 9999, background: 'black', border: '4px solid red' }}>ADMIN ROUTE MOUNTED</div>
       <section className="ok-workbench p-5 md:p-8">
         <header className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl">

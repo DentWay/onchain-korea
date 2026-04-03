@@ -171,7 +171,10 @@ export default function Layout() {
             </div>
           </div>
         </div>
-        <div className="p-4 md:px-6 md:pb-6 ok-page-enter"><Outlet /></div>
+        <div className="p-4 md:px-6 md:pb-6 ok-page-enter">
+          <div style={{ color: 'lime', fontSize: 14, padding: 8, border: '2px solid lime', marginBottom: 8, zIndex: 9999, position: 'relative' }}>OUTLET AREA VISIBLE</div>
+          <Outlet />
+        </div>
       </main>
     </div>
   )
