@@ -1,8 +1,5 @@
 import Nav from '../components/landing/Nav'
 import HeroStage from '../components/landing/HeroStage'
-import HeroPathPreview from '../components/landing/HeroPathPreview'
-import WhySection from '../components/landing/WhySection'
-import GreedSignals from '../components/landing/GreedSignals'
 import Curriculum from '../components/landing/Curriculum'
 import Features from '../components/landing/Features'
 import FAQ from '../components/landing/FAQ'
@@ -15,9 +12,6 @@ export default function Landing() {
       <Nav />
       <HeroStage />
       <div className="relative z-10">
-        <HeroPathPreview />
-        <WhySection />
-        <GreedSignals />
         <Curriculum />
         <Features />
         <FAQ />
