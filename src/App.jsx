@@ -32,6 +32,10 @@ export default function App() {
       <Route path={ADMIN_ACCESS_PATH} element={<AdminAccess />} />
       <Route path={`${ADMIN_ENTRY_PATH}/`} element={<Navigate to={ADMIN_ENTRY_PATH} replace />} />
       <Route path={`${ADMIN_ACCESS_PATH}/`} element={<Navigate to={ADMIN_ACCESS_PATH} replace />} />
+      <Route path={ADMIN_CONSOLE_PATH} element={<ProtectedRoute adminOnly><Layout /></ProtectedRoute>}>
+        <Route index element={<Admin />} />
+      </Route>
+      <Route path={`${ADMIN_CONSOLE_PATH}/`} element={<Navigate to={ADMIN_CONSOLE_PATH} replace />} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/week/:weekId" element={<WeekDetail />} />
@@ -42,8 +46,6 @@ export default function App() {
         <Route path="/community" element={<Community />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path={ADMIN_CONSOLE_PATH} element={<div style={{ color: 'red', fontSize: 40, padding: 40, background: '#111', border: '4px solid red' }}>DIRECT ROUTE MATCH — NO GUARD</div>} />
-        <Route path={`${ADMIN_CONSOLE_PATH}/`} element={<Navigate to={ADMIN_CONSOLE_PATH} replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
