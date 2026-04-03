@@ -31,9 +31,8 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
 
   if (adminOnly && adminAccessLoading) {
     return (
-      <div style={{ color: 'yellow', fontSize: 30, padding: 40, background: 'black', border: '4px solid yellow', position: 'relative', zIndex: 9999 }}>
-        ADMIN ACCESS LOADING...
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(79,131,255,0.25)] border-t-[#4F83FF]" style={{ marginTop: 16 }} />
+      <div className="flex items-center justify-center h-screen bg-[var(--surface-0)]">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(79,131,255,0.25)] border-t-[#4F83FF]" />
       </div>
     )
   }
