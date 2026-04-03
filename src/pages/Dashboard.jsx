@@ -225,7 +225,7 @@ export default function Dashboard() {
                 </span>
               </div>
               <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] ok-ink-high">
-                {pick(lang, `${firstName}님, 이어서 진행해요`, `Pick up where you left off, ${firstName}`)}
+                {pick(lang, `${firstName}님, 이어서 진행해봐요`, `Pick up where you left off, ${firstName}`)}
               </h1>
               <p className="mt-3 max-w-2xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
                 {currentWeek
