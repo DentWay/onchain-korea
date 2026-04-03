@@ -25,33 +25,28 @@ export default function HeroStage() {
 
       <div className="relative z-10 flex h-full min-h-[100svh] items-end px-6 pb-14 pt-28 md:pb-16 md:pt-32">
         <div className="mx-auto w-full max-w-7xl text-center">
-          <div className="ok-readable-panel w-full px-6 py-6 md:px-8 md:py-8">
+          <div className="ok-readable-panel w-full px-5 py-5 md:px-7 md:py-6">
             <div className="relative z-10 mx-auto max-w-3xl">
               <div className="flex justify-center">
                 <BrandLockup surface="dark" withElixi responsive className="origin-center scale-[1.02] md:scale-[1.12]" />
               </div>
 
-              <div className="mt-7 flex items-center justify-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-low)]">
+              <div className="mt-5 flex items-center justify-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-low)]">
                 <span className="h-2 w-2 rounded-full bg-[#4ADE80]" />
                 <span>{t('landing.semester1Badge')}</span>
               </div>
 
-              <h1 className="mt-6 text-[40px] font-bold leading-[1.04] tracking-[-0.045em] text-[var(--text-high)] md:text-[68px] md:leading-[1.02]">
+              <h1 className="mt-4 text-[40px] font-bold leading-[1.04] tracking-[-0.045em] text-[var(--text-high)] md:text-[68px] md:leading-[1.02]">
                 {t('landing.hero1')}
                 <br />
                 <span className="text-white">{t('landing.hero2')}</span>
               </h1>
 
-              <p className="mx-auto mt-6 max-w-[42rem] text-[15px] leading-[1.75] text-[var(--text-mid)] md:text-[18px]">
-                {t('landing.heroSub').split('\n').map((line, index) => (
-                  <span key={index}>
-                    {line}
-                    {index === 0 && <br />}
-                  </span>
-                ))}
+              <p className="mx-auto mt-5 max-w-[52rem] text-[14px] leading-[1.7] text-[var(--text-mid)] md:text-[16px]">
+                {t('landing.heroSub')}
               </p>
 
-              <div className="pointer-events-auto mt-8 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
+              <div className="pointer-events-auto mt-6 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-center">
                 <Link to={startLink} className="ok-btn ok-btn-primary px-7 py-3 text-[14px]">
                   {t('landing.startFree')}
                   <ArrowRight size={15} />
@@ -62,7 +57,7 @@ export default function HeroStage() {
               </div>
 
               {stats.total_users > 0 && (
-                <p className="mt-5 text-[12px] text-[var(--text-low)]">
+                <p className="mt-4 text-[12px] text-[var(--text-low)]">
                   {stats.total_users}{t('landing.socialProof')}
                 </p>
               )}
