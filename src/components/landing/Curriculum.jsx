@@ -16,6 +16,7 @@ function shortTitle(title, lang) {
 export default function Curriculum() {
   const { t, lang } = useLang()
   const [selectedWeekId, setSelectedWeekId] = useState(1)
+  const [hoveredWeekId, setHoveredWeekId] = useState(null)
 
   const selectedWeek = useMemo(
     () => programWeeks.find((week) => week.id === selectedWeekId) || programWeeks[0],
@@ -39,7 +40,7 @@ export default function Curriculum() {
 
         <div className="ok-readable-panel-soft mt-12 p-6 md:p-8">
           <div className="relative z-10 grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)] xl:items-start">
-          <div className="xl:sticky xl:top-28">
+          <div className="xl:sticky xl:top-24 xl:max-h-[calc(100svh-7rem)] xl:overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
             <div className="border-l border-[rgba(255,255,255,0.10)] pl-5 md:pl-6">
               <div className="flex flex-wrap items-center gap-2">
                 <span className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
@@ -65,11 +66,11 @@ export default function Curriculum() {
                 {l(selectedWeek.subtitle, lang)}
               </p>
 
-              <div className="mt-8 border-t border-[rgba(255,255,255,0.08)] pt-5">
+              <div className="mt-5 border-t border-[rgba(255,255,255,0.08)] pt-4">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-low)]">
                   {pick(lang, '이번 주 흐름', 'This week flow')}
                 </p>
-                <div className="mt-4 space-y-3">
+                <div className="mt-3 space-y-2">
                   {selectedWeek.lessons.map((lesson, index) => (
                     <div key={lesson.id} className="flex items-start gap-3 text-[13px] leading-relaxed text-[var(--text-mid)]">
                       <span className="mt-[2px] shrink-0 text-[11px] font-semibold text-[#79AFFF]">{index + 1}.</span>
@@ -91,7 +92,7 @@ export default function Curriculum() {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-3 gap-4 border-t border-[rgba(255,255,255,0.08)] pt-5">
+              <div className="mt-4 grid grid-cols-3 gap-4 border-t border-[rgba(255,255,255,0.08)] pt-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-low)]">{pick(lang, 'Article', 'Articles')}</p>
                   <p className="mt-2 text-[22px] font-[800] text-[var(--text-high)]">{selectedWeek.lessons.length}</p>
@@ -125,6 +126,39 @@ export default function Curriculum() {
             </div>
 
             <div className="relative pl-8 md:pl-12">
+              <div className="sticky top-24 z-20 mb-6 -ml-3 rounded-2xl border border-[rgba(255,255,255,0.10)] bg-[rgba(7,11,18,0.82)] px-4 py-4 shadow-[0_18px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl md:-ml-4 md:px-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-low)]">
+                      {pick(lang, '현재 선택한 주차', 'Current selection')}
+                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[rgba(59,130,246,0.14)] px-2.5 py-1 text-[10px] font-semibold text-[#79AFFF]">
+                        Week {selectedWeek.id}
+                      </span>
+                      <span className="text-[16px] font-[800] tracking-[-0.03em] text-[var(--text-high)]">
+                        {l(selectedWeek.title, lang)}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-[12px] leading-relaxed text-[var(--text-mid)]">
+                      {pick(
+                        lang,
+                        '오른쪽 카드를 클릭하면 왼쪽 상세 패널이 바뀝니다.',
+                        'Click a week card to update the detailed preview on the left.'
+                      )}
+                    </p>
+                  </div>
+                  <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold ${
+                    selectedWeek.id > 4
+                      ? 'border border-[rgba(255,255,255,0.08)] text-[var(--text-low)]'
+                      : 'bg-[rgba(59,130,246,0.10)] text-[#79AFFF]'
+                  }`}>
+                    {selectedWeek.id > 4 ? <Lock size={12} /> : <CheckCircle2 size={12} />}
+                    <span>{selectedWeek.id > 4 ? pick(lang, '잠금', 'Locked') : pick(lang, '열림', 'Open')}</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="absolute bottom-5 left-[12px] top-5 w-px bg-[rgba(255,255,255,0.08)] md:left-[18px]" />
               <motion.div
                 className="absolute left-[12px] top-5 w-px rounded-full bg-gradient-to-b from-[#3B82F6] to-[#79AFFF] md:left-[18px]"
@@ -136,6 +170,7 @@ export default function Curriculum() {
                 {programWeeks.map((week) => {
                   const isSelected = selectedWeek.id === week.id
                   const isLocked = week.id > 4
+                  const isHovered = hoveredWeekId === week.id
 
                   return (
                     <div key={week.id}>
@@ -158,8 +193,9 @@ export default function Curriculum() {
 
                       <motion.button
                         type="button"
-                        key={week.id}
-                        onMouseEnter={() => setSelectedWeekId(week.id)}
+                        aria-pressed={isSelected}
+                        onMouseEnter={() => setHoveredWeekId(week.id)}
+                        onMouseLeave={() => setHoveredWeekId(null)}
                         onFocus={() => setSelectedWeekId(week.id)}
                         onClick={() => setSelectedWeekId(week.id)}
                         initial={{ opacity: 0, y: 16 }}
@@ -181,7 +217,9 @@ export default function Curriculum() {
                         <div className={`border-b border-[rgba(255,255,255,0.08)] py-5 transition-all ${
                           isSelected
                             ? 'bg-[linear-gradient(90deg,rgba(59,130,246,0.12),rgba(59,130,246,0.00))] pl-4 pr-3'
-                            : 'hover:bg-[rgba(255,255,255,0.02)]'
+                            : isHovered
+                              ? 'bg-[rgba(255,255,255,0.025)]'
+                              : 'hover:bg-[rgba(255,255,255,0.02)]'
                         }`}>
                           <div className="flex flex-wrap items-start justify-between gap-4">
                             <div>

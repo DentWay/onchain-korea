@@ -36,10 +36,8 @@ export default function HeroStage() {
                 <span>{t('landing.semester1Badge')}</span>
               </div>
 
-              <h1 className="mt-4 text-[40px] font-bold leading-[1.04] tracking-[-0.045em] text-[var(--text-high)] md:text-[68px] md:leading-[1.02]">
-                {t('landing.hero1')}
-                <br />
-                <span className="text-white">{t('landing.hero2')}</span>
+              <h1 className="mt-4 text-[36px] font-bold leading-[1.04] tracking-[-0.045em] text-[var(--text-high)] md:text-[60px] md:leading-[1.02]">
+                {t('landing.hero1')}{t('landing.hero2')}
               </h1>
 
               <p className="mx-auto mt-5 max-w-[52rem] text-[14px] leading-[1.7] text-[var(--text-mid)] md:text-[16px]">
