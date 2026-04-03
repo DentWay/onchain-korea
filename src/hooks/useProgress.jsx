@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react'
 import { weeks as weekData } from '../data/curriculum'
+import { articleQuizzes, weeklyTests } from '../data/quizzes'
 import { supabase } from '../lib/supabase'
 import useAuth from './useAuth'
+import useQuiz from './useQuiz'
 
 const STORAGE_KEY = 'onchain-korea-progress'
 
@@ -34,10 +36,17 @@ function mergeProgress(local, remote) {
   }
 }
 
+function sameItems(a, b) {
+  if (a.length !== b.length) return false
+  const set = new Set(a)
+  return b.every((item) => set.has(item))
+}
+
 const ProgressContext = createContext(null)
 
 export function ProgressProvider({ children }) {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
+  const { getQuizStatus } = useQuiz()
   const [progress, setProgress] = useState(loadLocal)
   const syncTimer = useRef(null)
   const initialSyncDone = useRef(false)
@@ -61,14 +70,12 @@ export function ProgressProvider({ children }) {
     }, 500)
   }, [user])
 
-  // Flush pending sync on tab close
+  // Flush pending sync when the tab is backgrounded.
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden' && supabase && user) {
         clearTimeout(syncTimer.current)
         const data = loadLocal()
-        navigator.sendBeacon?.(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/user_progress?id=eq.${user.id}`, '')
-        // Fallback: sync immediately
         supabase.from('user_progress').upsert({
           id: user.id,
           completed_lessons: data.completedLessons,
@@ -82,6 +89,12 @@ export function ProgressProvider({ children }) {
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [user])
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(syncTimer.current)
+    }
+  }, [])
 
   // Initial sync: merge local + remote on login
   useEffect(() => {
@@ -113,7 +126,10 @@ export function ProgressProvider({ children }) {
 
   // Reset sync flag on logout
   useEffect(() => {
-    if (!user) initialSyncDone.current = false
+    if (!user) {
+      initialSyncDone.current = false
+      setProgress(defaultProgress)
+    }
   }, [user])
 
   // Re-sync on reconnect
@@ -132,15 +148,6 @@ export function ProgressProvider({ children }) {
       return next
     })
   }, [syncToSupabase])
-
-  const toggleLesson = useCallback((lessonId) => {
-    updateProgress(prev => ({
-      ...prev,
-      completedLessons: prev.completedLessons.includes(lessonId)
-        ? prev.completedLessons.filter(id => id !== lessonId)
-        : [...prev.completedLessons, lessonId],
-    }))
-  }, [updateProgress])
 
   const toggleAction = useCallback((actionId) => {
     updateProgress(prev => ({
@@ -164,43 +171,83 @@ export function ProgressProvider({ children }) {
   const totalLessons = weekData.reduce((sum, w) => sum + w.lessons.length, 0)
   const totalActions = weekData.reduce((sum, w) => sum + w.actions.length, 0)
 
-  const isWeekUnlocked = useCallback((weekId) => {
-    if (weekId === 1) return true
-    const prevWeek = weekData.find(w => w.id === weekId - 1)
-    if (!prevWeek) return false
-    const done = prevWeek.lessons.filter(l => progress.completedLessons.includes(l.id)).length
-    return (done / prevWeek.lessons.length) >= 0.6
+  const isLegacyLessonComplete = useCallback((lessonId) => {
+    return progress.completedLessons.includes(lessonId)
   }, [progress.completedLessons])
 
-  // Sequential unlock: lesson N requires lesson N-1 completed
-  const isLessonUnlocked = useCallback((lessonId) => {
+  const isLessonComplete = useCallback((lessonId) => {
+    const hasArticleQuiz = !!articleQuizzes[lessonId]
+    if (!hasArticleQuiz) return isLegacyLessonComplete(lessonId)
+
+    const status = getQuizStatus('article', lessonId)
+    return status.passed || (status.attempts === 0 && isLegacyLessonComplete(lessonId))
+  }, [getQuizStatus, isLegacyLessonComplete])
+
+  const isWeekCompleted = useCallback((weekId) => {
+    const week = weekData.find(w => w.id === Number(weekId))
+    if (!week) return false
+
+    const legacyWeekDone = week.lessons.every((lesson) => progress.completedLessons.includes(lesson.id))
+    const status = getQuizStatus('weekly', String(weekId))
+
+    if (weeklyTests[Number(weekId)]) {
+      return status.passed || (status.attempts === 0 && legacyWeekDone)
+    }
+
+    return week.lessons.every((lesson) => isLessonComplete(lesson.id))
+  }, [getQuizStatus, isLessonComplete, progress.completedLessons])
+
+  const isWeekUnlockedByProgress = useCallback((weekId) => {
+    if (weekId === 1) return true
+    return isWeekCompleted(weekId - 1)
+  }, [isWeekCompleted])
+
+  const isWeekUnlocked = useCallback((weekId) => {
+    return isAdmin || isWeekUnlockedByProgress(weekId)
+  }, [isAdmin, isWeekUnlockedByProgress])
+
+  // Sequential unlock: lesson N requires the previous lesson quiz to be passed.
+  const isLessonUnlockedByProgress = useCallback((lessonId) => {
     for (const week of weekData) {
       const idx = week.lessons.findIndex(l => l.id === lessonId)
       if (idx === -1) continue
-      if (idx === 0) return true // first lesson always unlocked
-      return progress.completedLessons.includes(week.lessons[idx - 1].id)
+      if (!isWeekUnlockedByProgress(week.id)) return false
+      if (idx === 0) return true
+      return isLessonComplete(week.lessons[idx - 1].id)
     }
     return true
-  }, [progress.completedLessons])
+  }, [isLessonComplete, isWeekUnlockedByProgress])
 
-  // Actions unlock after all lessons in that week are completed
-  const isActionsUnlocked = useCallback((weekId) => {
+  const isLessonUnlocked = useCallback((lessonId) => {
+    return isAdmin || isLessonUnlockedByProgress(lessonId)
+  }, [isAdmin, isLessonUnlockedByProgress])
+
+  // Actions unlock after all lesson quizzes in that week are passed.
+  const isActionsUnlockedByProgress = useCallback((weekId) => {
     const week = weekData.find(w => w.id === weekId)
     if (!week) return false
-    return week.lessons.every(l => progress.completedLessons.includes(l.id))
-  }, [progress.completedLessons])
+    return week.lessons.every(l => isLessonComplete(l.id))
+  }, [isLessonComplete])
+
+  const isActionsUnlocked = useCallback((weekId) => {
+    return isAdmin || isActionsUnlockedByProgress(weekId)
+  }, [isAdmin, isActionsUnlockedByProgress])
 
   // Hidden topic unlocks after at least 1 action in that week is completed
-  const isHiddenTopicUnlocked = useCallback((weekId) => {
+  const isHiddenTopicUnlockedByProgress = useCallback((weekId) => {
     const week = weekData.find(w => w.id === weekId)
     if (!week) return false
     return week.actions.some(a => progress.completedActions.includes(a.id))
   }, [progress.completedActions])
 
+  const isHiddenTopicUnlocked = useCallback((weekId) => {
+    return isAdmin || isHiddenTopicUnlockedByProgress(weekId)
+  }, [isAdmin, isHiddenTopicUnlockedByProgress])
+
   const getLessonStatus = useCallback((lessonId) => {
-    if (progress.completedLessons.includes(lessonId)) return 'done'
+    if (isLessonComplete(lessonId)) return 'done'
     return isLessonUnlocked(lessonId) ? 'available' : 'locked'
-  }, [progress.completedLessons, isLessonUnlocked])
+  }, [isLessonComplete, isLessonUnlocked])
 
   const getActionStatus = useCallback((actionId) => {
     if (progress.completedActions.includes(actionId)) return 'done'
@@ -216,14 +263,18 @@ export function ProgressProvider({ children }) {
   const getWeekProgress = useCallback((weekId) => {
     const week = weekData.find(w => w.id === weekId)
     if (!week) return 0
-    const done = week.lessons.filter(l => progress.completedLessons.includes(l.id)).length
+    const done = week.lessons.filter(l => isLessonComplete(l.id)).length
     return Math.round((done / week.lessons.length) * 100)
-  }, [progress.completedLessons])
+  }, [isLessonComplete])
+
+  const completedLessons = weekData.flatMap((week) =>
+    week.lessons.filter((lesson) => isLessonComplete(lesson.id)).map((lesson) => lesson.id)
+  )
 
   const certificateStatus = {
-    lessonsComplete: progress.completedLessons.length,
+    lessonsComplete: completedLessons.length,
     lessonsRequired: Math.ceil(totalLessons * 0.8),
-    lessonsEligible: progress.completedLessons.length >= Math.ceil(totalLessons * 0.8),
+    lessonsEligible: completedLessons.length >= Math.ceil(totalLessons * 0.8),
     actionsComplete: progress.completedActions.length,
     actionsRequired: 3,
     actionsEligible: progress.completedActions.length >= 3,
@@ -236,13 +287,29 @@ export function ProgressProvider({ children }) {
   }
 
   const overallProgress = Math.round(
-    (progress.completedLessons.length / totalLessons) * 100
+    (completedLessons.length / totalLessons) * 100
   )
 
   const activeWeek = weekData.reduce((active, w) => {
-    if (isWeekUnlocked(w.id)) return w.id
+    if (isWeekUnlockedByProgress(w.id)) return w.id
     return active
   }, 1)
+
+  useEffect(() => {
+    const needsLessonMirror = !sameItems(progress.completedLessons, completedLessons)
+    const needsWeekMirror = progress.currentWeek !== activeWeek
+
+    if (!needsLessonMirror && !needsWeekMirror) return
+
+    const next = {
+      ...progress,
+      completedLessons: needsLessonMirror ? completedLessons : progress.completedLessons,
+      currentWeek: needsWeekMirror ? activeWeek : progress.currentWeek,
+    }
+
+    setProgress(next)
+    syncToSupabase(next)
+  }, [activeWeek, completedLessons, progress, syncToSupabase])
 
   const resetProgress = useCallback(() => {
     const reset = { ...defaultProgress }
@@ -261,9 +328,11 @@ export function ProgressProvider({ children }) {
 
   const value = {
     ...progress,
-    toggleLesson,
+    completedLessons,
+    currentWeek: activeWeek,
     toggleAction,
     toggleHiddenTopic,
+    isWeekCompleted,
     isWeekUnlocked,
     isLessonUnlocked,
     isActionsUnlocked,
@@ -274,6 +343,7 @@ export function ProgressProvider({ children }) {
     certificateStatus,
     overallProgress,
     activeWeek,
+    isAdmin,
     totalLessons,
     totalActions,
     resetProgress,

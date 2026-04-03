@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#F5F3ED"/>
+  <circle cx="178" cy="102" r="170" fill="#CD313A" fill-opacity=".08"/>
+  <circle cx="1052" cy="120" r="156" fill="#0047A0" fill-opacity=".08"/>
+  <circle cx="1000" cy="540" r="190" fill="#CD313A" fill-opacity=".05"/>
+
+  <g transform="translate(108 140)">
+    <g transform="translate(0 28)">
+      <path d="M64 127c13-52 55-84 101-84 37 0 71 18 93 49" stroke="#CD313A" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M63 173c15 48 58 87 105 87 37 0 71-18 93-50" stroke="#0047A0" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="67" y="65" width="43" height="24" rx="12" transform="rotate(-28 67 65)" stroke="#CD313A" stroke-width="8"/>
+      <rect x="113" y="43" width="45" height="24" rx="12" transform="rotate(-10 113 43)" stroke="#CD313A" stroke-width="8"/>
+      <rect x="162" y="44" width="45" height="24" rx="12" transform="rotate(10 162 44)" stroke="#CD313A" stroke-width="8"/>
+      <rect x="208" y="65" width="43" height="24" rx="12" transform="rotate(28 208 65)" stroke="#CD313A" stroke-width="8"/>
+      <rect x="208" y="225" width="43" height="24" rx="12" transform="rotate(-28 208 225)" stroke="#0047A0" stroke-width="8"/>
+      <rect x="162" y="244" width="45" height="24" rx="12" transform="rotate(-10 162 244)" stroke="#0047A0" stroke-width="8"/>
+      <rect x="114" y="244" width="45" height="24" rx="12" transform="rotate(10 114 244)" stroke="#0047A0" stroke-width="8"/>
+      <rect x="67" y="225" width="43" height="24" rx="12" transform="rotate(28 67 225)" stroke="#0047A0" stroke-width="8"/>
+      <path d="M75 136l35-23 37 16 33-25 42 24" stroke="#CD313A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M78 165l35 23 37-15 34 25 41-21" stroke="#0047A0" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="75" cy="136" r="8" fill="#CD313A"/>
+      <circle cx="110" cy="113" r="8" fill="#CD313A"/>
+      <circle cx="147" cy="129" r="8" fill="#CD313A"/>
+      <circle cx="180" cy="104" r="8" fill="#CD313A"/>
+      <circle cx="222" cy="128" r="8" fill="#CD313A"/>
+      <circle cx="78" cy="165" r="8" fill="#0047A0"/>
+      <circle cx="113" cy="188" r="8" fill="#0047A0"/>
+      <circle cx="150" cy="173" r="8" fill="#0047A0"/>
+      <circle cx="184" cy="198" r="8" fill="#0047A0"/>
+      <circle cx="225" cy="177" r="8" fill="#0047A0"/>
+    </g>
+    <text x="260" y="216" fill="#0C0D11" font-family="Pretendard, Inter, Arial, sans-serif" font-size="124" font-weight="800" letter-spacing="-5.5">nChain</text>
+    <text x="770" y="236" fill="rgba(12,13,17,.42)" font-family="Pretendard, Inter, Arial, sans-serif" font-size="42" font-weight="600" letter-spacing="2.5">KOREA</text>
+    <line x1="260" y1="264" x2="520" y2="264" stroke="rgba(12,13,17,.18)" stroke-width="2"/>
+    <text x="262" y="312" fill="rgba(12,13,17,.72)" font-family="Georgia, Times, serif" font-size="32" font-style="italic">by</text>
+    <text x="312" y="312" fill="#0C0D11" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="800" font-style="italic">Elixi.</text>
+  </g>
+
+  <text x="108" y="430" fill="#0C0D11" font-family="Pretendard, Inter, Arial, sans-serif" font-size="58" font-weight="800" letter-spacing="-2.4">8-week on-chain literacy program for Korea</text>
+  <text x="108" y="486" fill="rgba(12,13,17,.68)" font-family="Pretendard, Inter, Arial, sans-serif" font-size="28" font-weight="500">
+    From exchange to self-custody, quizzes, action labs, and a Proof of Attendance.
+  </text>
+  <text x="108" y="548" fill="rgba(12,13,17,.42)" font-family="Pretendard, Inter, Arial, sans-serif" font-size="22" font-weight="600" letter-spacing="1.8">
+    GREED ACADEMY BASED · LIGHT LANDING / DARK LEARNING APP
+  </text>
+</svg>

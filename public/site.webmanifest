@@ -1,0 +1,21 @@
+{
+  "name": "OnChain Korea",
+  "short_name": "OnChain KR",
+  "description": "8-week blockchain literacy and safety program for Korean learners.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F3ED",
+  "theme_color": "#0C0D11",
+  "icons": [
+    {
+      "src": "/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

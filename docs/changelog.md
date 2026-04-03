@@ -4,7 +4,82 @@
 
 ---
 
-## 2026-03-31
+## 2026-04-02
+
+### 관리자 콘솔 blank shell 방지 및 승인 이메일 UI 비노출
+- 관리자 콘솔 route guard가 `adminAccessLoading`에 막혀 검은 빈 화면처럼 보이던 문제를 수정
+- 관리자 전용 route는 초기 auth loading만 spinner를 보이고, 관리자 게이트 동기화는 access page로 넘기도록 단순화
+- `/ops/onchainkorea-admin/access`의 SPA 화면과 server-rendered gate page 모두에서 승인 이메일 목록을 더 이상 노출하지 않도록 수정
+- access page는 승인 이메일 하드코딩 목록 대신 `승인된 관리자 계정만 통과 가능` 규칙만 보여주도록 정리
+
+### 관리자 콘솔 재구성 및 asset load 복구
+- blank screen이 나지 않도록 관리자 콘솔을 더 단순한 운영 대시보드로 재구성
+- 관리자 콘솔은 이제 항상 최소 골격(`요약 / 학습자 리스트 / 상세 / 빠른 이동 / 백엔드 상태`)을 렌더
+- 학습자 데이터가 없어도 empty state와 권한 안내가 보이도록 수정
+- stale hashed asset/chunk 404 발생 시 브라우저에서 1회 자동 새로고침 복구 추가
+- 운영 첫 화면에 `운영 우선 확인`과 `주차 분포`를 추가해 정체 학습자와 주차 몰림을 바로 볼 수 있게 확장
+
+### 관리자 접근 경로를 서버 페이지로 전환
+- `/ops/onchainkorea-admin`를 Vercel server page redirect로 전환
+- `/ops/onchainkorea-admin/access`를 React route가 아닌 dedicated server-rendered HTML gate page로 전환
+- admin access blank screen을 SPA boot 문제와 분리
+- `vercel.json`에 운영 경로 rewrite를 명시해 catch-all SPA rewrite보다 먼저 처리
+
+### 관리자 접근 blank screen 복구 및 GREED 공개 신호 섹션 추가
+- 관리자 `입구`와 `잠금 해제` 페이지를 protected app shell 바깥으로 이동
+- 관리자 `입구`는 항상 `/ops/onchainkorea-admin/access`로 단순 전달되도록 변경
+- 관리자 `잠금 해제` 화면의 full-screen loading 분기를 제거하고 인라인 상태칩만 남김
+- 헤더/사이드바의 `관리자 입구` 버튼을 SPA `Link` 대신 전체 문서 이동(`href`)으로 변경
+- `/ops/onchainkorea-admin/access`와 `/ops/onchainkorea-admin`를 다시 authenticated app shell 안에서 렌더되도록 조정
+- `AdminAccess.jsx`의 누락된 `ADMIN_ACCESS_PATH` 참조 수정
+- 관리자 진입 버튼을 눌렀을 때 빈 검은 화면 대신 정상 라우팅/렌더가 되도록 정리
+- `docs/greed-academy-research-2026-04-02.md`에 GREED Academy 공개 메타데이터와 워크숍/참여 신호 정리
+- 랜딩에 GREED 공개 성과 기반 인포그래픽 섹션 추가
+- admin allowlist에 `min9.mark@gmail.com` 추가
+- 로그아웃 완료 화면에 dark app theme scope와 대비 조정 적용
+
+### 랜딩 Proof 섹션 제거
+- 랜딩 하단의 회전 태극 심볼 섹션 전체 제거
+- `CertificatePreview` 컴포넌트 삭제
+
+### 관리자 입구 버튼 및 랜딩 패널 폭 조정
+- 관리자 계정 UI 버튼은 `/ops/onchainkorea-admin`이 아니라 `/ops/onchainkorea-admin/access`로 바로 연결되도록 수정
+- typed entry route `/ops/onchainkorea-admin`는 `adminAccessLoading`에 묶이지 않도록 단순화
+- 랜딩의 가독성 패널 폭을 `max-w-7xl` 기준으로 확장해 기본값이 화면 가로에 더 가깝게 차도록 조정
+- Hero 패널 내부 텍스트는 중앙 정렬을 유지하되 바깥 패널은 넓게 확장
+- Hero 로고 락업/헤드라인 자간과 줄 간격을 완화해 가독성 조정
+- Proof 섹션을 `두꺼운 태극 심볼 단일 회전` 모드로 단순화하고 hero 배경 간섭을 차단
+- Proof 심볼 두께를 줄이고, 레이어 간격이 보이지 않도록 밀도를 높여 재조정
+- Proof 심볼은 마우스 반응을 제거하고 자동 free-floating 회전으로 변경
+- Proof 심볼 회전을 full Y-spin에서 oblique ambient spin으로 변경해 중간에 사라져 보이는 문제 완화
+
+### 관리자 잠금 해제 흐름 안정화
+- 관리자 비밀번호 통과 후 프로필 재조회 완료를 기다리지 않고 바로 운영 경로로 이동하도록 수정
+- 관리자 잠금 해제 요청에 12초 타임아웃 추가
+- 관리자 잠금 해제 화면에 타임아웃 전용 오류 문구 추가
+- 관리자 상태 확인에도 타임아웃 추가
+- 관리자 접근 화면 refresh 시 전체 spinner로 막히지 않도록 수정
+- `/ops/onchainkorea-admin/`, `/ops/onchainkorea-admin/access/` trailing slash 경로 정규화
+- OAuth callback 무한 로딩 방지용 5초 fallback 추가
+- `/ops/onchainkorea-admin`를 콘솔이 아닌 전용 관리자 입구로 분리
+- 실제 관리자 콘솔 경로를 `/ops/onchainkorea-admin/console`로 이동
+
+### 코드 정리 및 저위험 최적화
+- 의미 없이 남아 있던 `sendBeacon` progress sync 제거
+- progress sync timer unmount cleanup 추가
+- `useStats`의 미사용 `loaded` 상태 제거
+- 현재 랜딩에서 사용하지 않는 dead component 제거
+
+### 관리자 운영 경로 하드닝
+- 공개 `/admin` 경로 폐기
+- 별도 운영 경로 `/ops/onchainkorea-admin` 도입
+- 관리자 비밀번호 검증을 프론트에서 제거하고 Vercel serverless API로 이동
+- httpOnly 운영 쿠키 기반 세션 잠금/해제 추가
+- OAuth 로그인 후 관리자 진입 경로 복귀 로직 추가
+- 일반 계정도 운영 비밀번호 통과 시 관리자 승격 가능하도록 흐름 수정
+- 관리자 허용 이메일을 `dentway.official@gmail.com` 단일 계정으로 제한
+- `supabase-auth-hardening.sql` 추가
+- `docs/auth-security.md` 문서 추가
 
 ### Bojana 피드백 반영
 - "Certificate" → "Proof of Attendance (PoAP)" 전체 용어 변경 (공식 자격증 오해 방지)

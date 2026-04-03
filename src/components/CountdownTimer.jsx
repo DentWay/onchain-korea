@@ -3,9 +3,12 @@ import useLang from '../hooks/useLang'
 
 function pad(n) { return String(n).padStart(2, '0') }
 
-export default function CountdownTimer({ targetDate, compact = false }) {
+export default function CountdownTimer({ targetDate, compact = false, surface = 'dark' }) {
   const { t } = useLang()
   const [time, setTime] = useState(getTimeLeft(targetDate))
+  const primaryTone = surface === 'light' ? 'ok-ink-high' : 'text-white/80'
+  const secondaryTone = surface === 'light' ? 'ok-ink-low' : 'text-white/30'
+  const closedTone = surface === 'light' ? 'ok-ink-low' : 'text-white/40'
 
   useEffect(() => {
     const id = setInterval(() => setTime(getTimeLeft(targetDate)), 1000)
@@ -14,7 +17,7 @@ export default function CountdownTimer({ targetDate, compact = false }) {
 
   if (time.total <= 0) {
     return (
-      <span className="text-[12px] text-white/40 font-medium">
+      <span className={`text-[12px] font-medium ${closedTone}`}>
         {t('countdown.closed')}
       </span>
     )
@@ -23,11 +26,11 @@ export default function CountdownTimer({ targetDate, compact = false }) {
   if (compact) {
     return (
       <div className="flex items-center gap-1 text-[12px] ok-tabular-nums">
-        <span className="text-white/80 font-semibold">{time.days}d</span>
-        <span className="text-white/30">:</span>
-        <span className="text-white/80 font-semibold">{pad(time.hours)}h</span>
-        <span className="text-white/30">:</span>
-        <span className="text-white/80 font-semibold">{pad(time.minutes)}m</span>
+        <span className={`${primaryTone} font-semibold`}>{time.days}d</span>
+        <span className={secondaryTone}>:</span>
+        <span className={`${primaryTone} font-semibold`}>{pad(time.hours)}h</span>
+        <span className={secondaryTone}>:</span>
+        <span className={`${primaryTone} font-semibold`}>{pad(time.minutes)}m</span>
       </div>
     )
   }
@@ -43,10 +46,10 @@ export default function CountdownTimer({ targetDate, compact = false }) {
     <div className="flex items-center gap-2">
       {units.map((u, i) => (
         <div key={i} className="flex flex-col items-center">
-          <span className="text-xl md:text-2xl font-bold text-white ok-tabular-nums leading-none">
+          <span className={`text-xl md:text-2xl font-bold ok-tabular-nums leading-none ${surface === 'light' ? 'ok-ink-high' : 'text-white'}`}>
             {u.value}
           </span>
-          <span className="text-[9px] text-white/30 mt-1 uppercase tracking-wider">{u.label}</span>
+          <span className={`text-[9px] mt-1 uppercase tracking-wider ${secondaryTone}`}>{u.label}</span>
         </div>
       ))}
     </div>

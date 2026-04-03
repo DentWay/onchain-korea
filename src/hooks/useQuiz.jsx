@@ -62,11 +62,17 @@ export function QuizProvider({ children }) {
             }
           } else {
             merged[key] = {
-              attempts: Math.max(existing.attempts, 1),
+              attempts: existing.attempts + 1,
               bestScore: Math.max(existing.bestScore, row.score),
               total: row.total,
               passed: existing.passed || row.passed,
-              firstPassDate: existing.firstPassDate || (row.passed ? row.attempted_at : null),
+              firstPassDate: existing.firstPassDate
+                ? (
+                    row.passed && new Date(row.attempted_at).getTime() < new Date(existing.firstPassDate).getTime()
+                      ? row.attempted_at
+                      : existing.firstPassDate
+                  )
+                : (row.passed ? row.attempted_at : null),
             }
           }
         }
@@ -79,7 +85,10 @@ export function QuizProvider({ children }) {
 
   // Reset sync flag on logout
   useEffect(() => {
-    if (!user) initialSyncDone.current = false
+    if (!user) {
+      initialSyncDone.current = false
+      setResults({})
+    }
   }, [user])
 
   const getQuizStatus = useCallback((quizType, quizId) => {
@@ -105,20 +114,31 @@ export function QuizProvider({ children }) {
       return { ...prev, [key]: updated }
     })
 
+    let syncError = null
+
     // Save to Supabase
     if (supabase && user) {
-      await supabase.from('quiz_results').insert({
-        user_id: user.id,
-        quiz_type: quizType,
-        quiz_id: quizId,
-        score,
-        total,
-        passed,
-        attempted_at: new Date().toISOString(),
-      })
+      try {
+        const { error } = await supabase.from('quiz_results').insert({
+          user_id: user.id,
+          quiz_type: quizType,
+          quiz_id: quizId,
+          score,
+          total,
+          passed,
+          attempted_at: new Date().toISOString(),
+        })
+        if (error) {
+          syncError = error
+          console.error('Quiz result sync failed:', error)
+        }
+      } catch (error) {
+        syncError = error
+        console.error('Quiz result sync failed:', error)
+      }
     }
 
-    return { passed, score, total }
+    return { passed, score, total, syncError }
   }, [user])
 
   const isArticlePassed = useCallback((lessonId) => {

@@ -1,31 +1,49 @@
-// Greed Academy source articles
-export const greedArticles = {
-  'S1-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-staking-and-validators-378beb4b3624', title: 'Staking and Validators' },
-  'S1-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-governance-4e6f42381104', title: 'Governance' },
-  'S1-L3': { url: 'https://medium.com/@GreedAcademy/lesson-3-defi-72fdd4a15a8b', title: 'DeFi (S1)' },
-  'S1-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-hype-6b5911ae077b', title: 'Hype' },
-  'S1-L5': { url: 'https://medium.com/@GreedAcademy/lesson-5-wallets-533940862aa6', title: 'Wallets' },
-  'S1-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-nfts-5d6d968b0ffe', title: 'NFTs' },
-  'S1-L7': { url: 'https://medium.com/@GreedAcademy/lesson-7-dyor-part-1-b37bca48479e', title: 'DYOR Part 1' },
-  'S1-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-dyor-part-2-8f491539bdbd', title: 'DYOR Part 2' },
-  'S2-L1': { url: 'https://medium.com/@GreedAcademy/lesson-1-wallets-and-wallet-hygiene-8eaf26a62269', title: 'Wallets & Wallet Hygiene' },
-  'S2-L2': { url: 'https://medium.com/@GreedAcademy/lesson-2-digital-assets-b325f0fcc0a1', title: 'Digital Assets' },
-  'S2-L3': { url: 'https://medium.com/@GreedAcademy/governance-623612c5707d', title: 'Governance and DAOs' },
-  'S2-L4': { url: 'https://medium.com/@GreedAcademy/lesson-4-defi-29f03eb73f00', title: 'DeFi' },
-  'S2-L5': { url: 'https://medium.com/@GreedAcademy/lesson-5-perpetual-futures-trading-3e63b4491510', title: 'Perpetual Futures Trading' },
-  'S2-L6': { url: 'https://medium.com/@GreedAcademy/lesson-6-onchain-explorers-bc61de7d3250', title: 'Onchain Explorers' },
-  'S2-L7': { url: 'https://medium.com/@GreedAcademy/lesson-7-stablecoins-22ef6be6c003', title: 'Stablecoins' },
-  'S2-L8': { url: 'https://medium.com/@GreedAcademy/lesson-8-cross-chain-and-bridging-7af924e1016d', title: 'Cross-chain & Bridging' },
-  'TK-1': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-1-9fb892c64878', title: 'Intro to Tokens 1' },
-  'TK-2': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-2-3d2483a65e94', title: 'Intro to Tokens 2' },
-  'TK-4': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-4-905f1b7a0145', title: 'Intro to Tokens 4' },
-  'TK-B': { url: 'https://medium.com/@GreedAcademy/introduction-to-tokens-bonus-lesson-bca2a358917e', title: 'Create Your Own Token' },
-  'DF-1': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-1-d232b521577d', title: 'Intro to DeFi 1' },
-  'DF-3': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-3-f693ae3b8d20', title: 'Intro to DeFi 3' },
-  'DF-4': { url: 'https://medium.com/@GreedAcademy/introduction-to-defi-4-219598c22cf1', title: 'Intro to DeFi 4' },
+import { deliveryCadence, getLessonPlan, getWeekPlan, sourceCatalog } from './programBlueprint'
+
+// Canonical Greed Academy source catalog plus local original content.
+export const greedArticles = sourceCatalog
+
+function enrichLesson(lesson, fallbackDay) {
+  const plan = getLessonPlan(lesson.id)
+  const sourceRefs = plan?.sourceRefs?.length ? plan.sourceRefs : (lesson.source ? [lesson.source] : [])
+
+  return {
+    ...lesson,
+    day: plan?.day || fallbackDay,
+    cadenceType: 'article',
+    sourceRefs,
+    plannedSourceRefs: plan?.plannedSourceRefs || [],
+    plannedTitle: plan?.plannedTitle || null,
+    blueprintStatus: plan?.status || 'unplanned',
+  }
 }
 
-export const weeks = [
+function enrichWeek(week) {
+  const weekPlan = getWeekPlan(week.id)
+
+  return {
+    ...week,
+    deliveryCadence,
+    weeklyTest: weekPlan?.weeklyTest || null,
+    optionalSourceRefs: weekPlan?.optionalSourceRefs || [],
+    lessons: week.lessons.map((lesson, index) => enrichLesson(lesson, index + 1)),
+    actions: week.actions.map((action) => ({
+      ...action,
+      day: weekPlan?.actionLab?.day || deliveryCadence.actionDay,
+      cadenceType: 'action-lab',
+    })),
+    hiddenTopic: week.hiddenTopic
+      ? {
+          ...week.hiddenTopic,
+          day: weekPlan?.hiddenTopic?.day || deliveryCadence.hiddenTopicDay,
+          cadenceType: 'hidden-topic',
+          sourceRefs: weekPlan?.hiddenTopic?.sourceRefs || [],
+        }
+      : null,
+  }
+}
+
+const baseWeeks = [
   // ── Week 1: 처음 시작하기 ──
   {
     id: 1,
@@ -199,6 +217,8 @@ export const weeks = [
   },
 ]
 
+export const weeks = baseWeeks.map(enrichWeek)
+
 export const actionGuides = [
   {
     weekId: 2,
@@ -210,7 +230,7 @@ export const actionGuides = [
     description: { ko: '버너 지갑은 의심스러운 dApp이나 민팅에 사용하는 "일회용 지갑"입니다. 메인 지갑을 보호하는 가장 실전적인 방법이에요.', en: 'A burner wallet is a "disposable wallet" used for suspicious dApps or minting. It\'s the most practical way to protect your main wallet.' },
     steps: [
       { text: { ko: 'solflare.com 에 접속 → Chrome 확장 또는 모바일 앱 설치', en: 'Visit solflare.com → Install Chrome extension or mobile app' }, link: 'https://solflare.com', note: { ko: '이미 Phantom이 있어도 Solflare를 별도로 설치하세요', en: 'Install Solflare separately even if you already have Phantom' } },
-      { text: { ko: '기존 지갑 시드 문구로 Solflare에 로그인', en: 'Log into Solflare with your existing wallet seed phrase' }, note: { ko: 'Semester 2 등록 시 사용한 지갑과 동일해야 합니다', en: 'Must be the same wallet used for Semester 2 registration' } },
+      { text: { ko: '기존 지갑 시드 문구로 Solflare에 로그인', en: 'Log into Solflare with your existing wallet seed phrase' }, note: { ko: '이 프로그램 등록에 사용한 지갑과 동일해야 합니다', en: 'This must match the wallet used for your program registration' } },
       { text: { ko: '"버너 지갑 만들기" 기능 사용 (Solflare 내장)', en: 'Use the "Create Burner Wallet" feature (built into Solflare)' }, note: { ko: '다른 지갑에서는 "새 주소 추가"로 동일하게 가능', en: 'On other wallets, use "Add New Address" for the same result' } },
       { text: { ko: '버너 지갑으로 소액 전송 → 테스트 트랜잭션 → 자산 전부 메인으로 회수', en: 'Send small amount to burner → Test transaction → Withdraw all back to main' }, note: { ko: '버너를 비운 후 그 주소는 폐기하는 것이 원칙', en: 'The principle is to discard the address after emptying the burner' } },
       { text: { ko: 'Solscan에서 내 트랜잭션 확인', en: 'Verify your transaction on Solscan' }, link: 'https://solscan.io', note: { ko: '지갑 주소 검색 → 전송 내역이 보이면 성공!', en: 'Search wallet address → If you see the transfer history, success!' } },

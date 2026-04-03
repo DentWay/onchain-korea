@@ -4,11 +4,11 @@ import CountdownTimer from '../CountdownTimer'
 import useStats from '../../hooks/useStats'
 import useLang from '../../hooks/useLang'
 
-// Semester 1 + 2 deadline: 2026-04-30 KST
+// 8-week program deadline: 2026-04-30 KST
 const SEMESTER_DEADLINE = '2026-04-30T23:59:59+09:00'
 
 export default function FomoBanner({ onVisibilityChange }) {
-  const { t, lang } = useLang()
+  const { lang } = useLang()
   const { stats } = useStats()
   const [visible, setVisible] = useState(() => {
     try { return sessionStorage.getItem('ok-fomo-dismissed') !== 'true' } catch { return true }
@@ -24,11 +24,15 @@ export default function FomoBanner({ onVisibilityChange }) {
     try { sessionStorage.setItem('ok-fomo-dismissed', 'true') } catch {}
   }
 
+  const bannerCopy = lang === 'ko'
+    ? `4주 기본기 먼저 시작 · ${count > 0 ? `${count}/200 모집 중` : '선착순 200명'} · 4월 30일 마감`
+    : `Start with the 4-week foundation · ${count > 0 ? `${count}/200 enrolled` : '200 spots'} · closes Apr 30`
+
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] bg-accent">
       <div className="max-w-5xl mx-auto px-4 h-9 flex items-center justify-between">
         <p className="text-[11px] text-white font-medium truncate flex-1">
-          Semester 1 + 2 {t('fomo.text')} — {count > 0 ? `${count}/200${t('fomo.bannerSpots')}` : t('fomo.spotsLimit')} · {t('fomo.closes')}
+          {bannerCopy}
         </p>
         <div className="hidden sm:flex items-center gap-3 shrink-0 ml-3">
           <CountdownTimer targetDate={SEMESTER_DEADLINE} compact />

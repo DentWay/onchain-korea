@@ -12,10 +12,11 @@ const fallback = {
 
 export default function useStats() {
   const [stats, setStats] = useState(fallback)
-  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    if (!supabase) { setLoaded(true); return }
+    let cancelled = false
+
+    if (!supabase) return undefined
 
     supabase
       .from('enrollment_stats')
@@ -23,11 +24,14 @@ export default function useStats() {
       .eq('id', 1)
       .single()
       .then(({ data }) => {
-        if (data) setStats(data)
-        setLoaded(true)
+        if (!cancelled && data) setStats(data)
       })
-      .catch(() => setLoaded(true))
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  return { stats, loaded }
+  return { stats }
 }

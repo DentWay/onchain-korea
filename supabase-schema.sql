@@ -8,6 +8,8 @@ create table public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
   avatar_url text,
+  email text,
+  is_admin boolean not null default false,
   lang text default 'ko' check (lang in ('ko', 'en')),
   created_at timestamptz default now(),
   updated_at timestamptz default now()
@@ -15,6 +17,14 @@ create table public.profiles (
 
 alter table public.profiles enable row level security;
 create policy "Users read own profile" on public.profiles for select using (auth.uid() = id);
+create policy "Admins read all profiles" on public.profiles for select using (
+  exists (
+    select 1
+    from public.profiles me
+    where me.id = auth.uid()
+      and me.is_admin = true
+  )
+);
 create policy "Users update own profile" on public.profiles for update using (auth.uid() = id);
 create policy "Users insert own profile" on public.profiles for insert with check (auth.uid() = id);
 
@@ -30,6 +40,14 @@ create table public.user_progress (
 
 alter table public.user_progress enable row level security;
 create policy "Users read own progress" on public.user_progress for select using (auth.uid() = id);
+create policy "Admins read all progress" on public.user_progress for select using (
+  exists (
+    select 1
+    from public.profiles me
+    where me.id = auth.uid()
+      and me.is_admin = true
+  )
+);
 create policy "Users update own progress" on public.user_progress for update using (auth.uid() = id);
 create policy "Users insert own progress" on public.user_progress for insert with check (auth.uid() = id);
 
@@ -55,11 +73,12 @@ insert into public.enrollment_stats (id) values (1);
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, display_name, avatar_url)
+  insert into public.profiles (id, display_name, avatar_url, email)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data->>'avatar_url', null)
+    coalesce(new.raw_user_meta_data->>'avatar_url', null),
+    new.email
   );
   insert into public.user_progress (id) values (new.id);
   update public.enrollment_stats set total_users = total_users + 1, updated_at = now() where id = 1;
@@ -91,3 +110,27 @@ begin
   where id = 1;
 end;
 $$ language plpgsql security definer;
+
+-- 6. Self-service account deletion
+create or replace function public.delete_my_account()
+returns void
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  target_user_id uuid := auth.uid();
+begin
+  if target_user_id is null then
+    raise exception 'not_authenticated';
+  end if;
+
+  delete from auth.users
+  where id = target_user_id;
+
+  perform public.refresh_enrollment_stats();
+end;
+$$;
+
+revoke all on function public.delete_my_account() from public;
+grant execute on function public.delete_my_account() to authenticated;

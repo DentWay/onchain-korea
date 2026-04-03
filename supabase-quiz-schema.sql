@@ -17,6 +17,18 @@ create policy "Users read own results"
   for select
   using (auth.uid() = user_id);
 
+create policy "Admins read all quiz results"
+  on public.quiz_results
+  for select
+  using (
+    exists (
+      select 1
+      from public.profiles me
+      where me.id = auth.uid()
+        and me.is_admin = true
+    )
+  );
+
 create policy "Users insert own results"
   on public.quiz_results
   for insert

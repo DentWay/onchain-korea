@@ -11,15 +11,15 @@ const faqs = [
   },
   {
     q: { ko: '정말 무료인가요? 나중에 결제를 요구하진 않나요?', en: 'Is it really free? Will you ask for payment later?' },
-    a: { ko: '네, 4주 전체 커리큘럼이 완전 무료입니다. 카드 정보를 요구하지 않으며, 숨겨진 비용도 없습니다. Greed Academy와 파트너들의 후원으로 운영됩니다.', en: 'Yes, the entire 4-week curriculum is completely free. We never ask for credit card info, and there are no hidden costs. Supported by Greed Academy and our partners.' },
+    a: { ko: '네, 8주 전체 커리큘럼이 무료입니다. 먼저 Week 1-4 기본 트랙부터 진행하고, 각 주차의 테스트를 통과하면 Week 5-8 심화 트랙이 순서대로 열립니다. 카드 정보를 요구하지 않으며, 숨겨진 비용도 없습니다.', en: 'Yes, the full 8-week curriculum is free. You start with the Week 1-4 foundation track, and Weeks 5-8 unlock sequentially after you pass each weekly test. We never ask for credit card information and there are no hidden charges.' },
   },
   {
     q: { ko: '하루에 얼마나 시간을 투자해야 하나요?', en: 'How much time do I need per day?' },
-    a: { ko: '주당 2~3시간이면 충분합니다. 레슨 읽기 30분 + 실습 30분 정도로, 출퇴근길이나 점심시간에도 진행할 수 있습니다.', en: 'About 2-3 hours per week is enough. Around 30 minutes for reading + 30 minutes for practice. You can do it during your commute or lunch break.' },
+    a: { ko: '하루 20~30분 정도면 충분합니다. 월-수는 article 1개씩, 목은 Action Lab, 금은 히든 토픽/복습, 토는 주간 테스트 흐름이라 직장인도 따라가기 어렵지 않게 설계했습니다.', en: 'About 20-30 minutes a day is enough. The rhythm is one article each on Mon-Wed, an action lab on Thu, hidden-topic review on Fri, and a weekly test on Sat, so working professionals can keep up.' },
   },
   {
     q: { ko: '실습에 돈이 드나요?', en: 'Does the practice cost money?' },
-    a: { ko: '실습 비용은 Week 2부터 필요합니다. Week 1은 완전 무료로 진행됩니다. 대부분의 실습은 무료이며, 일부 온체인 액션(DEX 스왑, NFT 민팅 등)에 소액의 네트워크 수수료(0.01달러 미만)가 필요합니다. SOL 기준 0.1개(약 2,000원) 정도면 모든 실습을 완료할 수 있습니다. 업비트나 빗썸에서 SOL을 구매한 후 Phantom 지갑으로 출금하면 됩니다. 자세한 방법은 Week 1 레슨에서 안내합니다.', en: 'Practice costs only apply from Week 2 onwards. Week 1 is completely free. Most practice is free. Some on-chain actions (DEX swap, NFT minting) require small network fees (less than $0.01). About 0.1 SOL (~$2) is enough to complete all practices. You can buy SOL on an exchange like Coinbase or Binance and withdraw to your Phantom wallet. Detailed instructions are provided in Week 1 lessons.' },
+    a: { ko: 'Week 1은 완전 무료로 시작할 수 있습니다. 이후 일부 온체인 액션은 소액의 네트워크 수수료가 필요하지만, 대부분은 매우 적은 비용으로 진행됩니다. 업비트나 빗썸에서 SOL을 구매한 뒤 개인 지갑으로 옮기는 방법도 Week 1에서 안내합니다.', en: 'Week 1 can be started completely free. After that, some on-chain actions require small network fees, but the costs are still minimal. Week 1 also explains how to buy SOL on an exchange and move it into your own wallet.' },
   },
   {
     q: { ko: '수료증은 어떻게 받나요?', en: 'How do I get the certificate?' },
@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: { ko: '다음 기수는 언제인가요?', en: 'When is the next cohort?' },
-    a: { ko: 'Semester는 Greed Academy의 학기 단위입니다. 현재 Semester 1과 2를 합쳐서 진행 중이며, 등록은 2026년 4월 30일에 마감됩니다. 다음 기수(Semester 3)는 2026년 7월 예정입니다. 이번 기수를 놓치면 약 2개월을 기다려야 합니다.', en: 'Semester refers to Greed Academy\'s cohort system. We\'re currently running Semester 1 + 2 combined, and registration closes April 30, 2026. The next cohort (Semester 3) is planned for July 2026. If you miss this one, you\'ll wait about 2 months.' },
+    a: { ko: '현재 프로그램은 8주 경로로 운영됩니다. Semester 1은 Week 1-4 기본 트랙, Semester 2는 Week 5-8 심화 트랙이며, Semester 1의 주간 테스트를 통과해야 Semester 2가 열립니다. 등록은 2026년 4월 30일에 마감됩니다.', en: 'The current program runs as an 8-week path. Semester 1 is the Week 1-4 foundation track, and Semester 2 is the Week 5-8 advanced track. Semester 2 unlocks only after you pass the Semester 1 weekly tests. Registration closes on April 30, 2026.' },
   },
 ]
 
@@ -36,18 +36,23 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
-    <Section className="py-32 px-6">
+    <Section className="py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-14"
+          className="text-center mb-12"
         >
           <h2 className="text-[32px] md:text-[40px] font-bold text-[var(--text-high)] tracking-tight">
             {t('faq.title')}
           </h2>
+          <p className="mt-4 text-[14px] leading-relaxed text-[var(--text-mid)]">
+            {lang === 'ko'
+              ? '자주 묻는 질문만 짧게 정리했습니다. 시작 전에 확인하면 흐름이 더 명확합니다.'
+              : 'A short set of practical questions before you start.'}
+          </p>
         </motion.div>
 
         <div className="space-y-3">
@@ -62,14 +67,14 @@ export default function FAQ() {
                 transition={{ delay: i * 0.05, duration: 0.4 }}
               >
                 <button onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full ok-card px-6 py-5 flex items-center justify-between gap-4 text-left hover:bg-[var(--surface-2)] transition-colors">
+                  className="w-full ok-landing-card px-6 py-5 flex items-center justify-between gap-4 text-left transition-colors hover:border-[rgba(255,255,255,0.14)]">
                   <span className="text-[14px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
                   <ChevronDown size={16} className={`shrink-0 text-[var(--text-low)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <div className="px-6 py-4 text-[13px] text-[var(--text-mid)] leading-relaxed bg-[var(--surface-1)] rounded-b-xl border-x border-b border-[var(--border)] -mt-1">
+                      <div className="px-6 py-4 text-[13px] text-[var(--text-mid)] leading-relaxed rounded-b-[24px] border-x border-b border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] -mt-1">
                         {faq.a[lang] || faq.a.ko}
                       </div>
                     </motion.div>

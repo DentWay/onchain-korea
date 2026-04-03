@@ -1,12 +1,10 @@
 import Nav from '../components/landing/Nav'
-import Hero from '../components/landing/Hero'
-import Stats from '../components/landing/Stats'
+import HeroStage from '../components/landing/HeroStage'
+import HeroPathPreview from '../components/landing/HeroPathPreview'
 import WhySection from '../components/landing/WhySection'
-import Testimonials from '../components/landing/Testimonials'
+import GreedSignals from '../components/landing/GreedSignals'
 import Curriculum from '../components/landing/Curriculum'
-import InlineCTA from '../components/landing/InlineCTA'
 import Features from '../components/landing/Features'
-import CertificatePreview from '../components/landing/CertificatePreview'
 import FAQ from '../components/landing/FAQ'
 import FinalCTA from '../components/landing/FinalCTA'
 import Footer from '../components/landing/Footer'
@@ -15,17 +13,17 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-[var(--surface-0)] text-[var(--text-high)] overflow-x-hidden">
       <Nav />
-      <Hero />
-      <Stats />
-      <WhySection />
-      <Curriculum />
-      <InlineCTA />
-      <Features />
-      <CertificatePreview />
-      <Testimonials />
-      <FAQ />
-      <FinalCTA />
-      <Footer />
+      <HeroStage />
+      <div className="relative z-10">
+        <HeroPathPreview />
+        <WhySection />
+        <GreedSignals />
+        <Curriculum />
+        <Features />
+        <FAQ />
+        <FinalCTA />
+        <Footer />
+      </div>
     </div>
   )
 }

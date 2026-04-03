@@ -1,5 +1,10 @@
 {
   "rewrites": [
+    { "source": "/ops/onchainkorea-admin", "destination": "/api/admin-gate/entry-page" },
+    { "source": "/ops/onchainkorea-admin/", "destination": "/api/admin-gate/entry-page" },
+    { "source": "/ops/onchainkorea-admin/access", "destination": "/api/admin-gate/access-page" },
+    { "source": "/ops/onchainkorea-admin/access/", "destination": "/api/admin-gate/access-page" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
