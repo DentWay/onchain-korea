@@ -69,7 +69,7 @@ const translations = {
   'lesson.preparing': { ko: '콘텐츠 준비 중', en: 'Korean content coming soon' },
   'lesson.preparingDesc': { ko: '한국어 본문을 준비하고 있어요.\nGreed Academy 원문으로 먼저 볼 수 있어요.', en: 'Korean translation of this lesson will be available soon.\nPlease refer to the original Greed Academy article in the meantime.' },
   'lesson.readOriginal': { ko: 'Greed Academy 원문 읽기 (영어)', en: 'Read Original on Greed Academy' },
-  'lesson.markComplete': { ko: '읽었으면 완료로 표시해요', en: 'Mark as complete after reading' },
+  'lesson.markComplete': { ko: '읽었으면 완료로 표시해봐요', en: 'Mark as complete after reading' },
   'lesson.completed': { ko: '완료됨 · 클릭하면 취소', en: 'Completed (click to undo)' },
   'lesson.quizPassed': { ko: '퀴즈 통과', en: 'Quiz Passed' },
   'lesson.passQuizToUnlockNext': { ko: '퀴즈를 통과하면 다음이 열려요', en: 'Pass this quiz to unlock the next article' },
@@ -309,7 +309,7 @@ const translations = {
   'quiz.of': { ko: '/', en: ' of ' },
   'quiz.takeQuiz': { ko: '퀴즈', en: 'Quiz' },
   'quiz.weeklyTestTitle': { ko: '주간 테스트', en: 'Weekly Test' },
-  'quiz.weeklyTestDesc': { ko: '이번 주 학습 내용을 종합 테스트해요', en: 'Comprehensive test of this week\'s learning content' },
+  'quiz.weeklyTestDesc': { ko: '이번 주 학습 내용을 종합 테스트해봐요', en: 'Comprehensive test of this week\'s learning content' },
   'quiz.passAllArticles': { ko: '아티클 퀴즈를 모두 통과하면 열려요', en: 'Pass all lesson quizzes to unlock' },
 
   // CountdownTimer

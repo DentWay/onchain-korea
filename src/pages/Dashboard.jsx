@@ -177,7 +177,7 @@ export default function Dashboard() {
       title: `Week ${currentWeek.id} ${t('quiz.weeklyTest')}`,
       body: pick(
         lang,
-        `30문제로 이번 주를 점검해요.\n통과하면 다음 주가 열려요.`,
+        `30문제로 이번 주를 점검해봐요.\n통과하면 다음 주가 열려요.`,
         `A 30-question checkpoint across this week's articles. Passing it unlocks the next week.`
       ),
       meta: pick(lang, '30문제 · 24/30 통과', '30 questions · 24/30 to pass'),
@@ -288,7 +288,7 @@ export default function Dashboard() {
                       `${Math.round(getWeekProgress(currentWeek.id))}% 완료 · 다음 단계가 열려 있어요.`,
                       `${Math.round(getWeekProgress(currentWeek.id))}% complete · the next step opens as you progress.`
                     )
-                  : pick(lang, '열린 주차에서 시작해요.', `Continue from the current unlocked week.`)}
+                  : pick(lang, '열린 주차에서 시작해봐요.', `Continue from the current unlocked week.`)}
               </p>
             </div>
 
@@ -298,11 +298,11 @@ export default function Dashboard() {
                   <div>
                     <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '이번 주 리듬', "This week's rhythm")}</p>
                     <p className="mt-2 text-[15px] font-[700] ok-ink-high">
-                      {pick(lang, '월-토 순서대로 진행해요', 'Follow the Mon-Sat sequence')}
+                      {pick(lang, '월-토 순서대로 진행해봐요', 'Follow the Mon-Sat sequence')}
                     </p>
                   </div>
                   <p className="text-[12px] ok-ink-mid">
-                    {pick(lang, '열린 단계부터 하나씩 해요.', 'Focus only on the currently open step.')}
+                    {pick(lang, '열린 단계부터 하나씩 해봐요.', 'Focus only on the currently open step.')}
                   </p>
                 </div>
                 <div className="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-6">

@@ -12,7 +12,7 @@ function getPageChrome(pathname, lang) {
   if (pathname.startsWith('/dashboard')) {
     return {
       label: lang === 'ko' ? '대시보드' : 'Dashboard',
-      hint: lang === 'ko' ? '오늘의 학습을 확인해요' : 'Pick up the next required step',
+      hint: lang === 'ko' ? '오늘의 학습을 확인해봐요' : 'Pick up the next required step',
     }
   }
 
@@ -33,14 +33,14 @@ function getPageChrome(pathname, lang) {
   if (pathname.startsWith('/quiz/')) {
     return {
       label: lang === 'ko' ? '퀴즈' : 'Quiz',
-      hint: lang === 'ko' ? '한 문제씩 풀어요' : 'One question at a time',
+      hint: lang === 'ko' ? '한 문제씩 풀어봐요' : 'One question at a time',
     }
   }
 
   if (pathname.startsWith('/certificate')) {
     return {
       label: lang === 'ko' ? '수료 증명' : 'Certificate',
-      hint: lang === 'ko' ? '남은 조건을 확인해요' : 'Review the remaining requirements',
+      hint: lang === 'ko' ? '남은 조건을 확인해봐요' : 'Review the remaining requirements',
     }
   }
 
@@ -54,7 +54,7 @@ function getPageChrome(pathname, lang) {
   if (pathname.startsWith('/settings')) {
     return {
       label: lang === 'ko' ? '내 정보' : 'My Account',
-      hint: lang === 'ko' ? '프로필과 계정을 관리해요' : 'Manage your profile and account',
+      hint: lang === 'ko' ? '프로필과 계정을 관리해봐요' : 'Manage your profile and account',
     }
   }
 
@@ -81,7 +81,7 @@ function getPageChrome(pathname, lang) {
 
   return {
     label: 'OnChain Korea',
-    hint: lang === 'ko' ? '하나씩 진행해요' : 'One step at a time',
+    hint: lang === 'ko' ? '하나씩 진행해봐요' : 'One step at a time',
   }
 }
 

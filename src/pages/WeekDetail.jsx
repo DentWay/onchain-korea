@@ -294,7 +294,7 @@ export default function WeekDetail() {
                               {state === 'done'
                                 ? pick(lang, '실습 완료로 기록됐어요.', 'Marked as completed.')
                                 : state === 'available'
-                                  ? pick(lang, '가이드를 따라 진행하고 완료로 기록해요.', 'Open the guide, complete the lab, and record it as done.')
+                                  ? pick(lang, '가이드를 따라 진행하고 완료로 기록해봐요.', 'Open the guide, complete the lab, and record it as done.')
                                   : pick(lang, '아티클 퀴즈를 모두 통과하면 열려요.', 'This opens after all article quizzes in this week are passed.')}
                             </p>
                           </div>
