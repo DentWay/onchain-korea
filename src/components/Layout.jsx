@@ -12,49 +12,49 @@ function getPageChrome(pathname, lang) {
   if (pathname.startsWith('/dashboard')) {
     return {
       label: lang === 'ko' ? '대시보드' : 'Dashboard',
-      hint: lang === 'ko' ? '지금 해야 할 것부터 이어가면 됩니다' : 'Pick up the next required step',
+      hint: lang === 'ko' ? '오늘의 학습을 확인해요' : 'Pick up the next required step',
     }
   }
 
   if (pathname.startsWith('/week/')) {
     return {
       label: lang === 'ko' ? '주차 학습' : 'Weekly path',
-      hint: lang === 'ko' ? '아티클, 실습, 히든 토픽, 테스트 순서로 진행됩니다' : 'Article, lab, hidden topic, then test',
+      hint: lang === 'ko' ? '아티클 → 실습 → 히든 토픽 → 테스트' : 'Article → Lab → Hidden topic → Test',
     }
   }
 
   if (pathname.startsWith('/lesson/')) {
     return {
       label: lang === 'ko' ? '아티클' : 'Article',
-      hint: lang === 'ko' ? '읽고 퀴즈를 통과하면 다음 아티클이 열립니다' : 'Read it, pass the quiz, unlock the next article',
+      hint: lang === 'ko' ? '퀴즈를 통과하면 다음이 열려요' : 'Pass the quiz to unlock the next article',
     }
   }
 
   if (pathname.startsWith('/quiz/')) {
     return {
       label: lang === 'ko' ? '퀴즈' : 'Quiz',
-      hint: lang === 'ko' ? '한 문제씩 풀고 바로 다음 단계로 넘어갑니다' : 'Solve one question at a time and move forward',
+      hint: lang === 'ko' ? '한 문제씩 풀어요' : 'One question at a time',
     }
   }
 
   if (pathname.startsWith('/certificate')) {
     return {
       label: lang === 'ko' ? '수료 증명' : 'Certificate',
-      hint: lang === 'ko' ? '남은 조건만 확인하면 됩니다' : 'Review the remaining requirements',
+      hint: lang === 'ko' ? '남은 조건을 확인해요' : 'Review the remaining requirements',
     }
   }
 
   if (pathname.startsWith('/hidden')) {
     return {
       label: lang === 'ko' ? '히든 토픽' : 'Hidden Topic',
-      hint: lang === 'ko' ? '이번 주 학습과 연결된 맥락만 짧게 읽으면 됩니다' : 'Read the context linked to this week',
+      hint: lang === 'ko' ? '이번 주 시장 맥락이에요' : 'This week\u2019s market context',
     }
   }
 
   if (pathname.startsWith('/settings')) {
     return {
       label: lang === 'ko' ? '내 정보' : 'My Account',
-      hint: lang === 'ko' ? '닉네임과 계정 설정을 여기서 관리합니다' : 'Manage your profile and account settings here',
+      hint: lang === 'ko' ? '프로필과 계정을 관리해요' : 'Manage your profile and account',
     }
   }
 
@@ -81,7 +81,7 @@ function getPageChrome(pathname, lang) {
 
   return {
     label: 'OnChain Korea',
-    hint: lang === 'ko' ? '한 번에 하나씩 진행하면 됩니다' : 'Move through the path one step at a time',
+    hint: lang === 'ko' ? '하나씩 진행해요' : 'One step at a time',
   }
 }
 

@@ -131,11 +131,11 @@ export default function Dashboard() {
   if (currentWeek && nextLesson) {
     primaryTask = {
       icon: BookOpen,
-      eyebrow: pick(lang, '오늘 할 일', 'Today'),
+      eyebrow: pick(lang, '다음 단계', 'Next up'),
       title: l(nextLesson.title, lang),
       body: pick(
         lang,
-        `퀴즈 10문제 중 8문제를 맞히면 다음 아티클이 열립니다.`,
+        `10문제 중 8문제를 맞추면 다음 아티클이 열려요.`,
         `Pass 8 of 10 quiz questions to unlock the next article.`
       ),
       meta: `Week ${currentWeek.id} · ${weekdayLabels[lang]?.[nextLesson.day] || `D${nextLesson.day}`}`,
@@ -149,7 +149,7 @@ export default function Dashboard() {
       title: l(nextAction.title, lang),
       body: pick(
         lang,
-        `실습을 마치면 이번 주 히든 토픽이 열립니다.`,
+        `실습을 마치면 히든 토픽이 열려요.`,
         `Finish the action lab to open the hidden topic for this week.`
       ),
       meta: `Week ${currentWeek.id} · ${weekdayLabels[lang]?.[4] || 'D4'}`,
@@ -163,8 +163,8 @@ export default function Dashboard() {
       title: l(currentWeek.hiddenTopic.title, lang),
       body: pick(
         lang,
-        `이번 주 학습과 연결된 시장 맥락을 짧게 정리한 글입니다.`,
-        `Use this Korea-focused brief to add context around this week’s practical work.`
+        `이번 주 학습과 연결된 시장 이슈예요.`,
+        `Use this Korea-focused brief to add context around this week's practical work.`
       ),
       meta: `Week ${currentWeek.id} · ${weekdayLabels[lang]?.[5] || 'D5'}`,
       href: '/hidden',
@@ -177,8 +177,8 @@ export default function Dashboard() {
       title: `Week ${currentWeek.id} ${t('quiz.weeklyTest')}`,
       body: pick(
         lang,
-        `이번 주 학습을 한 번에 점검하는 30문제 테스트입니다. 통과하면 다음 주가 열립니다.`,
-        `A 30-question checkpoint across this week’s articles. Passing it unlocks the next week.`
+        `30문제로 이번 주를 점검해요.\n통과하면 다음 주가 열려요.`,
+        `A 30-question checkpoint across this week's articles. Passing it unlocks the next week.`
       ),
       meta: pick(lang, '30문제 · 24/30 통과', '30 questions · 24/30 to pass'),
       href: `/quiz/weekly/${currentWeek.id}`,
@@ -187,11 +187,11 @@ export default function Dashboard() {
   } else {
     primaryTask = {
       icon: Trophy,
-      eyebrow: pick(lang, '마무리 단계', 'Milestone'),
-      title: pick(lang, '수료 조건 확인하기', 'Review your certificate progress'),
+      eyebrow: pick(lang, '마무리', 'Milestone'),
+      title: pick(lang, '수료 조건 확인', 'Review your certificate progress'),
       body: pick(
         lang,
-        `남은 실습과 히든 토픽을 채우고 수료 상태를 확인해보세요.`,
+        `남은 조건을 채우면 수료증을 받을 수 있어요.`,
         `Check your remaining actions and hidden topics, then review your on-chain certificate progress.`
       ),
       meta: pick(lang, '수료 진행 상황', 'Certificate status'),
@@ -225,16 +225,16 @@ export default function Dashboard() {
                 </span>
               </div>
               <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] ok-ink-high">
-                {pick(lang, `${firstName}님, 오늘은 여기부터 하면 됩니다`, `Pick up where you left off, ${firstName}`)}
+                {pick(lang, `${firstName}님, 이어서 진행해요`, `Pick up where you left off, ${firstName}`)}
               </h1>
               <p className="mt-3 max-w-2xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
                 {currentWeek
                   ? pick(
                       lang,
-                      `이번 주는 아티클 ${currentWeek.lessons.length}개를 통과하고 주간 테스트까지 마치면 됩니다. 지금은 ${currentWeekLessonsDone}개를 끝냈습니다.`,
+                      `아티클 ${currentWeekLessonsDone}/${currentWeek.lessons.length}개 완료 · 주간 테스트까지 마무리하면 돼요.`,
                       `Clear ${currentWeek.lessons.length} articles and the weekly checkpoint for Week ${currentWeek.id}.`
                     )
-                  : pick(lang, '지금 열려 있는 주차부터 이어가면 됩니다.', `Continue from the currently unlocked path.`)}
+                  : pick(lang, '열린 주차부터 바로 시작할 수 있어요.', `Continue from the currently unlocked path.`)}
               </p>
             </div>
 
@@ -285,10 +285,10 @@ export default function Dashboard() {
                 {currentWeek
                   ? pick(
                       lang,
-                      `${Math.round(getWeekProgress(currentWeek.id))}% 진행 중 · 열린 순서대로 하나씩 진행하면 됩니다.`,
+                      `${Math.round(getWeekProgress(currentWeek.id))}% 완료 · 다음 단계가 열려 있어요.`,
                       `${Math.round(getWeekProgress(currentWeek.id))}% complete · the next step opens as you progress.`
                     )
-                  : pick(lang, '지금 열린 주차부터 이어집니다.', `Continue from the current unlocked week.`)}
+                  : pick(lang, '열린 주차에서 시작해요.', `Continue from the current unlocked week.`)}
               </p>
             </div>
 
@@ -296,13 +296,13 @@ export default function Dashboard() {
               <div className="mt-8 border-t border-[var(--app-divider)] pt-5">
                 <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '이번 주 리듬', 'This week’s rhythm')}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '이번 주 리듬', "This week's rhythm")}</p>
                     <p className="mt-2 text-[15px] font-[700] ok-ink-high">
-                      {pick(lang, '월-토 흐름만 따라가면 됩니다', 'Follow the Mon-Sat sequence')}
+                      {pick(lang, '월-토 순서대로 진행해요', 'Follow the Mon-Sat sequence')}
                     </p>
                   </div>
                   <p className="text-[12px] ok-ink-mid">
-                    {pick(lang, '열린 단계만 먼저 보면 됩니다.', 'Focus only on the currently open step.')}
+                    {pick(lang, '열린 단계부터 하나씩 해요.', 'Focus only on the currently open step.')}
                   </p>
                 </div>
                 <div className="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-6">
@@ -344,7 +344,7 @@ export default function Dashboard() {
               <div className="px-5 md:px-6 pt-5 md:pt-6 pb-4 border-b border-[var(--app-divider)]">
                 <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">{pick(lang, '한 주씩 여는 학습 경로', 'A roadmap that opens one week at a time')}</h2>
                 <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
-                  {pick(lang, '이번 주만 강하게 보이고, 다음 주는 테스트 통과 후 열립니다.', 'The current week stays in focus and the next week opens after the weekly test.')}
+                  {pick(lang, '지금 주차에 집중하고, 테스트를 통과하면 다음 주가 열려요.', 'The current week stays in focus and the next week opens after the weekly test.')}
                 </p>
               </div>
 
@@ -449,7 +449,7 @@ export default function Dashboard() {
                   <div>
                     <h3 className="mt-2 text-[18px] font-[700] tracking-[-0.03em] ok-ink-high">{pick(lang, '수료 진행 상황', 'Certificate progress')}</h3>
                     <p className="mt-2 text-[12px] leading-relaxed ok-ink-mid">
-                      {pick(lang, '남은 아티클, 실습, 히든 토픽만 채우면 수료 조건을 확인할 수 있습니다.', 'Clear the remaining articles, actions, and hidden topics to reach certificate eligibility.')}
+                      {pick(lang, '아티클, 실습, 히든 토픽을 채우면 수료 자격이 생겨요.', 'Clear the remaining articles, actions, and hidden topics to reach certificate eligibility.')}
                     </p>
                   </div>
                   <Trophy size={18} className="text-[#2156B8]" />
@@ -475,13 +475,13 @@ export default function Dashboard() {
                 <Link to="/hidden" className="block ok-paper-muted p-5 transition-transform hover:-translate-y-[1px]">
                   <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] ok-ink-low">
                     <Flame size={13} className="text-[#2156B8]" />
-                    <span>{pick(lang, '이번 주 맥락', 'This week’s context')}</span>
+                    <span>{pick(lang, '이번 주 맥락', "This week's context")}</span>
                   </div>
                   <p className="mt-3 text-[16px] font-[700] leading-snug ok-ink-high">{l(currentWeek.hiddenTopic.title, lang)}</p>
                   <p className="mt-2 text-[12px] leading-relaxed ok-ink-mid">
                     {hiddenReady
-                      ? pick(lang, '이번 주 실습과 연결된 시장 맥락을 읽어보세요.', 'Read the market context connected to this week’s work.')
-                      : pick(lang, '이번 주 action을 완료하면 히든 토픽이 열립니다.', 'The hidden topic opens after you complete this week’s action.')}
+                      ? pick(lang, '실습과 연결된 시장 맥락이에요.', 'Market context connected to this week\u2019s work.')
+                      : pick(lang, 'action을 완료하면 열려요.', 'Opens after you complete this week\u2019s action.')}
                   </p>
                   <div className="mt-4 flex items-center justify-between text-[12px]">
                     <span className={hiddenReady ? 'text-[#2156B8]' : 'ok-ink-low'}>

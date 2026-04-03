@@ -42,8 +42,8 @@ export default function LessonDetail() {
   const TypeIcon = cfg?.icon
   const sourceTitle = lesson.source ? greedArticles[lesson.source]?.title : null
   const passCopy = hasQuiz
-    ? pick(lang, `${questionCount}문제 중 8문제 이상 맞히면 다음 아티클이 열립니다.`, `Score at least 8 out of ${questionCount} to open the next article.`)
-    : pick(lang, '이 아티클은 참고용 콘텐츠입니다.', 'This article is reference content.')
+    ? pick(lang, `${questionCount}문제 중 8문제 이상 맞히면 다음 아티클이 열려요.`, `Score at least 8 out of ${questionCount} to open the next article.`)
+    : pick(lang, '이 아티클은 참고용 콘텐츠예요.', 'This article is reference content.')
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -79,8 +79,8 @@ export default function LessonDetail() {
               {pick(
                 lang,
                 hasQuiz
-                  ? `${questionCount}문제 퀴즈를 통과해야 다음 아티클이 열립니다. 먼저 읽고 핵심만 정리해두세요.`
-                  : '이 아티클은 참고용 콘텐츠입니다. 본문을 읽고 연결된 실습 흐름을 이해하세요.',
+                  ? `${questionCount}문제 퀴즈를 통과해야 다음 아티클이 열려요. 먼저 읽고 핵심만 정리해 두세요.`
+                  : '이 아티클은 참고용 콘텐츠예요. 본문을 읽고 연결된 실습 흐름을 확인해 보세요.',
                 hasQuiz
                   ? `You need to pass a ${questionCount}-question quiz to unlock the next article. Read first and lock in the core ideas.`
                   : 'This article is reference content. Read it to understand the connected practical flow.'
@@ -181,11 +181,11 @@ export default function LessonDetail() {
                   <div className="max-w-3xl">
                     <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '다음 단계', 'Next step')}</p>
                     <p className="mt-3 text-[22px] font-[800] tracking-[-0.04em] ok-ink-high">
-                      {done ? t('lesson.quizPassed') : pick(lang, '읽은 뒤 바로 퀴즈로 넘어가세요', 'Read first, then move straight to the quiz')}
+                      {done ? t('lesson.quizPassed') : pick(lang, '읽은 뒤 바로 퀴즈로 넘어가요', 'Read first, then move straight to the quiz')}
                     </p>
                     <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
                       {done
-                        ? pick(lang, '이 아티클은 통과 처리되었습니다. 다음 단계로 넘어가면 됩니다.', 'This article is already cleared. Move to the next step.')
+                        ? pick(lang, '이 아티클은 통과됐어요. 다음 단계로 넘어가면 돼요.', 'This article is already cleared. Move to the next step.')
                         : passCopy}
                     </p>
                   </div>

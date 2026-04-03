@@ -92,14 +92,14 @@ export default function WeekDetail() {
   const weeklyAvailable = allLessonsDone || weeklyPassed || isAdmin
   const weeklyStatus = getQuizStatus('weekly', String(week.id))
   const nextUnlockCopy = isAdmin
-    ? pick(lang, '관리자 모드에서는 잠금 없이 모든 주차와 테스트를 열 수 있습니다.', 'Admin mode bypasses content locks and opens every week and test.')
+    ? pick(lang, '관리자 모드라 모든 주차와 테스트가 열려 있어요.', 'Admin mode bypasses content locks and opens every week and test.')
     : !allLessonsDone
-    ? pick(lang, '아티클 3개 퀴즈를 통과하면 Action Lab이 열립니다.', 'Pass all 3 article quizzes to unlock the action lab.')
+    ? pick(lang, '아티클 3개 퀴즈를 통과하면 Action Lab이 열려요.', 'Pass all 3 article quizzes to unlock the action lab.')
     : completedWeekActions === 0
-      ? pick(lang, 'action 1개를 완료하면 Hidden Topic이 열립니다.', 'Complete one action to unlock the hidden topic.')
+      ? pick(lang, 'action 1개를 완료하면 Hidden Topic이 열려요.', 'Complete one action to unlock the hidden topic.')
       : !weeklyPassed
-        ? pick(lang, '주간 테스트를 통과하면 다음 주가 열립니다.', 'Pass the weekly test to unlock the next week.')
-        : pick(lang, '이번 주 필수 흐름을 마쳤습니다. 다음 주로 넘어갈 수 있습니다.', 'You have completed this week’s core flow and can move on.')
+        ? pick(lang, '주간 테스트를 통과하면 다음 주가 열려요.', 'Pass the weekly test to unlock the next week.')
+        : pick(lang, '이번 주를 마쳤어요. 다음 주로 넘어갈 수 있어요.', 'You have completed this week\u2019s core flow and can move on.')
 
   const cadenceSteps = [
     ...week.lessons.map((lesson) => ({
@@ -172,7 +172,7 @@ export default function WeekDetail() {
               <p className="mt-4 text-[13px] leading-relaxed ok-ink-mid">
                 {pick(
                   lang,
-                  `이번 주는 월-수 아티클, 목 실습, 금 히든 토픽, 토 테스트 순서로 이어집니다. 지금은 실습 ${completedWeekActions}/${week.actions.length}개를 진행했습니다.`,
+                  `월-수 아티클, 목 실습, 금 히든 토픽, 토 테스트 순서예요. 실습은 ${completedWeekActions}/${week.actions.length}개 진행했어요.`,
                   `This week runs Mon-Wed articles, Thu action lab, Fri hidden topic, and Sat test. You have logged ${completedWeekActions} of ${week.actions.length} actions so far.`
                 )}
               </p>
@@ -200,10 +200,10 @@ export default function WeekDetail() {
             <div className="space-y-5">
               <section className="ok-paper overflow-hidden">
                 <SectionHeader
-                  title={pick(lang, '이번 주 아티클', 'This week’s articles')}
+                  title={pick(lang, '이번 주 아티클', "This week's articles")}
                   description={pick(
                     lang,
-                    '앞선 아티클 퀴즈를 통과해야 다음 아티클이 열립니다. 각 퀴즈는 10문제이고 8문제 이상 맞히면 통과입니다.',
+                    '앞 퀴즈를 통과하면 다음이 열려요. 10문제 중 8문제 이상 맞추면 통과예요.',
                     'Each next article opens after you pass the previous quiz. Every article quiz has 10 questions and requires 8 correct answers.'
                   )}
                 />
@@ -238,8 +238,8 @@ export default function WeekDetail() {
                               {state === 'done'
                                 ? pick(lang, `${questionCount}문제 퀴즈 통과 완료`, `${questionCount} quiz questions cleared`)
                                 : state === 'available'
-                                  ? pick(lang, `${questionCount}문제 퀴즈 · 통과하면 다음 아티클이 열립니다`, `${questionCount} quiz questions · pass to unlock the next article`)
-                                  : pick(lang, '앞선 아티클 퀴즈를 통과하면 열립니다.', 'This opens after you pass the previous article quiz.')}
+                                  ? pick(lang, `${questionCount}문제 퀴즈 · 통과하면 다음이 열려요`, `${questionCount} quiz questions · pass to unlock the next article`)
+                                  : pick(lang, '앞 퀴즈를 통과하면 열려요.', 'This opens after you pass the previous article quiz.')}
                             </p>
                           </div>
 
@@ -268,7 +268,7 @@ export default function WeekDetail() {
                   title={pick(lang, 'Action Lab', 'Action Lab')}
                   description={pick(
                     lang,
-                    '이번 주 아티클을 모두 통과하면 실습이 열립니다. 실습 하나를 마치면 히든 토픽을 읽을 수 있습니다.',
+                    '아티클을 모두 통과하면 실습이 열려요. 실습 하나를 마치면 히든 토픽을 읽을 수 있어요.',
                     'The lab opens after you clear all articles. Finishing one action opens the hidden topic.'
                   )}
                 />
@@ -292,10 +292,10 @@ export default function WeekDetail() {
                             </h3>
                             <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
                               {state === 'done'
-                                ? pick(lang, '실습 완료로 기록되었습니다.', 'Marked as completed.')
+                                ? pick(lang, '실습 완료로 기록됐어요.', 'Marked as completed.')
                                 : state === 'available'
-                                  ? pick(lang, '가이드를 따라 실습을 진행한 뒤 완료로 기록하세요.', 'Open the guide, complete the lab, and record it as done.')
-                                  : pick(lang, '이번 주 아티클 퀴즈를 모두 통과하면 열립니다.', 'This opens after all article quizzes in this week are passed.')}
+                                  ? pick(lang, '가이드를 따라 진행하고 완료로 기록해요.', 'Open the guide, complete the lab, and record it as done.')
+                                  : pick(lang, '아티클 퀴즈를 모두 통과하면 열려요.', 'This opens after all article quizzes in this week are passed.')}
                             </p>
                           </div>
 
@@ -369,10 +369,10 @@ export default function WeekDetail() {
                     <h2 className="mt-3 text-[24px] font-[800] tracking-[-0.04em] ok-ink-high">{pick(lang, 'Weekly Test', 'Weekly Test')}</h2>
                     <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
                       {weeklyPassed
-                        ? pick(lang, '이번 주 테스트를 통과했고 다음 주가 열려 있습니다.', 'You passed this week’s test and the next week is unlocked.')
+                        ? pick(lang, '이번 주 테스트를 통과했어요. 다음 주가 열려 있어요.', "You passed this week's test and the next week is unlocked.")
                         : weeklyAvailable
-                          ? pick(lang, '30문제 중 24문제 이상 맞히면 다음 주가 열립니다. 아티클 퀴즈와 완전히 같은 문제는 나오지 않습니다.', 'Score 24 out of 30 to unlock the next week. The questions are variants, not duplicates of the article quizzes.')
-                          : pick(lang, '먼저 이번 주 아티클 3개 퀴즈를 모두 통과해야 테스트를 볼 수 있습니다.', 'You need to pass all three article quizzes before the test opens.')}
+                          ? pick(lang, '30문제 중 24문제 이상 맞추면 다음 주가 열려요. 아티클 퀴즈와 같은 문제는 안 나와요.', 'Score 24 out of 30 to unlock the next week. The questions are variants, not duplicates of the article quizzes.')
+                          : pick(lang, '아티클 3개 퀴즈를 모두 통과해야 테스트가 열려요.', 'You need to pass all three article quizzes before the test opens.')}
                     </p>
                   </div>
 
@@ -432,7 +432,7 @@ export default function WeekDetail() {
                     </span>
                     <div>
                       <p className="font-semibold ok-ink-high">{pick(lang, '아티클 3개 통과', 'Pass all 3 articles')}</p>
-                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '앞선 퀴즈를 통과해야 다음 아티클이 열립니다.', 'Each next article opens after the previous quiz.')}</p>
+                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '앞 퀴즈를 통과하면 다음이 열려요.', 'Each next article opens after the previous quiz.')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 py-4">
@@ -441,7 +441,7 @@ export default function WeekDetail() {
                     </span>
                     <div>
                       <p className="font-semibold ok-ink-high">{pick(lang, 'Action 1개 이상 완료', 'Complete at least one action')}</p>
-                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '실습 하나를 마치면 히든 토픽이 열립니다.', 'One completed action opens the hidden topic.')}</p>
+                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '실습 하나를 마치면 히든 토픽이 열려요.', 'One completed action opens the hidden topic.')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 py-4">
@@ -450,7 +450,7 @@ export default function WeekDetail() {
                     </span>
                     <div>
                       <p className="font-semibold ok-ink-high">{pick(lang, '주간 테스트 통과', 'Pass the weekly test')}</p>
-                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '30문제 중 24문제를 맞히면 다음 주가 열립니다.', 'Score 24 out of 30 to unlock the next week.')}</p>
+                      <p className="mt-1 text-[12px] ok-ink-mid">{pick(lang, '30문제 중 24문제 맞추면 다음 주가 열려요.', 'Score 24 out of 30 to unlock the next week.')}</p>
                     </div>
                   </div>
                 </div>

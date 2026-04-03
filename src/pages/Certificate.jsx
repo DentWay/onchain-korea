@@ -80,7 +80,7 @@ export default function Certificate() {
                 <div className="px-5 md:px-6 pt-5 md:pt-6 pb-4 border-b border-[var(--app-divider)]">
                   <h2 className="text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">{t('cert.requirements')}</h2>
                   <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
-                    {pick(lang, '레슨, 온체인 액션, 히든 토픽 조건을 모두 충족하면 수료증 발급 대상이 됩니다.', 'You become eligible for the certificate after clearing the lesson, action, and hidden-topic requirements.')}
+                    {pick(lang, '레슨, 온체인 액션, 히든 토픽 조건을 모두 충족하면 수료증을 받을 수 있어요.', 'You become eligible for the certificate after clearing the lesson, action, and hidden-topic requirements.')}
                   </p>
                 </div>
 

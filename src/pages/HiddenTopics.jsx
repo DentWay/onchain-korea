@@ -47,7 +47,7 @@ export default function HiddenTopics() {
                 {readHiddenTopics.length}/{weeks.length}
               </p>
               <p className="mt-2 text-[12px] ok-ink-mid">
-                {pick(lang, '실습을 마친 주차부터 순서대로 열립니다.', 'Topics open week by week after actions are completed.')}
+                {pick(lang, '실습을 마친 주차부터 순서대로 열려요.', 'Topics open week by week after actions are completed.')}
               </p>
             </div>
           </header>
