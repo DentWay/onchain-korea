@@ -42,7 +42,7 @@ export default function App() {
         <Route path="/community" element={<Community />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path={ADMIN_CONSOLE_PATH} element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
+        <Route path={ADMIN_CONSOLE_PATH} element={<div style={{ color: 'red', fontSize: 40, padding: 40, background: '#111', border: '4px solid red' }}>DIRECT ROUTE MATCH — NO GUARD</div>} />
         <Route path={`${ADMIN_CONSOLE_PATH}/`} element={<Navigate to={ADMIN_CONSOLE_PATH} replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
