@@ -428,9 +428,14 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let cancelled = false
 
-    if (!supabase || !user || !isAdmin) {
+    if (!supabase) {
       setAdminAccessGranted(false)
       setAdminAccessLoading(false)
+      return undefined
+    }
+
+    if (!user || !isAdmin) {
+      setAdminAccessGranted(false)
       return undefined
     }
 
