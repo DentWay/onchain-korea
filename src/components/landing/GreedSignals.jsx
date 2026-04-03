@@ -90,14 +90,14 @@ export default function GreedSignals() {
                 <span className="ok-section-label">
                   {pick(lang, 'Public Signals', 'Public Signals')}
                 </span>
-                <h2 className="mt-4 text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[44px]">
-                  {pick(lang, '왜 이 구조를 가져왔는지, 공개 데이터로 설명합니다', 'Why we chose this model, using public data')}
+                <h2 className="mt-4 whitespace-pre-line text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[44px] md:leading-[1.15]">
+                  {pick(lang, '왜 이 구조를 가져왔는지,\n공개 데이터로 설명해요', 'Why we chose this model,\nexplained with public data')}
                 </h2>
-                <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-[var(--text-mid)]">
+                <p className="mt-4 max-w-2xl whitespace-pre-line text-[15px] leading-[1.8] text-[var(--text-mid)]">
                   {pick(
                     lang,
-                    'GREED Academy의 공개 결과와 워크숍 사례를 보면, 초보자에게는 순서 있는 학습 흐름과 바로 해보는 실습이 가장 잘 작동했습니다. OnChain Korea는 그 구조를 한국 사용자 흐름에 맞춰 다시 짰습니다.',
-                    'Public GREED Academy results and workshop recaps show that sequenced learning and immediate hands-on practice worked best for beginners. OnChain Korea adapts that structure for Korean users.'
+                    'GREED Academy의 공개 결과와 워크숍 사례를 보면,\n초보자에게는 순서 있는 학습 흐름과 바로 해보는 실습이\n가장 잘 작동했어요.\n\nOnChain Korea는 그 구조를\n한국 사용자 흐름에 맞춰 다시 짰어요.',
+                    'Public GREED Academy results and workshop recaps show that sequenced learning and immediate hands-on practice worked best for beginners.\n\nOnChain Korea adapts that structure for Korean users.'
                   )}
                 </p>
               </div>
@@ -114,14 +114,14 @@ export default function GreedSignals() {
                       transition={{ duration: 0.45, delay: index * 0.06 }}
                       className="rounded-[24px] border border-[rgba(255,255,255,0.10)] bg-[rgba(255,255,255,0.04)] px-5 py-5"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(59,130,246,0.12)] text-[#79AFFF]">
-                          <Icon size={18} />
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(59,130,246,0.12)] text-[#79AFFF]">
+                          <Icon size={16} />
                         </div>
-                        <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-low)]">{item.source}</span>
+                        <span className="text-[9px] uppercase tracking-[0.18em] text-[var(--text-low)] leading-tight">{item.source}</span>
                       </div>
-                      <p className="mt-5 text-[32px] font-[800] tracking-[-0.05em] text-[var(--text-high)]">{item.value}</p>
-                      <p className="mt-2 text-[13px] leading-relaxed text-[var(--text-mid)]">{item.title[lang] || item.title.ko}</p>
+                      <p className="mt-4 text-[32px] font-[800] tracking-[-0.05em] text-[var(--text-high)]">{item.value}</p>
+                      <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-mid)]">{item.title[lang] || item.title.ko}</p>
                     </motion.div>
                   )
                 })}
