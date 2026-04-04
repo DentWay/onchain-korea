@@ -73,8 +73,10 @@ function renderAccessPage() {
       .status { border: 1px solid var(--success-border); background: var(--success-bg); color: #afcbff; }
       .error { border: 1px solid var(--danger-border); background: var(--danger-bg); color: var(--danger); }
       code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-      .brand { font-size: 24px; font-weight: 800; letter-spacing: -0.05em; }
-      .brand small { margin-left: 8px; font-size: 12px; letter-spacing: 0.2em; color: var(--text-low); vertical-align: baseline; }
+      .brand { display: flex; align-items: center; gap: 10px; }
+      .brand img { width: 36px; height: 36px; }
+      .brand span { font-size: 24px; font-weight: 800; letter-spacing: -0.05em; }
+      .brand small { margin-left: 4px; font-size: 12px; letter-spacing: 0.2em; color: var(--text-low); vertical-align: baseline; }
     </style>
   </head>
   <body>
@@ -86,7 +88,7 @@ function renderAccessPage() {
         </div>
         <div class="card">
           <div class="eyebrow">운영 콘솔 접근</div>
-          <div class="brand">OnChain <small>KR</small></div>
+          <div class="brand"><img src="/brand/symbol-web.png" alt="OnChain Korea" /><span>OnChain <small>KR</small></span></div>
           <h1 class="title">관리자 잠금 해제</h1>
           <p class="desc">
             승인된 관리자 계정으로 로그인한 뒤 운영 비밀번호를 입력하면 관리자 콘솔이 열립니다.
