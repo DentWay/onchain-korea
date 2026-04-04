@@ -96,8 +96,7 @@ export default function AdminAccess() {
             </div>
           )}
 
-          <div className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_260px]">
-            <div>
+          <div className="mt-8 max-w-lg">
               {!user ? (
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-4 text-[13px] text-[var(--text-mid)]">
@@ -175,27 +174,6 @@ export default function AdminAccess() {
                   </div>
                 </form>
               )}
-            </div>
-
-            <aside className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] p-4 text-[13px] text-[var(--text-mid)]">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-low)]">{pick(lang, '현재 조건', 'Requirements')}</p>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-low)]">{pick(lang, '현재 계정', 'Current account')}</p>
-                  <p className="mt-1 break-all text-[13px] text-[var(--text-high)]">{currentEmail || pick(lang, '로그인 필요', 'Not signed in')}</p>
-                </div>
-                <div className="border-t border-[var(--app-divider)] pt-4">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-low)]">{pick(lang, '접근 기준', 'Access rule')}</p>
-                  <p className="mt-1 text-[13px] text-[var(--text-high)]">
-                    {pick(lang, '승인된 관리자 계정만 비밀번호를 통과할 수 있습니다.', 'Only approved admin accounts can pass this gate.')}
-                  </p>
-                </div>
-                <div className="border-t border-[var(--app-divider)] pt-4">
-                  <p className="text-[11px] uppercase tracking-[0.16em] text-[var(--text-low)]">{pick(lang, '운영 경로', 'Ops path')}</p>
-                  <code className="mt-1 block text-[12px] text-[var(--text-high)]">{ADMIN_ENTRY_PATH}</code>
-                </div>
-              </div>
-            </aside>
           </div>
         </div>
       </div>
