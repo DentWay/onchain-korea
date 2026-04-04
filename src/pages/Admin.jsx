@@ -2,17 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import {
   ArrowRight,
-  BookOpen,
-  ClipboardCheck,
   Clock3,
   Filter,
   RefreshCcw,
   Search,
-  Shield,
-  Target,
-  Trophy,
   Users,
-  Zap,
 } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import { supabase } from '../lib/supabase'
@@ -543,58 +537,30 @@ export default function Admin() {
   return (
     <div className="mx-auto max-w-7xl">
       <section className="ok-workbench p-5 md:p-8">
-        <header className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-[11px] uppercase tracking-[0.22em] ok-ink-low">Admin</p>
-            <h1 className="mt-2 text-[30px] font-[800] tracking-[-0.05em] ok-ink-high md:text-[40px]">
+        <header className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-[26px] font-[800] tracking-[-0.05em] ok-ink-high md:text-[32px]">
               {pick(lang, '운영 대시보드', 'Admin Console')}
             </h1>
-            <p className="mt-3 text-[14px] leading-relaxed ok-ink-mid md:text-[15px]">
-              {pick(
-                lang,
-                '전체 학습자의 현재 주차, 진행률, 병목 구간, 최근 퀴즈 기록을 한 화면에서 확인합니다. 콘텐츠 잠금은 관리자에게 적용되지 않습니다.',
-                'Review every learner’s current week, progress, bottlenecks, and recent quiz activity from one screen. Content locks do not apply in admin mode.'
-              )}
-            </p>
           </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(59,130,246,0.16)] bg-[rgba(59,130,246,0.10)] px-4 py-2 text-[12px] font-semibold text-[#79AFFF]">
-              <Shield size={14} />
-              <span>{pick(lang, '관리자 접근 활성화', 'Admin access enabled')}</span>
-            </div>
-            <button onClick={() => void loadAdminData()} className="ok-btn ok-btn-light px-4 py-2.5 text-[12px]" disabled={loading}>
-              <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} />
-              {pick(lang, '새로고침', 'Refresh')}
-            </button>
-          </div>
+          <button onClick={() => void loadAdminData()} className="ok-btn ok-btn-light px-4 py-2.5 text-[12px]" disabled={loading}>
+            <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} />
+            {pick(lang, '새로고침', 'Refresh')}
+          </button>
         </header>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <SummaryCard
-            icon={Users}
-            label={pick(lang, '전체 학습자', 'Learners')}
-            value={summary.totalUsers}
-            meta={pick(lang, '프로필 기준', 'Profiles')}
-          />
-          <SummaryCard
-            icon={BookOpen}
-            label={pick(lang, '학습 시작', 'Started')}
-            value={summary.activeUsers}
-            meta={pick(lang, '진행률 1% 이상', '1%+ progress')}
-          />
-          <SummaryCard
-            icon={Zap}
-            label={pick(lang, '평균 진행률', 'Average progress')}
-            value={`${summary.avgProgress}%`}
-            meta={`${totalLessons} ${pick(lang, '개 아티클 기준', 'articles tracked')}`}
-          />
-          <SummaryCard
-            icon={ClipboardCheck}
-            label={pick(lang, '주간 테스트 통과', 'Weekly passes')}
-            value={summary.weeklyPasses}
-            meta={`${weeks.length} ${pick(lang, '주차 누적', 'weeks total')}`}
-          />
+        <div className="mt-5 flex flex-wrap gap-6 border-b border-[var(--app-divider)] pb-5">
+          {[
+            { label: pick(lang, '전체', 'Total'), value: summary.totalUsers },
+            { label: pick(lang, '학습 중', 'Active'), value: summary.activeUsers },
+            { label: pick(lang, '평균', 'Avg'), value: `${summary.avgProgress}%` },
+            { label: pick(lang, '테스트', 'Tests'), value: summary.weeklyPasses },
+          ].map((item) => (
+            <div key={item.label} className="flex items-baseline gap-2">
+              <span className="text-[22px] font-[800] ok-tabular-nums ok-ink-high">{item.value}</span>
+              <span className="text-[12px] ok-ink-mid">{item.label}</span>
+            </div>
+          ))}
         </div>
 
         <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
@@ -663,41 +629,20 @@ export default function Admin() {
 
         <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
           <section className="ok-paper overflow-hidden">
-            <div className="border-b border-[var(--app-divider)] px-5 pb-4 pt-5 md:px-6 md:pt-6">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '학습자 현황', 'Learner progress')}</p>
-                  <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">
-                    {pick(lang, '전체 사용자 진행률', 'All learner progress')}
-                  </h2>
-                  <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
-                    {pick(
-                      lang,
-                      '이름 또는 이메일로 좁히고, 상태와 주차 기준으로 병목 구간을 빠르게 찾습니다.',
-                      'Filter by name, email, stage, and week to find learner bottlenecks quickly.'
-                    )}
-                  </p>
-                </div>
-
-                <label className="flex w-full items-center gap-3 rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 lg:max-w-[320px]">
+            <div className="border-b border-[var(--app-divider)] px-5 py-4 md:px-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="flex flex-1 items-center gap-3 rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-2.5 min-w-[200px] max-w-[360px]">
                   <Search size={15} className="ok-ink-low" />
                   <input
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder={pick(lang, '이름 또는 이메일 검색', 'Search name or email')}
+                    placeholder={pick(lang, '검색', 'Search')}
                     className="w-full bg-transparent text-[13px] ok-ink-high placeholder:text-[var(--app-ink-low)] outline-none"
                   />
                 </label>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-3">
                 <FilterSelect label={pick(lang, '상태', 'Status')} value={statusFilter} onChange={setStatusFilter} options={statusOptions} />
                 <FilterSelect label={pick(lang, '주차', 'Week')} value={weekFilter} onChange={setWeekFilter} options={weekOptions} />
-                <FilterSelect label={pick(lang, '정렬', 'Sort')} value={sortBy} onChange={setSortBy} options={sortOptions} />
-                <div className="inline-flex items-center gap-2 rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 text-[12px] font-medium ok-ink-mid">
-                  <Target size={14} className="ok-ink-low" />
-                  <span>{pick(lang, `결과 ${visibleRows.length}명`, `${visibleRows.length} results`)}</span>
-                </div>
+                <span className="text-[12px] ok-ink-low ok-tabular-nums">{visibleRows.length}{pick(lang, '명', '')}</span>
               </div>
             </div>
 
@@ -730,82 +675,35 @@ export default function Admin() {
                 />
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left">
-                  <thead className="border-b border-[var(--app-divider)] bg-[rgba(255,255,255,0.02)]">
-                    <tr className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">
-                      <th className="px-5 py-3 md:px-6">{pick(lang, '학습자', 'Learner')}</th>
-                      <th className="px-5 py-3">{pick(lang, '현재 위치', 'Current step')}</th>
-                      <th className="px-5 py-3">{pick(lang, '진행률', 'Progress')}</th>
-                      <th className="px-5 py-3">{pick(lang, '실습 / 히든', 'Action / Hidden')}</th>
-                      <th className="px-5 py-3">{pick(lang, '테스트', 'Tests')}</th>
-                      <th className="px-5 py-3 md:px-6">{pick(lang, '최근 활동', 'Last activity')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visibleRows.map((row, index) => {
-                      const stageMeta = getStageMeta(lang, getLearnerStage(row))
-                      const isSelected = row.id === selectedId
+              <div className="divide-y divide-[var(--app-divider)]">
+                {visibleRows.map((row) => {
+                  const stageMeta = getStageMeta(lang, getLearnerStage(row))
+                  const isSelected = row.id === selectedId
 
-                      return (
-                        <tr
-                          key={row.id}
-                          className={`cursor-pointer transition-colors ${index > 0 ? 'border-t border-[var(--app-divider)]' : ''} ${isSelected ? 'bg-[rgba(59,130,246,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}
-                          onClick={() => setSelectedId(row.id)}
-                        >
-                          <td className="px-5 py-4 md:px-6 align-top">
-                            <div className="min-w-[220px]">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <p className="text-[14px] font-semibold ok-ink-high">{row.displayName}</p>
-                                <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${stageMeta.tone}`}>
-                                  {stageMeta.label}
-                                </span>
-                              </div>
-                              <p className="mt-1 text-[12px] ok-ink-mid">{row.email || pick(lang, '이메일 없음', 'No email')}</p>
-                              <p className="mt-1 text-[11px] ok-ink-low">Lang: {String(row.lang).toUpperCase()}</p>
-                            </div>
-                          </td>
-                          <td className="px-5 py-4 align-top">
-                            <div className="min-w-[150px]">
-                              <p className="text-[14px] font-semibold ok-ink-high">Week {row.currentWeek}</p>
-                              <p className="mt-1 text-[11px] ok-ink-mid">
-                                {row.articlePassedCount}/{totalLessons} {pick(lang, '퀴즈 통과', 'quiz passed')}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="px-5 py-4 align-top">
-                            <div className="min-w-[140px]">
-                              <p className="text-[18px] font-[800] ok-tabular-nums ok-ink-high">{row.progressPct}%</p>
-                              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
-                                <div className="h-full rounded-full bg-[#3B82F6]" style={{ width: `${Math.min(row.progressPct, 100)}%` }} />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-5 py-4 align-top">
-                            <div className="min-w-[150px] space-y-1 text-[12px] ok-ink-mid">
-                              <p>{row.completedActions}/{totalActions} {pick(lang, '실습 완료', 'actions')}</p>
-                              <p>{row.readHiddenTopics}/{totalHiddenTopics} {pick(lang, '히든 읽음', 'hidden read')}</p>
-                            </div>
-                          </td>
-                          <td className="px-5 py-4 align-top">
-                            <div className="min-w-[150px] space-y-1 text-[12px] ok-ink-mid">
-                              <p>{row.weeklyPassedCount}/{weeks.length} {pick(lang, '주차 통과', 'weekly passed')}</p>
-                              <p>{row.quizAttempts} {pick(lang, '회 응시', 'attempts')}</p>
-                            </div>
-                          </td>
-                          <td className="px-5 py-4 md:px-6 align-top">
-                            <div className="min-w-[180px]">
-                              <p className="text-[12px] ok-ink-high">{formatDate(lang, row.lastActivityAt)}</p>
-                              <p className="mt-1 text-[11px] ok-ink-low">
-                                {pick(lang, '생성일', 'Joined')}: {formatDate(lang, row.createdAt)}
-                              </p>
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
+                  return (
+                    <button
+                      key={row.id}
+                      type="button"
+                      onClick={() => setSelectedId(row.id)}
+                      className={`flex w-full items-center gap-4 px-5 py-4 text-left transition-colors md:px-6 ${isSelected ? 'bg-[rgba(59,130,246,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="text-[14px] font-semibold ok-ink-high">{row.displayName}</p>
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${stageMeta.tone}`}>{stageMeta.label}</span>
+                        </div>
+                        <p className="mt-1 text-[12px] ok-ink-mid">Week {row.currentWeek} · {row.email || pick(lang, '이메일 없음', 'No email')}</p>
+                      </div>
+                      <div className="shrink-0 w-28 text-right">
+                        <p className="text-[18px] font-[800] ok-tabular-nums ok-ink-high">{row.progressPct}%</p>
+                        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[var(--app-track)]">
+                          <div className="h-full rounded-full bg-[#3B82F6]" style={{ width: `${Math.min(row.progressPct, 100)}%` }} />
+                        </div>
+                      </div>
+                      <ArrowRight size={14} className="shrink-0 ok-ink-low" />
+                    </button>
+                  )
+                })}
               </div>
             )}
           </section>
