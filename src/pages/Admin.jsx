@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import {
   ArrowRight,
   Clock3,
@@ -268,20 +268,6 @@ function buildLearnerRows(profiles = [], progressRows = [], quizRows = []) {
   })
 }
 
-function SummaryCard({ icon: Icon, label, value, meta }) {
-  return (
-    <div className="ok-paper-muted p-5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{label}</p>
-        <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[rgba(59,130,246,0.10)] text-[#79AFFF]">
-          <Icon size={16} />
-        </span>
-      </div>
-      <p className="mt-4 text-[34px] font-[800] tracking-[-0.06em] ok-tabular-nums ok-ink-high">{value}</p>
-      <p className="mt-2 text-[12px] ok-ink-mid">{meta}</p>
-    </div>
-  )
-}
 
 function FilterSelect({ label, value, onChange, options }) {
   return (
@@ -310,22 +296,6 @@ function EmptyPanel({ title, body }) {
     <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-4">
       <p className="text-[13px] font-semibold ok-ink-high">{title}</p>
       <p className="mt-2 text-[12px] leading-relaxed ok-ink-mid">{body}</p>
-    </div>
-  )
-}
-
-function OpsChip({ label, value, tone = 'default' }) {
-  const toneClass = {
-    default: 'border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] text-[var(--app-ink-high)]',
-    danger: 'border-[rgba(248,113,113,0.18)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]',
-    success: 'border-[rgba(74,222,128,0.18)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]',
-    info: 'border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.10)] text-[#79AFFF]',
-  }[tone]
-
-  return (
-    <div className={`rounded-2xl border px-4 py-3 ${toneClass}`}>
-      <p className="text-[10px] uppercase tracking-[0.16em] opacity-80">{label}</p>
-      <p className="mt-2 text-[22px] font-[800] tracking-[-0.04em] ok-tabular-nums">{value}</p>
     </div>
   )
 }
@@ -407,35 +377,6 @@ export default function Admin() {
     return { totalUsers, activeUsers, avgProgress, weeklyPasses }
   }, [rows])
 
-  const opsSnapshot = useMemo(() => {
-    const stageCounts = {
-      active: 0,
-      stalled: 0,
-      completed: 0,
-      notStarted: 0,
-      admin: 0,
-    }
-
-    for (const row of rows) {
-      stageCounts[getLearnerStage(row)] += 1
-    }
-
-    const stalledRows = [...rows]
-      .filter((row) => getLearnerStage(row) === 'stalled')
-      .sort((a, b) => a.lastActivityTs - b.lastActivityTs)
-      .slice(0, 5)
-
-    const weekDistribution = weeks.map((week) => ({
-      weekId: week.id,
-      count: rows.filter((row) => row.currentWeek === week.id).length,
-      label: l(week.title, lang),
-    }))
-
-    const maxWeekCount = Math.max(1, ...weekDistribution.map((item) => item.count))
-
-    return { stageCounts, stalledRows, weekDistribution, maxWeekCount }
-  }, [lang, rows])
-
   const statusOptions = useMemo(() => [
     { value: 'all', label: pick(lang, '전체', 'All') },
     { value: 'active', label: pick(lang, '진행 중', 'Active') },
@@ -448,14 +389,6 @@ export default function Admin() {
   const weekOptions = useMemo(() => [
     { value: 'all', label: pick(lang, '전체 주차', 'All weeks') },
     ...weeks.map((week) => ({ value: String(week.id), label: `Week ${week.id}` })),
-  ], [lang])
-
-  const sortOptions = useMemo(() => [
-    { value: 'recent', label: pick(lang, '최근 활동순', 'Recent activity') },
-    { value: 'progress', label: pick(lang, '진행률순', 'Progress') },
-    { value: 'week', label: pick(lang, '주차순', 'Current week') },
-    { value: 'attempts', label: pick(lang, '퀴즈 응시순', 'Quiz attempts') },
-    { value: 'name', label: pick(lang, '이름순', 'Name') },
   ], [lang])
 
   const visibleRows = useMemo(() => {
@@ -519,16 +452,6 @@ export default function Admin() {
     [lang, selectedRow, selectedSnapshots]
   )
 
-  const quickLinks = useMemo(() => [
-    ...weeks.map((week) => ({
-      label: `Week ${week.id}`,
-      href: `/week/${week.id}`,
-      meta: pick(lang, '주차 열기', 'Open week'),
-    })),
-    { label: pick(lang, '히든 토픽', 'Hidden Topics'), href: '/hidden', meta: pick(lang, '전체 보기', 'Open all') },
-    { label: pick(lang, '수료증', 'Certificate'), href: '/certificate', meta: pick(lang, '수료 상태', 'Open proof') },
-    { label: pick(lang, '커뮤니티', 'Community'), href: '/community', meta: pick(lang, '운영 확인', 'Open space') },
-  ], [lang])
 
   if (supabaseEnabled && !isAdmin) {
     return <Navigate to="/dashboard" replace />
@@ -561,70 +484,6 @@ export default function Admin() {
               <span className="text-[12px] ok-ink-mid">{item.label}</span>
             </div>
           ))}
-        </div>
-
-        <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <section className="ok-paper-muted p-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '운영 우선 확인', 'Ops priorities')}</p>
-            <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">
-              {pick(lang, '지금 막힌 학습자를 먼저 봅니다', 'Review stalled learners first')}
-            </h2>
-            <div className="mt-4 grid gap-3 md:grid-cols-4">
-              <OpsChip label={pick(lang, '정체', 'Stalled')} value={opsSnapshot.stageCounts.stalled} tone="danger" />
-              <OpsChip label={pick(lang, '진행 중', 'Active')} value={opsSnapshot.stageCounts.active} tone="info" />
-              <OpsChip label={pick(lang, '수료권', 'Completed')} value={opsSnapshot.stageCounts.completed} tone="success" />
-              <OpsChip label={pick(lang, '대기', 'Not started')} value={opsSnapshot.stageCounts.notStarted} />
-            </div>
-            <div className="mt-5 space-y-2">
-              {opsSnapshot.stalledRows.length > 0 ? (
-                opsSnapshot.stalledRows.map((row) => (
-                  <button
-                    key={row.id}
-                    type="button"
-                    onClick={() => setSelectedId(row.id)}
-                    className="flex w-full items-center justify-between rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 text-left transition-colors hover:bg-[var(--app-soft-bg-strong)]"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate text-[13px] font-semibold ok-ink-high">{row.displayName}</p>
-                      <p className="mt-1 text-[11px] ok-ink-mid">
-                        Week {row.currentWeek} · {row.progressPct}% · {formatDate(lang, row.lastActivityAt)}
-                      </p>
-                    </div>
-                    <ArrowRight size={14} className="shrink-0 ok-ink-low" />
-                  </button>
-                ))
-              ) : (
-                <EmptyPanel
-                  title={pick(lang, '정체 학습자 없음', 'No stalled learners')}
-                  body={pick(lang, '최근 7일 기준으로 멈춰 있는 학습자가 없습니다.', 'No learners are stalled based on the last 7 days.')}
-                />
-              )}
-            </div>
-          </section>
-
-          <section className="ok-paper-muted p-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '주차 분포', 'Week distribution')}</p>
-            <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">
-              {pick(lang, '어느 구간에 학습자가 몰리는지 봅니다', 'See where learners cluster')}
-            </h2>
-            <div className="mt-4 space-y-3">
-              {opsSnapshot.weekDistribution.map((item) => (
-                <div key={item.weekId}>
-                  <div className="flex items-center justify-between gap-3 text-[12px]">
-                    <p className="font-semibold ok-ink-high">Week {item.weekId}</p>
-                    <p className="ok-tabular-nums ok-ink-mid">{item.count}</p>
-                  </div>
-                  <p className="mt-1 text-[11px] ok-ink-low">{item.label}</p>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
-                    <div
-                      className="h-full rounded-full bg-[#3B82F6]"
-                      style={{ width: `${(item.count / opsSnapshot.maxWeekCount) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
         </div>
 
         <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
@@ -779,7 +638,7 @@ export default function Admin() {
 
                   <div className="mt-5">
                     <div className="mb-3 flex items-center gap-2">
-                      <Trophy size={14} className="ok-ink-low" />
+                      <Clock3 size={14} className="ok-ink-low" />
                       <p className="text-[12px] font-semibold ok-ink-high">{pick(lang, '최근 퀴즈 기록', 'Recent quiz activity')}</p>
                     </div>
                     <div className="space-y-2">
@@ -814,66 +673,6 @@ export default function Admin() {
               )}
             </section>
 
-            <section className="ok-paper-muted p-5">
-              <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '빠른 이동', 'Quick access')}</p>
-              <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">
-                {pick(lang, '모든 콘텐츠 바로 열기', 'Open any content')}
-              </h2>
-              <div className="mt-4 grid gap-2">
-                {quickLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className="flex items-center justify-between rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 text-[13px] transition-colors hover:bg-[var(--app-soft-bg-strong)]"
-                  >
-                    <div>
-                      <p className="font-semibold ok-ink-high">{item.label}</p>
-                      <p className="mt-1 text-[11px] ok-ink-mid">{item.meta}</p>
-                    </div>
-                    <ArrowRight size={14} className="ok-ink-low" />
-                  </Link>
-                ))}
-              </div>
-              <p className="mt-4 text-[12px] leading-relaxed ok-ink-mid">
-                {pick(
-                  lang,
-                  '관리자 모드에서는 아티클, 실습, 히든 토픽, 주간 테스트 잠금을 우회합니다.',
-                  'Admin mode bypasses article, action, hidden-topic, and weekly-test locks.'
-                )}
-              </p>
-            </section>
-
-            <section className="ok-paper-muted p-5">
-              <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '백엔드 상태', 'Backend state')}</p>
-              <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">
-                {pick(lang, '권한 및 동기화', 'Permissions and sync')}
-              </h2>
-              <div className="mt-4 space-y-3">
-                <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, 'Supabase', 'Supabase')}</p>
-                  <p className="mt-2 text-[13px] font-semibold ok-ink-high">
-                    {supabaseEnabled ? pick(lang, '연결됨', 'Connected') : pick(lang, '로컬 모드', 'Local mode')}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '관리자 조회 정책', 'Admin read policy')}</p>
-                  <p className="mt-2 text-[13px] font-semibold ok-ink-high">
-                    {error
-                      ? pick(lang, '확인 필요', 'Needs attention')
-                      : pick(lang, '정상 또는 미검증', 'Healthy or unverified')}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '마지막 새로고침', 'Last refresh')}</p>
-                  <p className="mt-2 text-[13px] font-semibold ok-ink-high">
-                    {lastLoadedAt ? formatDate(lang, lastLoadedAt) : pick(lang, '아직 없음', 'Not loaded yet')}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 text-[12px] ok-ink-high">
-                <code>/Users/jason/Desktop/Project/onchain-korea/supabase-admin-schema.sql</code>
-              </div>
-            </section>
           </aside>
         </div>
       </section>
