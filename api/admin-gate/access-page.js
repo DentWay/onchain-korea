@@ -43,8 +43,6 @@ function renderAccessPage() {
         box-shadow: 0 20px 80px rgba(0,0,0,0.35);
         padding: 28px;
       }
-      .grid { display: grid; gap: 24px; }
-      @media (min-width: 880px) { .grid { grid-template-columns: minmax(0,1fr) 260px; } }
       .title { margin: 12px 0 0; font-size: clamp(32px, 6vw, 44px); line-height: 0.98; letter-spacing: -0.05em; font-weight: 800; }
       .desc { margin: 16px 0 0; max-width: 56ch; font-size: 14px; line-height: 1.65; color: var(--text-mid); }
       .box { margin-top: 24px; border: 1px solid var(--border); background: var(--panel-2); border-radius: 20px; padding: 18px; }
@@ -74,12 +72,6 @@ function renderAccessPage() {
       }
       .status { border: 1px solid var(--success-border); background: var(--success-bg); color: #afcbff; }
       .error { border: 1px solid var(--danger-border); background: var(--danger-bg); color: var(--danger); }
-      .aside { border: 1px solid var(--border); background: rgba(255,255,255,0.04); border-radius: 20px; padding: 18px; }
-      .aside h2 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-low); }
-      .aside-block { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.08); }
-      .aside-block:first-of-type { border-top: 0; padding-top: 0; margin-top: 16px; }
-      .aside-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-low); }
-      .aside-value { margin-top: 6px; font-size: 13px; color: var(--text-high); word-break: break-word; }
       code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
       .brand { font-size: 24px; font-weight: 800; letter-spacing: -0.05em; }
       .brand small { margin-left: 8px; font-size: 12px; letter-spacing: 0.2em; color: var(--text-low); vertical-align: baseline; }
@@ -101,8 +93,7 @@ function renderAccessPage() {
             이 화면은 일반 사용자 내비게이션에 노출되지 않습니다.
           </p>
 
-          <div class="grid">
-            <section>
+          <div>
               <div id="status" class="status" hidden>관리자 세션을 확인 중입니다.</div>
               <div id="error" class="error" hidden></div>
 
@@ -114,10 +105,10 @@ function renderAccessPage() {
                 </div>
               </div>
 
-              <div class="box" id="gate-box" hidden>
+              <div class="box" id="gate-box" hidden style="max-width:480px">
                 <label for="admin-password">관리자 비밀번호</label>
                 <input id="admin-password" type="password" autocomplete="current-password" placeholder="비밀번호를 입력하세요" />
-                <p class="hint">비밀번호는 서버에서 검증합니다. 성공하면 이 브라우저 세션에서만 운영 콘솔이 열립니다.</p>
+                <p class="hint">서버에서 검증합니다. 이 브라우저 세션에서만 유효해요.</p>
                 <div class="actions">
                   <button class="btn btn-primary" id="unlock-btn" type="button">관리자 열기</button>
                   <a class="btn btn-secondary" href="/dashboard">대시보드로</a>
@@ -131,23 +122,6 @@ function renderAccessPage() {
                   <button class="btn btn-primary" id="signin-again-btn" type="button">다시 로그인</button>
                 </div>
               </div>
-            </section>
-
-            <aside class="aside">
-              <h2>현재 조건</h2>
-              <div class="aside-block">
-                <div class="aside-label">접근 기준</div>
-                <div class="aside-value">승인된 관리자 계정만 비밀번호를 통과할 수 있습니다.</div>
-              </div>
-              <div class="aside-block">
-                <div class="aside-label">현재 계정</div>
-                <div class="aside-value" id="current-email">확인 중</div>
-              </div>
-              <div class="aside-block">
-                <div class="aside-label">운영 경로</div>
-                <div class="aside-value"><code>${ADMIN_ENTRY_PATH}</code></div>
-              </div>
-            </aside>
           </div>
         </div>
       </div>
@@ -159,7 +133,6 @@ function renderAccessPage() {
       const CONSOLE_PATH = ${JSON.stringify(ADMIN_CONSOLE_PATH)};
       const statusEl = document.getElementById('status');
       const errorEl = document.getElementById('error');
-      const currentEmailEl = document.getElementById('current-email');
       const signInBox = document.getElementById('signin-box');
       const gateBox = document.getElementById('gate-box');
       const deniedBox = document.getElementById('denied-box');
@@ -280,7 +253,6 @@ function renderAccessPage() {
 
         const session = readSupabaseSession();
         const email = normalizeEmail(session?.email);
-        currentEmailEl.textContent = email || '로그인 필요';
 
         if (!session?.accessToken) {
           clearStatus();
