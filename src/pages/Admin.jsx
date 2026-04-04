@@ -376,14 +376,11 @@ export default function Admin() {
 
       const queryError = profilesRes.error || progressRes.error || quizRes.error
       if (queryError) {
+        const failedTable = profilesRes.error ? 'profiles' : progressRes.error ? 'user_progress' : 'quiz_results'
+        const detail = queryError.message || queryError.code || JSON.stringify(queryError)
+        console.error('[Admin] query failed:', failedTable, queryError)
         setRows([])
-        setError(
-          pick(
-            lang,
-            '전체 학습자 데이터 조회 권한이 아직 열리지 않았습니다. `supabase-admin-schema.sql` 적용 상태를 확인하세요.',
-            'Admin read access is not enabled yet. Check whether `supabase-admin-schema.sql` has been applied.'
-          )
-        )
+        setError(`[${failedTable}] ${detail}`)
         return
       }
 
