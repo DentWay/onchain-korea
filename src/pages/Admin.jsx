@@ -307,17 +307,37 @@ export default function Admin() {
   const [weekFilter, setWeekFilter] = useState('all')
   const [sortBy, setSortBy] = useState('recent')
   const [selectedId, setSelectedId] = useState(null)
+  const CACHE_KEY = 'ok-admin-data'
+  const CACHE_TTL = 5 * 60 * 1000
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [lastLoadedAt, setLastLoadedAt] = useState(null)
-  const [rows, setRows] = useState([])
+  const [rows, setRows] = useState(() => {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
+      if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.rows
+    } catch {}
+    return []
+  })
 
-  const loadAdminData = useCallback(async () => {
+  const loadAdminData = useCallback(async (force = false) => {
     if (!supabaseEnabled || !supabase) {
       setRows([])
       setError('')
       setLastLoadedAt(new Date().toISOString())
       return
+    }
+
+    if (!force) {
+      try {
+        const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
+        if (cached && Date.now() - cached.ts < CACHE_TTL && cached.rows.length > 0) {
+          setRows(cached.rows)
+          setLastLoadedAt(new Date(cached.ts).toISOString())
+          return
+        }
+      } catch {}
     }
 
     setLoading(true)
@@ -347,8 +367,10 @@ export default function Admin() {
         return
       }
 
-      setRows(buildLearnerRows(profilesRes.data || [], progressRes.data || [], quizRes.data || []))
+      const built = buildLearnerRows(profilesRes.data || [], progressRes.data || [], quizRes.data || [])
+      setRows(built)
       setLastLoadedAt(new Date().toISOString())
+      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ rows: built, ts: Date.now() })) } catch {}
     } catch (nextError) {
       setRows([])
       setError(
@@ -365,7 +387,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (!isAdmin) return
-    void loadAdminData()
+    void loadAdminData(false)
   }, [isAdmin, loadAdminData])
 
   const summary = useMemo(() => {
@@ -465,7 +487,7 @@ export default function Admin() {
               {pick(lang, '운영 대시보드', 'Admin Console')}
             </h1>
           </div>
-          <button onClick={() => void loadAdminData()} className="ok-btn ok-btn-light px-4 py-2.5 text-[12px]" disabled={loading}>
+          <button onClick={() => void loadAdminData(true)} className="ok-btn ok-btn-light px-4 py-2.5 text-[12px]" disabled={loading}>
             <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} />
             {pick(lang, '새로고침', 'Refresh')}
           </button>
