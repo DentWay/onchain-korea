@@ -239,7 +239,6 @@ function buildLearnerRows(profiles = [], progressRows = [], quizRows = []) {
     const lastActivityAt = maxDate(profile.updated_at, progress.updated_at, quiz.lastQuizAt, profile.created_at)
     const recentQuizAttempts = [...quiz.recentAttempts]
       .sort((a, b) => parseDate(b.attemptedAt) - parseDate(a.attemptedAt))
-      .slice(0, 6)
 
     return {
       id,
@@ -551,7 +550,11 @@ export default function Admin() {
                           <p className="text-[14px] font-semibold ok-ink-high">{row.displayName}</p>
                           <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${stageMeta.tone}`}>{stageMeta.label}</span>
                         </div>
-                        <p className="mt-1 text-[12px] ok-ink-mid">Week {row.currentWeek} · {row.email || pick(lang, '이메일 없음', 'No email')}</p>
+                        <p className="mt-1 text-[12px] ok-ink-mid">
+                          Week {row.currentWeek}
+                          {row.articlePassedCount > 0 && <span> · {pick(lang, '퀴즈', 'Quiz')} {row.articlePassedCount}/{totalLessons}</span>}
+                          {row.weeklyPassedCount > 0 && <span> · {pick(lang, '테스트', 'Test')} {row.weeklyPassedCount}/{weeks.length}</span>}
+                        </p>
                       </div>
                       <div className="shrink-0 w-28 text-right">
                         <p className="text-[18px] font-[800] ok-tabular-nums ok-ink-high">{row.progressPct}%</p>
@@ -637,32 +640,37 @@ export default function Admin() {
                   </div>
 
                   <div className="mt-5">
-                    <div className="mb-3 flex items-center gap-2">
-                      <Clock3 size={14} className="ok-ink-low" />
-                      <p className="text-[12px] font-semibold ok-ink-high">{pick(lang, '최근 퀴즈 기록', 'Recent quiz activity')}</p>
-                    </div>
-                    <div className="space-y-2">
-                      {selectedRow.recentQuizAttempts.length > 0 ? (
-                        selectedRow.recentQuizAttempts.map((attempt, index) => (
-                          <div key={`${attempt.quizType}-${attempt.quizId}-${attempt.attemptedAt}-${index}`} className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                            <div className="flex items-start justify-between gap-3">
-                              <div>
-                                <p className="text-[12px] font-semibold ok-ink-high">{resolveQuizLabel(lang, attempt.quizType, attempt.quizId)}</p>
-                                <p className="mt-1 text-[11px] ok-ink-mid">{formatDate(lang, attempt.attemptedAt)}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low mb-3">{pick(lang, '퀴즈 · 테스트 기록', 'Quiz & test history')}</p>
+                    {selectedRow.recentQuizAttempts.length > 0 ? (
+                      <div className="space-y-1.5">
+                        {selectedRow.recentQuizAttempts.map((attempt, index) => (
+                          <div key={`${attempt.quizType}-${attempt.quizId}-${attempt.attemptedAt}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-3 py-2.5">
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${
+                                  attempt.quizType === 'weekly'
+                                    ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]'
+                                    : 'bg-[rgba(59,130,246,0.12)] text-[#79AFFF]'
+                                }`}>
+                                  {attempt.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
+                                </span>
+                                <p className="truncate text-[12px] font-medium ok-ink-high">{resolveQuizLabel(lang, attempt.quizType, attempt.quizId)}</p>
                               </div>
-                              <span className={`rounded-full px-2 py-1 text-[10px] font-semibold ${attempt.passed ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]' : 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'}`}>
-                                {attempt.score}/{attempt.total}
-                              </span>
+                              <p className="mt-0.5 text-[10px] ok-ink-low">{formatDate(lang, attempt.attemptedAt)}</p>
                             </div>
+                            <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ok-tabular-nums ${
+                              attempt.passed
+                                ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                                : 'bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
+                            }`}>
+                              {attempt.score}/{attempt.total}
+                            </span>
                           </div>
-                        ))
-                      ) : (
-                        <EmptyPanel
-                          title={pick(lang, '퀴즈 기록 없음', 'No quiz activity')}
-                          body={pick(lang, '아직 이 학습자의 퀴즈 기록이 없습니다.', 'This learner has no quiz attempts yet.')}
-                        />
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[12px] ok-ink-low">{pick(lang, '기록 없음', 'No records')}</p>
+                    )}
                   </div>
                 </>
               ) : (
