@@ -70,8 +70,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [adminAccessGranted, setAdminAccessGranted] = useState(false)
-  const [adminAccessLoading, setAdminAccessLoading] = useState(true)
+  const [adminAccessGranted, setAdminAccessGranted] = useState(() => {
+    try { return sessionStorage.getItem('ok-admin-unlocked') === '1' } catch { return false }
+  })
+  const [adminAccessLoading, setAdminAccessLoading] = useState(() => {
+    try { return sessionStorage.getItem('ok-admin-unlocked') !== '1' } catch { return true }
+  })
 
   const fetchProfile = useCallback(async (userId) => {
     if (!supabase) return null
@@ -250,6 +254,7 @@ export function AuthProvider({ children }) {
     setUser(null)
     setProfile(null)
     setAdminAccessGranted(false)
+    try { sessionStorage.removeItem('ok-admin-unlocked') } catch {}
     setAdminAccessLoading(false)
 
     try {
@@ -325,9 +330,11 @@ export function AuthProvider({ children }) {
       const payload = await response.json()
       const unlocked = !!payload?.unlocked
       setAdminAccessGranted(unlocked)
+      try { sessionStorage.setItem('ok-admin-unlocked', unlocked ? '1' : '0') } catch {}
       return unlocked
     } catch {
       setAdminAccessGranted(false)
+      try { sessionStorage.removeItem('ok-admin-unlocked') } catch {}
       return false
     } finally {
       setAdminAccessLoading(false)
@@ -386,6 +393,7 @@ export function AuthProvider({ children }) {
       }
 
       setAdminAccessGranted(true)
+      try { sessionStorage.setItem('ok-admin-unlocked', '1') } catch {}
       refreshProfile(user.id).catch(() => {})
       return true
     } catch (error) {
@@ -401,6 +409,7 @@ export function AuthProvider({ children }) {
   const lockAdminAccess = useCallback(async () => {
     setAdminAccessGranted(false)
     setAdminAccessLoading(false)
+    try { sessionStorage.removeItem('ok-admin-unlocked') } catch {}
 
     try {
       await fetch('/api/admin-gate/lock', {
