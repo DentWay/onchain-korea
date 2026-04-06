@@ -1,6 +1,6 @@
 # Roadmap
 
-> 완료된 단계와 앞으로의 계획
+> 완료된 단계와 앞으로의 계획 (2026-04-06 기준)
 
 ---
 
@@ -8,6 +8,7 @@
 
 ### Phase 1: 콘텐츠 완성
 - [x] 20개 레슨 한국어 콘텐츠 (4주 × 4~5개)
+- [x] 8주 커리큘럼 확장 (S1 4주 + S2 4주 풀 커리큘럼)
 - [x] 4개 히든토픽 에디토리얼 아티클
 - [x] GA 원문 매핑 + "원문 읽기" 링크
 - [x] 팩트체크 (35개 클레임 검증, 출처 확보)
@@ -15,18 +16,29 @@
 
 ### Phase 2: 백엔드 + 인증
 - [x] Supabase Auth (email + Google OAuth)
+- [x] 카카오 로그인 연동 (OAuth + Supabase)
 - [x] 진도 데이터 서버 동기화 (localStorage + Supabase)
 - [x] enrollment_stats 실시간 통계
 - [x] ProtectedRoute + Auth 페이지
 - [x] supabase-schema.sql
+- [x] Supabase RLS 정책 + SECURITY DEFINER 관리자 헬퍼 함수
+
+### Phase 2.5: 어드민 + 퀴즈
+- [x] 어드민 콘솔 (서버 사이드 패스워드 게이트, httpOnly 쿠키 인증)
+- [x] 어드민 대시보드 (학습자 진도, 퀴즈/테스트 이력 조회)
+- [x] 퀴즈 시스템: 아티클 퀴즈 (10문항, 8/10 통과) + 주간 테스트 (30문항, 24/30 통과)
 
 ### 디자인 + 전환율 최적화
 - [x] 디자인 리뉴얼 (LessonDetail, Dashboard, WeekDetail)
 - [x] 이모지 → Lucide 아이콘 전환
 - [x] 랜딩 전환율 최적화 (앵커링, FAQ, InlineCTA, 인터랙티브 Proof of Attendance 미리보기)
+- [x] 인터랙티브 랜딩 페이지 (Spline 3D 애니메이션)
+- [x] 랜딩 페이지 간소화 (불필요 섹션 3개 제거)
+- [x] 한국어 UX 카피 전면 리라이트 (Toss 스타일 해요체)
 - [x] 가짜 데이터 전면 제거
 - [x] 커리큘럼 한국 시장 최적화 (순서 재구성)
 - [x] Beta 뱃지 + 홈 링크
+- [x] 브랜드 에셋 (심볼, 로고 락업, OG 카드)
 
 ---
 
@@ -46,9 +58,6 @@
 - [ ] 카카오톡 오픈채팅 연동 (알림)
 
 ### 추가 개선 가능 사항
-- [ ] Supabase 프로젝트 생성 + 환경변수 설정
-- [ ] Google OAuth 활성화
-- [ ] Vercel 환경변수 (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
 - [ ] 모바일 최적화 심화 (sticky bottom CTA, LiveTicker 모바일 대응)
 - [ ] A/B 테스트 (CTA 문구, 섹션 순서)
 - [ ] 코드 스플리팅 (500KB+ 번들 경고 해결)
@@ -61,7 +70,6 @@
 ---
 
 ## 장기 비전
-- 백엔드 API로 실제 유저 인증 + 진도 동기화
 - 온체인 Proof of Attendance 실제 발급 (Solana NFT)
 - 커뮤니티 포럼 (댓글, 토론, 투표)
 - 모바일 앱 (React Native)

@@ -4,6 +4,48 @@
 
 ---
 
+## 2026-04-06
+
+### docs 폴더 구조 정리
+- docs/ 하위를 카테고리별 폴더로 재구성 (strategy, marketing, engineering, design, operations, finance, _archive)
+
+---
+
+## 2026-04-04
+
+### RLS 및 SQL 통합
+- profiles 테이블 RLS 무한 재귀 수정 (`is_admin_user()` SECURITY DEFINER 헬퍼 추가)
+- 6개 SQL 파일을 단일 `supabase-complete.sql`로 통합
+
+### 관리자 대시보드 간소화
+- 운영 우선 확인, 주차 분포, 빠른 이동, 백엔드 상태 섹션 제거
+- 테이블을 깔끔한 리스트 레이아웃으로 교체 (이름+뱃지 | 주차 | 진행률 바)
+- 관리자 데이터 sessionStorage 캐싱 (5분 TTL, 재진입 즉시 로드)
+- 관리자 사이드바에 퀴즈/테스트 이력 추가 (QUIZ/TEST 뱃지 구분)
+- 서버 렌더링 관리자 접근 페이지에 브랜드 아이콘 추가
+- 관리자 접근 페이지에서 불필요한 정보 사이드바 제거
+
+---
+
+## 2026-04-03
+
+### 관리자 콘솔 및 인증 수정
+- 관리자 콘솔 빈 페이지 수정: route를 최상위로 이동 (pathless layout route가 deep path 매칭 실패)
+- ProtectedRoute 레이스 컨디션 수정: `adminAccessLoading` 스피너 게이트 추가
+- useAuth 타이밍 수정: `adminAccessLoading` 초기값 + effect 리셋 로직
+- 카카오 로그인 수정: OnChain Korea REST API 키에 맞는 Client Secret 매칭
+
+### 랜딩 및 UX 카피 개편
+- 전체 한국어 UX 카피를 토스 스타일 해요체로 재작성 (7개 파일, 197개 문자열)
+- 액션 유도 카피에 부드러운 ~해봐요 톤 적용
+- Hero 타이틀 한 줄 병합, 패널 높이 축소
+- 랜딩 간소화: HeroPathPreview, WhySection, GreedSignals 3개 섹션 제거
+- Curriculum 섹션을 미니멀 2컬럼 그리드로 재작성
+- 모든 랜딩 섹션을 일관된 `ok-readable-panel-soft` 컨테이너로 래핑
+- GreedSignals 가독성 개선 (줄바꿈, 카드 간격)
+
+---
+
 ## 2026-04-02
 
 ### 관리자 콘솔 blank shell 방지 및 승인 이메일 UI 비노출
