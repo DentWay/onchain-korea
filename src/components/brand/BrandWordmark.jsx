@@ -9,7 +9,7 @@ export default function BrandWordmark({ surface = 'light', compact = false, clas
 
   return (
     <div className={`inline-flex items-end leading-none ${className}`}>
-      <span className="mr-[-2px] sm:mr-[-4px] shrink-0 relative top-[0.04em]">
+      <span className="mr-[-6px] sm:mr-[-10px] shrink-0 relative top-[0.04em]">
         <BrandIcon size={iconSize} surface={surface} variant="wordmark" title="" />
       </span>
       <span className={`${mainTone} ${mainSize} font-[800] tracking-[-0.045em]`}>
