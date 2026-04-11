@@ -30,12 +30,9 @@ export default function App() {
       <Route path="/admin-access" element={<Navigate to="/" replace />} />
       <Route path={ADMIN_ENTRY_PATH} element={<AdminEntry />} />
       <Route path={ADMIN_ACCESS_PATH} element={<AdminAccess />} />
-      <Route path={`${ADMIN_ENTRY_PATH}/`} element={<Navigate to={ADMIN_ENTRY_PATH} replace />} />
-      <Route path={`${ADMIN_ACCESS_PATH}/`} element={<Navigate to={ADMIN_ACCESS_PATH} replace />} />
       <Route path={ADMIN_CONSOLE_PATH} element={<ProtectedRoute adminOnly><Layout /></ProtectedRoute>}>
         <Route index element={<Admin />} />
       </Route>
-      <Route path={`${ADMIN_CONSOLE_PATH}/`} element={<Navigate to={ADMIN_CONSOLE_PATH} replace />} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/week/:weekId" element={<WeekDetail />} />
