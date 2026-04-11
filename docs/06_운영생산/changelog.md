@@ -11,6 +11,7 @@
 - `AdminGateFrame` 공통 레이아웃을 추가해 브랜드 락업, 상태 칩, 운영 원칙/보안 규칙 패널을 동일 패턴으로 통일
 - 관리자 전용 로딩 화면도 라이트 스피너가 아니라 다크 앱 셸 톤으로 맞춤
 - React Router의 trailing slash 중복 route가 자기 자신으로 `Navigate` 하며 빈 검은 화면을 만들던 문제를 수정
+- 오래된 server-rendered admin gate rewrite를 제거해 프로덕션에서도 동일한 SPA 디자인이 그대로 보이도록 정리
 
 ### 관리자보드 운영형 인포그래픽 확장
 - 온라인 교육 플랫폼 5종(Canvas, Moodle, Thinkific, Teachable, Kajabi) 관리자 대시보드 레퍼런스를 조사해 `admin-dashboard-benchmark-2026-04-12.md`로 정리
