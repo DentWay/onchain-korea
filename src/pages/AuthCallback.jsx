@@ -84,7 +84,7 @@ export default function AuthCallback() {
   }, [navigate, t])
 
   return (
-    <div className="flex items-center justify-center h-screen bg-[var(--surface-0)]">
+    <div className="flex items-center justify-center h-screen bg-white">
       <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
     </div>
   )

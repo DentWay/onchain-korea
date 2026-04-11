@@ -14,7 +14,9 @@ function resolveSize(size) {
 
 const SRC_MAP = {
   default: '/brand/symbol-web.png',
-  wordmark: '/brand/symbol-wordmark.png',
+  // The padded wordmark PNG created an artificial gap before the "n".
+  // Use the trimmed runtime symbol for the live lockup.
+  wordmark: '/brand/symbol-web.png',
 }
 
 export default function BrandIcon({

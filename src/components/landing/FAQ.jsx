@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
-import Section from './Section'
 import useLang from '../../hooks/useLang'
 
 const faqs = [
@@ -32,31 +31,35 @@ const faqs = [
 ]
 
 export default function FAQ() {
-  const { t, lang } = useLang()
+  const { lang } = useLang()
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
-    <Section className="py-20 px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="ok-readable-panel-soft p-6 md:p-8">
-          <div className="relative z-10 mx-auto max-w-3xl">
-        <motion.div
+    <section id="faq" className="py-24 md:py-32 px-6 bg-white">
+      <div className="max-w-3xl mx-auto">
+        {/* Section label */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          className="text-center text-[12px] uppercase tracking-[0.2em] text-[#686b82] mb-4"
+        >
+          FAQ
+        </motion.p>
+
+        {/* Heading */}
+        <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center text-[36px] md:text-[48px] font-bold text-[#101114] tracking-tight leading-[1.1] mb-14"
         >
-          <h2 className="text-[32px] md:text-[40px] font-bold text-[var(--text-high)] tracking-tight">
-            {t('faq.title')}
-          </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-[var(--text-mid)]">
-            {lang === 'ko'
-              ? '자주 묻는 질문만 짧게 정리했습니다. 시작 전에 확인하면 흐름이 더 명확합니다.'
-              : 'A short set of practical questions before you start.'}
-          </p>
-        </motion.div>
+          {lang === 'ko' ? '자주 묻는 질문' : 'Frequently Asked Questions'}
+        </motion.h2>
 
+        {/* Accordion */}
         <div className="space-y-3">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i
@@ -67,16 +70,29 @@ export default function FAQ() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}
+                className="rounded-[12px] border border-[#dedee5] bg-white overflow-hidden"
               >
-                <button onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full ok-landing-card px-6 py-5 flex items-center justify-between gap-4 text-left transition-colors hover:border-[rgba(255,255,255,0.14)]">
-                  <span className="text-[14px] font-medium text-[var(--text-high)]">{faq.q[lang] || faq.q.ko}</span>
-                  <ChevronDown size={16} className={`shrink-0 text-[var(--text-low)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : i)}
+                  className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left transition-colors hover:bg-[#f8f8fa]"
+                >
+                  <span className="text-[18px] font-semibold text-[#101114] leading-snug">
+                    {faq.q[lang] || faq.q.ko}
+                  </span>
+                  <ChevronDown
+                    size={20}
+                    className={`shrink-0 text-[#686b82] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                  />
                 </button>
                 <AnimatePresence>
                   {isOpen && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <div className="px-6 py-4 text-[13px] text-[var(--text-mid)] leading-relaxed rounded-b-[24px] border-x border-b border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] -mt-1">
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="px-6 pb-5 text-[16px] font-normal text-[#686b82] leading-[1.56]">
                         {faq.a[lang] || faq.a.ko}
                       </div>
                     </motion.div>
@@ -86,9 +102,7 @@ export default function FAQ() {
             )
           })}
         </div>
-          </div>
-        </div>
       </div>
-    </Section>
+    </section>
   )
 }

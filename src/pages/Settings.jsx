@@ -125,10 +125,10 @@ export default function Settings() {
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <section className="ok-workbench p-5 md:p-8">
+        <section className="bg-white border border-[#dedee5] rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 md:p-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-[12px] font-medium ok-ink-mid transition-colors hover:text-[var(--text-high)]"
+            className="inline-flex items-center gap-2 text-[12px] font-medium text-[#686b82] transition-colors hover:text-[#101114]"
           >
             <ArrowLeft size={14} />
             <span>{pick(lang, '대시보드', 'Dashboard')}</span>
@@ -136,11 +136,11 @@ export default function Settings() {
 
           <header className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '내 정보', 'My Account')}</p>
-              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] ok-ink-high">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">{pick(lang, '내 정보', 'My Account')}</p>
+              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] text-[#101114]">
                 {pick(lang, '이름과 계정을 여기서 관리하면 됩니다', 'Manage your profile and account here')}
               </h1>
-              <p className="mt-3 text-[14px] leading-relaxed ok-ink-mid">
+              <p className="mt-3 text-[14px] leading-relaxed text-[#686b82]">
                 {pick(
                   lang,
                   '닉네임은 상단과 사이드바에 바로 반영됩니다. 탈퇴는 되돌릴 수 없는 작업이라 확인 문구를 먼저 입력해야 합니다.',
@@ -149,15 +149,15 @@ export default function Settings() {
               </p>
             </div>
 
-            <div className="ok-paper-muted px-5 py-4 md:px-6 md:py-5 lg:min-w-[250px]">
-              <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '현재 계정', 'Current account')}</p>
+            <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] px-5 py-4 md:px-6 md:py-5 lg:min-w-[250px]">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '현재 계정', 'Current account')}</p>
               <div className="mt-3 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--app-soft-bg)]">
-                  <UserCircle2 size={22} className="ok-ink-mid" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#eef0f3]">
+                  <UserCircle2 size={22} className="text-[#686b82]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-[18px] font-[800] tracking-[-0.04em] ok-ink-high">{currentDisplayName || '-'}</p>
-                  <p className="truncate text-[12px] ok-ink-mid">{user?.email || '-'}</p>
+                  <p className="truncate text-[18px] font-[800] tracking-[-0.04em] text-[#101114]">{currentDisplayName || '-'}</p>
+                  <p className="truncate text-[12px] text-[#686b82]">{user?.email || '-'}</p>
                 </div>
               </div>
             </div>
@@ -165,10 +165,10 @@ export default function Settings() {
 
           <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_320px]">
             <div className="space-y-5">
-              <section className="ok-paper overflow-hidden">
-                <div className="border-b border-[var(--app-divider)] px-5 pb-4 pt-5 md:px-6 md:pt-6">
-                  <h2 className="text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">{pick(lang, '프로필', 'Profile')}</h2>
-                  <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
+              <section className="bg-white border border-[#dedee5] rounded-[1.5rem] overflow-hidden">
+                <div className="border-b border-[#dedee5] px-5 pb-4 pt-5 md:px-6 md:pt-6">
+                  <h2 className="text-[20px] font-[800] tracking-[-0.04em] text-[#101114]">{pick(lang, '프로필', 'Profile')}</h2>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#686b82]">
                     {pick(
                       lang,
                       '학습 화면에 보이는 이름만 바꾸면 됩니다. 이메일은 로그인 기준으로 유지됩니다.',
@@ -179,7 +179,7 @@ export default function Settings() {
 
                 <form onSubmit={handleSave} className="space-y-5 px-5 py-5 md:px-6 md:py-6">
                   <div className="space-y-2">
-                    <label htmlFor="display-name" className="text-[12px] font-semibold ok-ink-high">
+                    <label htmlFor="display-name" className="text-[12px] font-semibold text-[#101114]">
                       {pick(lang, '닉네임', 'Nickname')}
                     </label>
                     <input
@@ -192,29 +192,29 @@ export default function Settings() {
                         }
                       }}
                       placeholder={pick(lang, '닉네임을 입력하세요', 'Enter your nickname')}
-                      className="w-full rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3 text-[14px] ok-ink-high outline-none transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#3B82F6]"
+                      className="w-full rounded-2xl border border-[#dedee5] bg-white px-4 py-3 text-[14px] text-[#101114] outline-none transition-colors placeholder:text-[#9497a9] focus:border-[#5741d8]"
                       maxLength={24}
                       disabled={!supabaseEnabled}
                     />
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-[12px] ok-ink-mid">
+                      <p className="text-[12px] text-[#686b82]">
                         {pick(lang, '상단과 사이드바에 바로 반영됩니다.', 'This appears immediately in the header and sidebar.')}
                       </p>
-                      <span className={`text-[12px] ok-tabular-nums ${isDisplayNameValid ? 'ok-ink-low' : 'text-[#F87171]'}`}>
+                      <span className={`text-[12px] tabular-nums ${isDisplayNameValid ? 'text-[#9497a9]' : 'text-[#dc2626]'}`}>
                         {trimmedDisplayName.length}/24
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email-address" className="text-[12px] font-semibold ok-ink-high">
+                    <label htmlFor="email-address" className="text-[12px] font-semibold text-[#101114]">
                       {pick(lang, '이메일', 'Email')}
                     </label>
                     <input
                       id="email-address"
                       value={user?.email || ''}
                       readOnly
-                      className="w-full rounded-2xl border border-[var(--app-soft-border)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-[14px] ok-ink-mid outline-none"
+                      className="w-full rounded-2xl border border-[#dedee5] bg-[#f7f7f8] px-4 py-3 text-[14px] text-[#686b82] outline-none"
                     />
                   </div>
 
@@ -222,8 +222,8 @@ export default function Settings() {
                     <div
                       className={`rounded-2xl border px-4 py-3 text-[13px] ${
                         saveState.status === 'success'
-                          ? 'border-[rgba(74,222,128,0.18)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]'
-                          : 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
+                          ? 'border-[rgba(20,158,97,0.18)] bg-[rgba(20,158,97,0.10)] text-[#026b3f]'
+                          : 'border-[rgba(220,38,38,0.20)] bg-[rgba(220,38,38,0.08)] text-[#dc2626]'
                       }`}
                     >
                       {saveState.message}
@@ -234,13 +234,13 @@ export default function Settings() {
                     <button
                       type="submit"
                       disabled={!canSave}
-                      className="ok-btn ok-btn-primary px-5 py-3 text-[13px] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="inline-flex items-center justify-center gap-2 rounded-[56px] bg-[#5741d8] text-white font-semibold transition-colors hover:bg-[#7132f5] px-5 py-3 text-[13px] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {saveState.status === 'saving' ? <Loader2 size={15} className="animate-spin" /> : <Save size={15} />}
                       <span>{saveState.status === 'saving' ? pick(lang, '저장 중...', 'Saving...') : pick(lang, '저장하기', 'Save')}</span>
                     </button>
                     {!supabaseEnabled && (
-                      <p className="text-[12px] text-[#FCA5A5]">
+                      <p className="text-[12px] text-[#dc2626]">
                         {pick(lang, 'Supabase가 연결되지 않아 계정 설정을 저장할 수 없습니다.', 'Account settings cannot be saved because Supabase is not configured.')}
                       </p>
                     )}
@@ -248,13 +248,13 @@ export default function Settings() {
                 </form>
               </section>
 
-              <section className="ok-paper overflow-hidden">
-                <div className="border-b border-[var(--app-divider)] px-5 pb-4 pt-5 md:px-6 md:pt-6">
-                  <div className="flex items-center gap-2 text-[#FCA5A5]">
+              <section className="bg-white border border-[#dedee5] rounded-[1.5rem] overflow-hidden">
+                <div className="border-b border-[#dedee5] px-5 pb-4 pt-5 md:px-6 md:pt-6">
+                  <div className="flex items-center gap-2 text-[#dc2626]">
                     <AlertTriangle size={16} />
                     <h2 className="text-[20px] font-[800] tracking-[-0.04em]">{pick(lang, '위험 작업', 'Danger zone')}</h2>
                   </div>
-                  <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#686b82]">
                     {pick(
                       lang,
                       '탈퇴하면 프로필, 진행률, 퀴즈 기록이 함께 삭제됩니다. 이 작업은 되돌릴 수 없습니다.',
@@ -265,7 +265,7 @@ export default function Settings() {
 
                 <div className="space-y-5 px-5 py-5 md:px-6 md:py-6">
                   <div className="space-y-2">
-                    <label htmlFor="delete-phrase" className="text-[12px] font-semibold ok-ink-high">
+                    <label htmlFor="delete-phrase" className="text-[12px] font-semibold text-[#101114]">
                       {pick(lang, '확인 문구', 'Confirmation phrase')}
                     </label>
                     <input
@@ -278,16 +278,16 @@ export default function Settings() {
                         }
                       }}
                       placeholder={pick(lang, '`탈퇴`를 입력하세요', 'Type `DELETE` or `탈퇴`')}
-                      className="w-full rounded-2xl border border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.06)] px-4 py-3 text-[14px] ok-ink-high outline-none transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#F87171]"
+                      className="w-full rounded-2xl border border-[rgba(220,38,38,0.20)] bg-[rgba(220,38,38,0.04)] px-4 py-3 text-[14px] text-[#101114] outline-none transition-colors placeholder:text-[#9497a9] focus:border-[#dc2626]"
                       disabled={!supabaseEnabled || deleteState.status === 'deleting'}
                     />
-                    <p className="text-[12px] ok-ink-mid">
+                    <p className="text-[12px] text-[#686b82]">
                       {pick(lang, '버튼을 켜려면 `탈퇴`를 입력하세요.', 'Enter `DELETE` or `탈퇴` to enable the button.')}
                     </p>
                   </div>
 
                   {deleteState.message && (
-                    <div className="rounded-2xl border border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] px-4 py-3 text-[13px] text-[#FCA5A5]">
+                    <div className="rounded-2xl border border-[rgba(220,38,38,0.20)] bg-[rgba(220,38,38,0.08)] px-4 py-3 text-[13px] text-[#dc2626]">
                       {deleteState.message}
                     </div>
                   )}
@@ -296,7 +296,7 @@ export default function Settings() {
                     type="button"
                     onClick={handleDelete}
                     disabled={!supabaseEnabled || !deleteMatch || deleteState.status === 'deleting'}
-                    className="inline-flex items-center gap-2 rounded-full border border-[rgba(248,113,113,0.24)] bg-[rgba(248,113,113,0.10)] px-5 py-3 text-[13px] font-semibold text-[#FCA5A5] transition-colors hover:bg-[rgba(248,113,113,0.14)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-full border border-[rgba(220,38,38,0.24)] bg-[rgba(220,38,38,0.08)] px-5 py-3 text-[13px] font-semibold text-[#dc2626] transition-colors hover:bg-[rgba(220,38,38,0.12)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {deleteState.status === 'deleting' ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
                     <span>{deleteState.status === 'deleting' ? pick(lang, '탈퇴 처리 중...', 'Deleting...') : pick(lang, '회원 탈퇴', 'Delete account')}</span>
@@ -306,33 +306,33 @@ export default function Settings() {
             </div>
 
             <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-              <div className="ok-paper-muted p-5">
-                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] ok-ink-low">
+              <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] p-5">
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">
                   <Shield size={13} />
                   <span>{pick(lang, '계정 요약', 'Account summary')}</span>
                 </div>
                 <dl className="mt-4 space-y-3">
-                  <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                    <dt className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '로그인 방식', 'Sign-in method')}</dt>
-                    <dd className="mt-1 text-[15px] font-[700] ok-ink-high">{providerLabel}</dd>
+                  <div className="rounded-2xl border border-[#dedee5] bg-white px-4 py-3">
+                    <dt className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '로그인 방식', 'Sign-in method')}</dt>
+                    <dd className="mt-1 text-[15px] font-[700] text-[#101114]">{providerLabel}</dd>
                   </div>
-                  <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                    <dt className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '가입일', 'Joined')}</dt>
-                    <dd className="mt-1 text-[15px] font-[700] ok-ink-high">{formatDate(profile?.created_at || user?.created_at, lang)}</dd>
+                  <div className="rounded-2xl border border-[#dedee5] bg-white px-4 py-3">
+                    <dt className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '가입일', 'Joined')}</dt>
+                    <dd className="mt-1 text-[15px] font-[700] text-[#101114]">{formatDate(profile?.created_at || user?.created_at, lang)}</dd>
                   </div>
-                  <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                    <dt className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] ok-ink-low">
+                  <div className="rounded-2xl border border-[#dedee5] bg-white px-4 py-3">
+                    <dt className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">
                       <Mail size={12} />
                       <span>{pick(lang, '연결된 이메일', 'Connected email')}</span>
                     </dt>
-                    <dd className="mt-1 break-all text-[13px] ok-ink-high">{user?.email || '-'}</dd>
+                    <dd className="mt-1 break-all text-[13px] text-[#101114]">{user?.email || '-'}</dd>
                   </div>
                 </dl>
               </div>
 
-              <div className="ok-paper-muted p-5">
-                <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '안내', 'Notes')}</p>
-                <p className="mt-3 text-[13px] leading-relaxed ok-ink-mid">
+              <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] p-5">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">{pick(lang, '안내', 'Notes')}</p>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#686b82]">
                   {pick(
                     lang,
                     '탈퇴 버튼은 프론트만으로 끝나지 않습니다. 계정 삭제 RPC가 없는 Supabase 프로젝트라면 `supabase-account-schema.sql`을 한 번 적용해야 정상 동작합니다.',

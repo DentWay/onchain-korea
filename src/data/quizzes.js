@@ -2,6 +2,11 @@
 // Each question: { q: {ko, en}, options: [{ko, en}], answer: 0-3 }
 // Weeks 1-8 are expanded to target counts.
 
+import { p2w1w2Quizzes } from './quizzes-phase2-w1w2'
+import { p2w3w4Quizzes } from './quizzes-phase2-w3w4'
+import { p2w5w6Quizzes } from './quizzes-phase2-w5w6'
+import { p2w7w8Quizzes } from './quizzes-phase2-w7w8'
+
 export const articleQuizzes = {
   // ── Week 1: Getting Started ──
   'w1-0': [
@@ -306,6 +311,12 @@ export const articleQuizzes = {
     { q: { ko: '8주 과정을 잘 마친 사람의 포트폴리오 특징으로 가장 적절한 것은?', en: 'What best characterizes the portfolio of someone who completed the 8-week program well?' }, options: [{ ko: '여러 주차의 실습이 연결되고, 기록과 해석이 함께 정리되어 있다', en: 'It connects work from multiple weeks and combines records with interpretation' }, { ko: '토큰 가격 예측만 가득하다', en: 'It is full only of token-price predictions' }, { ko: '개인정보와 비밀번호가 포함돼 있다', en: 'It includes personal information and passwords' }, { ko: '아무 검증 링크 없이 주장만 적혀 있다', en: 'It contains only claims with no verification links' }], answer: 0 },
     { q: { ko: '졸업 포트폴리오가 단순 체크리스트보다 좋아야 하는 이유는?', en: 'Why should the graduation portfolio be more than a simple checklist?' }, options: [{ ko: '무엇을 했는지뿐 아니라 왜 했고 무엇을 배웠는지까지 보여줘야 해서', en: 'Because it should show not only what you did but why you did it and what you learned' }, { ko: '거래소 보너스를 받기 위해', en: 'To receive exchange bonuses' }, { ko: '가스비를 자동 환급받기 위해', en: 'To automatically receive gas refunds' }, { ko: '지갑 주소를 숨기기 위해', en: 'To hide the wallet address' }], answer: 0 },
   ],
+
+  // ── Phase 2: Web3.0 금융상품 이해하기 ──
+  ...p2w1w2Quizzes,
+  ...p2w3w4Quizzes,
+  ...p2w5w6Quizzes,
+  ...p2w7w8Quizzes,
 }
 
 export const weeklyTests = {

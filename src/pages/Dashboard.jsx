@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, BookOpen, Check, ClipboardCheck, Flame, Lock, Trophy, Zap } from 'lucide-react'
+import { ArrowRight, BookOpen, Check, ClipboardCheck, Flame, GraduationCap, Lock, Trophy, Zap } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
+import { phase2Weeks } from '../data/phase2Curriculum'
 import useProgress from '../hooks/useProgress'
 import useQuiz from '../hooks/useQuiz'
 import useLang from '../hooks/useLang'
@@ -211,23 +212,23 @@ export default function Dashboard() {
   return (
     <div className="max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <section className="ok-workbench p-5 md:p-8">
+        <section className="bg-white p-5 md:p-8">
           <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 {currentWeek && (
-                  <span className="inline-flex items-center rounded-full bg-[rgba(59,130,246,0.10)] px-3 py-1 text-[11px] font-semibold text-[#79AFFF]">
+                  <span className="inline-flex items-center rounded-full bg-[rgba(87,65,216,0.16)] px-3 py-1 text-[11px] font-semibold text-[#7132f5]">
                     Week {currentWeek.id}
                   </span>
                 )}
-                <span className="inline-flex items-center rounded-full border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-3 py-1 text-[11px] font-semibold ok-ink-mid">
+                <span className="inline-flex items-center rounded-full border border-[#dedee5] bg-[#f7f7f8] px-3 py-1 text-[11px] font-semibold text-[#686b82]">
                   {pick(lang, `${completedWeeks}/${weeks.length}주 완료`, `${completedWeeks}/${weeks.length} weeks cleared`)}
                 </span>
               </div>
-              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] ok-ink-high">
+              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] text-[#101114]">
                 {pick(lang, `${firstName}님, 이어서 진행해봐요`, `Pick up where you left off, ${firstName}`)}
               </h1>
-              <p className="mt-3 max-w-2xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
+              <p className="mt-3 max-w-2xl text-[14px] md:text-[15px] leading-relaxed text-[#686b82]">
                 {currentWeek
                   ? pick(
                       lang,
@@ -241,7 +242,7 @@ export default function Dashboard() {
             {currentWeek && (
               <Link
                 to={`/week/${currentWeek.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-2 text-[12px] font-semibold ok-ink-high transition-colors hover:bg-[var(--app-soft-bg-strong)]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#dedee5] bg-[#eef0f3] px-4 py-2 text-[12px] font-semibold text-[#101114] transition-colors hover:bg-[#e4e6ea]"
               >
                 <span>Week {currentWeek.id}</span>
                 <ArrowRight size={14} />
@@ -249,39 +250,39 @@ export default function Dashboard() {
             )}
           </header>
 
-          <div className="mt-6 ok-paper p-6 md:p-7">
+          <div className="mt-6 rounded-xl border border-[#dedee5] bg-white p-6 md:p-7" style={{ boxShadow: 'rgba(0,0,0,0.03) 0px 4px 24px' }}>
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 rounded-full bg-[rgba(59,130,246,0.10)] px-3 py-1 text-[11px] font-semibold text-[#2156B8]">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[rgba(87,65,216,0.16)] px-3 py-1 text-[11px] font-semibold text-[#7132f5]">
                   <ResolvedPrimaryTaskIcon size={14} />
                   <span>{primaryTask.eyebrow}</span>
                 </div>
-                <h2 className="mt-4 text-[24px] md:text-[30px] font-[800] tracking-[-0.05em] ok-ink-high">
+                <h2 className="mt-4 text-[24px] md:text-[30px] font-[800] tracking-[-0.05em] text-[#101114]">
                   {primaryTask.title}
                 </h2>
-                <p className="mt-3 max-w-xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
+                <p className="mt-3 max-w-xl text-[14px] md:text-[15px] leading-relaxed text-[#686b82]">
                   {primaryTask.body}
                 </p>
               </div>
 
-              <div className="shrink-0 border-l border-[var(--app-divider)] pl-5 text-left lg:min-w-[190px]">
-                <p className="text-[10px] uppercase tracking-[0.18em] ok-ink-low">{t('dash.progress')}</p>
-                <p className="mt-2 text-[32px] font-[800] tracking-[-0.05em] ok-ink-high ok-tabular-nums">{overallProgress}%</p>
-                <p className="mt-1 text-[12px] ok-ink-mid">{primaryTask.meta}</p>
+              <div className="shrink-0 border-l border-[#dedee5] pl-5 text-left lg:min-w-[190px]">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#9497a9]">{t('dash.progress')}</p>
+                <p className="mt-2 text-[32px] font-[800] tracking-[-0.05em] text-[#101114] tabular-nums">{overallProgress}%</p>
+                <p className="mt-1 text-[12px] text-[#686b82]">{primaryTask.meta}</p>
                 {currentWeek && (
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
-                    <div className="h-full rounded-full bg-[#3B82F6]" style={{ width: `${Math.round(getWeekProgress(currentWeek.id))}%` }} />
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#eef0f3]">
+                    <div className="h-full rounded-full bg-[#5741d8]" style={{ width: `${Math.round(getWeekProgress(currentWeek.id))}%` }} />
                   </div>
                 )}
               </div>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <Link to={primaryTask.href} className="ok-btn ok-btn-primary px-6 py-3 text-[13px]">
+              <Link to={primaryTask.href} className="inline-flex items-center gap-2 rounded-[56px] bg-[#5741d8] px-6 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#4a37b8]">
                 {primaryTask.cta}
                 <ArrowRight size={15} />
               </Link>
-              <p className="text-[12px] ok-ink-mid">
+              <p className="text-[12px] text-[#686b82]">
                 {currentWeek
                   ? pick(
                       lang,
@@ -293,15 +294,15 @@ export default function Dashboard() {
             </div>
 
             {currentCadence.length > 0 && (
-              <div className="mt-8 border-t border-[var(--app-divider)] pt-5">
+              <div className="mt-8 border-t border-[#dedee5] pt-5">
                 <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '이번 주 리듬', "This week's rhythm")}</p>
-                    <p className="mt-2 text-[15px] font-[700] ok-ink-high">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '이번 주 리듬', "This week's rhythm")}</p>
+                    <p className="mt-2 text-[15px] font-[700] text-[#101114]">
                       {pick(lang, '월-토 순서대로 진행해봐요', 'Follow the Mon-Sat sequence')}
                     </p>
                   </div>
-                  <p className="text-[12px] ok-ink-mid">
+                  <p className="text-[12px] text-[#686b82]">
                     {pick(lang, '열린 단계부터 하나씩 해봐요.', 'Focus only on the currently open step.')}
                   </p>
                 </div>
@@ -309,10 +310,10 @@ export default function Dashboard() {
                   {currentCadence.map((item) => {
                     const tone =
                       item.state === 'done'
-                        ? 'border-[rgba(74,222,128,0.22)] text-[#15803D]'
+                        ? 'border-[rgba(20,158,97,0.22)] text-[#026b3f]'
                         : item.state === 'locked'
-                          ? 'border-[var(--app-soft-border)] ok-ink-low'
-                          : 'border-[rgba(59,130,246,0.24)] text-[#79AFFF]'
+                          ? 'border-[#dedee5] text-[#9497a9]'
+                          : 'border-[rgba(87,65,216,0.24)] text-[#5741d8]'
 
                     return (
                       <div key={item.key} className={`border-l px-4 py-2 ${tone}`}>
@@ -328,22 +329,22 @@ export default function Dashboard() {
               </div>
             )}
 
-            <dl className="mt-8 grid gap-4 border-y border-[var(--app-divider)] py-5 sm:grid-cols-2 xl:grid-cols-4">
+            <dl className="mt-8 grid gap-4 border-y border-[#dedee5] py-5 sm:grid-cols-2 xl:grid-cols-4">
               {metricTiles.map((item, index) => (
-                <div key={item.label} className={`${index > 0 ? 'xl:border-l xl:border-[var(--app-divider)] xl:pl-5' : ''}`}>
-                  <dt className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{item.label}</dt>
-                  <dd className="mt-2 text-[24px] font-[800] tracking-[-0.04em] ok-tabular-nums ok-ink-high">{item.value}</dd>
-                  <p className="mt-1 text-[12px] ok-ink-mid">{item.note}</p>
+                <div key={item.label} className={`${index > 0 ? 'xl:border-l xl:border-[#dedee5] xl:pl-5' : ''}`}>
+                  <dt className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{item.label}</dt>
+                  <dd className="mt-2 text-[24px] font-[800] tracking-[-0.04em] tabular-nums text-[#101114]">{item.value}</dd>
+                  <p className="mt-1 text-[12px] text-[#686b82]">{item.note}</p>
                 </div>
               ))}
             </dl>
           </div>
 
           <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_300px]">
-            <section className="ok-paper overflow-hidden">
-              <div className="px-5 md:px-6 pt-5 md:pt-6 pb-4 border-b border-[var(--app-divider)]">
-                <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] ok-ink-high">{pick(lang, '한 주씩 여는 학습 경로', 'A roadmap that opens one week at a time')}</h2>
-                <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
+            <section className="rounded-xl border border-[#dedee5] bg-white overflow-hidden" style={{ boxShadow: 'rgba(0,0,0,0.03) 0px 4px 24px' }}>
+              <div className="px-5 md:px-6 pt-5 md:pt-6 pb-4 border-b border-[#dedee5]">
+                <h2 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-[#101114]">{pick(lang, '한 주씩 여는 학습 경로', 'A roadmap that opens one week at a time')}</h2>
+                <p className="mt-2 text-[13px] leading-relaxed text-[#686b82]">
                   {pick(lang, '지금 주차에 집중하고, 테스트를 통과하면 다음 주가 열려요.', 'The current week stays in focus and the next week opens after the weekly test.')}
                 </p>
               </div>
@@ -365,39 +366,39 @@ export default function Dashboard() {
                   )
 
                   const row = (
-                    <div className={`px-5 md:px-6 py-5 ${index > 0 ? 'border-t border-[var(--app-divider)]' : ''}`}>
+                    <div className={`px-5 md:px-6 py-5 ${index > 0 ? 'border-t border-[#dedee5]' : ''}`}>
                       <div className="flex items-start gap-4">
                         <div className={`mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border text-[13px] font-bold ${
                           isDone
-                            ? 'border-[rgba(74,222,128,0.22)] bg-[rgba(74,222,128,0.12)] text-[#15803D]'
+                            ? 'border-[rgba(20,158,97,0.22)] bg-[rgba(20,158,97,0.12)] text-[#026b3f]'
                             : isCurrent
-                              ? 'border-[rgba(59,130,246,0.18)] bg-[rgba(59,130,246,0.12)] text-[#2156B8]'
+                              ? 'border-[rgba(87,65,216,0.18)] bg-[rgba(87,65,216,0.12)] text-[#5741d8]'
                               : isLocked
-                                ? 'border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] text-[var(--app-ink-low)]'
-                                : 'border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] ok-ink-high'
+                                ? 'border-[#dedee5] bg-[#f7f7f8] text-[#9497a9]'
+                                : 'border-[#dedee5] bg-[#f7f7f8] text-[#101114]'
                         }`}>
                           {isDone ? <Check size={16} /> : isLocked ? <Lock size={14} /> : week.id}
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">Week {week.id}</p>
-                            {isDone && <span className="rounded-full bg-[rgba(74,222,128,0.12)] px-2.5 py-1 text-[10px] font-semibold text-[#15803D]">Done</span>}
-                            {isCurrent && !isDone && <span className="rounded-full bg-[rgba(59,130,246,0.10)] px-2.5 py-1 text-[10px] font-semibold text-[#2156B8]">{pick(lang, '현재 진행 중', 'In progress')}</span>}
-                            {isLocked && <span className="rounded-full bg-[var(--app-soft-bg)] px-2.5 py-1 text-[10px] font-semibold ok-ink-low">{pick(lang, '잠금', 'Locked')}</span>}
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">Week {week.id}</p>
+                            {isDone && <span className="rounded-full bg-[rgba(20,158,97,0.16)] px-2.5 py-1 text-[10px] font-semibold text-[#026b3f]">Done</span>}
+                            {isCurrent && !isDone && <span className="rounded-full bg-[rgba(87,65,216,0.16)] px-2.5 py-1 text-[10px] font-semibold text-[#7132f5]">{pick(lang, '현재 진행 중', 'In progress')}</span>}
+                            {isLocked && <span className="rounded-full bg-[#f7f7f8] px-2.5 py-1 text-[10px] font-semibold text-[#9497a9]">{pick(lang, '잠금', 'Locked')}</span>}
                           </div>
 
                           <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div className="min-w-0">
-                              <h3 className={`text-[17px] font-[700] leading-snug ${isLocked ? 'ok-ink-mid' : 'ok-ink-high'}`}>{l(week.title, lang)}</h3>
-                              <p className="mt-1 text-[13px] leading-relaxed ok-ink-mid">{l(week.subtitle, lang)}</p>
+                              <h3 className={`text-[17px] font-[700] leading-snug ${isLocked ? 'text-[#686b82]' : 'text-[#101114]'}`}>{l(week.title, lang)}</h3>
+                              <p className="mt-1 text-[13px] leading-relaxed text-[#686b82]">{l(week.subtitle, lang)}</p>
                             </div>
 
                             <div className="shrink-0 lg:pl-4">
-                              <p className="text-[12px] ok-ink-mid ok-tabular-nums">{progress}%</p>
-                              <div className="mt-2 h-1.5 w-24 overflow-hidden rounded-full bg-[var(--app-track)]">
+                              <p className="text-[12px] text-[#686b82] tabular-nums">{progress}%</p>
+                              <div className="mt-2 h-1.5 w-24 overflow-hidden rounded-full bg-[#eef0f3]">
                                 <div
-                                  className={`h-full rounded-full ${isDone ? 'bg-[#16A34A]' : 'bg-[#3B82F6]'}`}
+                                  className={`h-full rounded-full ${isDone ? 'bg-[#026b3f]' : 'bg-[#5741d8]'}`}
                                   style={{ width: `${progress}%` }}
                                 />
                               </div>
@@ -409,10 +410,10 @@ export default function Dashboard() {
                               {cadence.map((item) => {
                                 const tone =
                                   item.state === 'done'
-                                    ? 'bg-[rgba(74,222,128,0.12)] text-[#15803D] border-[rgba(74,222,128,0.18)]'
+                                    ? 'bg-[rgba(20,158,97,0.12)] text-[#026b3f] border-[rgba(20,158,97,0.18)]'
                                     : item.state === 'locked'
-                                      ? 'bg-[var(--app-soft-bg)] ok-ink-low border-[var(--app-soft-border)]'
-                                      : 'bg-[var(--app-soft-bg-strong)] ok-ink-high border-[var(--app-soft-border)]'
+                                      ? 'bg-[#f7f7f8] text-[#9497a9] border-[#dedee5]'
+                                      : 'bg-[#eef0f3] text-[#101114] border-[#dedee5]'
 
                                 return (
                                   <div key={item.key} className={`rounded-full border px-3 py-2 text-[11px] ${tone}`}>
@@ -426,7 +427,7 @@ export default function Dashboard() {
                         </div>
 
                         {!isLocked && (
-                          <ArrowRight size={16} className="mt-1 shrink-0 ok-ink-low" />
+                          <ArrowRight size={16} className="mt-1 shrink-0 text-[#9497a9]" />
                         )}
                       </div>
                     </div>
@@ -444,67 +445,89 @@ export default function Dashboard() {
             </section>
 
             <aside className="space-y-4">
-              <div className="ok-paper-muted p-5">
+              {/* Phase 2 Preview */}
+              <div className="rounded-xl border border-[#dedee5] bg-white overflow-hidden" style={{ boxShadow: 'rgba(0,0,0,0.03) 0px 4px 24px' }}>
+                <div className="bg-gradient-to-r from-[rgba(87,65,216,0.08)] to-[rgba(113,50,245,0.06)] px-5 py-4 border-b border-[#dedee5]">
+                  <div className="flex items-center gap-2">
+                    <GraduationCap size={16} className="text-[#5741d8]" />
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5741d8]">Phase 2</span>
+                    <span className="rounded-full bg-[rgba(87,65,216,0.16)] px-2 py-0.5 text-[10px] font-semibold text-[#7132f5]">{pick(lang, '준비중', 'Coming Soon')}</span>
+                  </div>
+                  <h3 className="mt-2 text-[16px] font-[700] text-[#101114]">{pick(lang, 'Web3.0 금융상품 이해하기', 'Understanding Web3 Financial Products')}</h3>
+                  <p className="mt-1 text-[12px] text-[#686b82]">{pick(lang, '8주 · 24레슨 · Phase 1 수료 후 시작', '8 weeks · 24 lessons · After Phase 1 completion')}</p>
+                </div>
+                <div className="px-5 py-3 space-y-2">
+                  {phase2Weeks.slice(0, 4).map((week) => (
+                    <div key={week.id} className="flex items-center gap-3 py-1.5 text-[12px]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[rgba(87,65,216,0.08)] text-[10px] font-bold text-[#5741d8]">{week.weekNumber}</span>
+                      <span className="text-[#686b82] truncate">{l(week.title, lang)}</span>
+                    </div>
+                  ))}
+                  <p className="pt-1 text-[11px] text-[#9497a9]">+{phase2Weeks.length - 4} {pick(lang, '주 더', 'more weeks')}</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-[#f7f7f8] p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="mt-2 text-[18px] font-[700] tracking-[-0.03em] ok-ink-high">{pick(lang, '수료 진행 상황', 'Certificate progress')}</h3>
-                    <p className="mt-2 text-[12px] leading-relaxed ok-ink-mid">
+                    <h3 className="mt-2 text-[18px] font-[700] tracking-[-0.03em] text-[#101114]">{pick(lang, '수료 진행 상황', 'Certificate progress')}</h3>
+                    <p className="mt-2 text-[12px] leading-relaxed text-[#686b82]">
                       {pick(lang, '아티클, 실습, 히든 토픽을 채우면 수료 자격이 생겨요.', 'Clear the remaining articles, actions, and hidden topics to reach certificate eligibility.')}
                     </p>
                   </div>
-                  <Trophy size={18} className="text-[#2156B8]" />
+                  <Trophy size={18} className="text-[#5741d8]" />
                 </div>
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
+                <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#eef0f3]">
                   <div
-                    className="h-full rounded-full bg-[#3B82F6]"
+                    className="h-full rounded-full bg-[#5741d8]"
                     style={{ width: `${certificateProgress}%` }}
                   />
                 </div>
-                <div className="mt-4 space-y-2 text-[12px] ok-ink-mid">
-                  <div className="flex items-center justify-between"><span>{pick(lang, 'Article', 'Articles')}</span><span className="ok-tabular-nums">{certificateStatus.lessonsComplete}/{certificateStatus.lessonsRequired}</span></div>
-                  <div className="flex items-center justify-between"><span>{pick(lang, 'Action', 'Actions')}</span><span className="ok-tabular-nums">{certificateStatus.actionsComplete}/{certificateStatus.actionsRequired}</span></div>
-                  <div className="flex items-center justify-between"><span>{pick(lang, 'Hidden', 'Hidden')}</span><span className="ok-tabular-nums">{certificateStatus.hiddenTopicsRead}/{certificateStatus.hiddenTopicsRequired}</span></div>
+                <div className="mt-4 space-y-2 text-[12px] text-[#686b82]">
+                  <div className="flex items-center justify-between"><span>{pick(lang, 'Article', 'Articles')}</span><span className="tabular-nums">{certificateStatus.lessonsComplete}/{certificateStatus.lessonsRequired}</span></div>
+                  <div className="flex items-center justify-between"><span>{pick(lang, 'Action', 'Actions')}</span><span className="tabular-nums">{certificateStatus.actionsComplete}/{certificateStatus.actionsRequired}</span></div>
+                  <div className="flex items-center justify-between"><span>{pick(lang, 'Hidden', 'Hidden')}</span><span className="tabular-nums">{certificateStatus.hiddenTopicsRead}/{certificateStatus.hiddenTopicsRequired}</span></div>
                 </div>
-                <Link to="/certificate" className="mt-5 inline-flex items-center gap-2 text-[12px] font-semibold text-[#2156B8] hover:text-[#1D4ED8]">
+                <Link to="/certificate" className="mt-5 inline-flex items-center gap-2 text-[12px] font-semibold text-[#5741d8] hover:text-[#4a37b8]">
                   {pick(lang, '수료증 보기', 'Open Certificate')}
                   <ArrowRight size={13} />
                 </Link>
               </div>
 
               {currentWeek?.hiddenTopic && (
-                <Link to="/hidden" className="block ok-paper-muted p-5 transition-transform hover:-translate-y-[1px]">
-                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] ok-ink-low">
-                    <Flame size={13} className="text-[#2156B8]" />
+                <Link to="/hidden" className="block rounded-xl bg-[#f7f7f8] p-5 transition-transform hover:-translate-y-[1px]">
+                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">
+                    <Flame size={13} className="text-[#5741d8]" />
                     <span>{pick(lang, '이번 주 맥락', "This week's context")}</span>
                   </div>
-                  <p className="mt-3 text-[16px] font-[700] leading-snug ok-ink-high">{l(currentWeek.hiddenTopic.title, lang)}</p>
-                  <p className="mt-2 text-[12px] leading-relaxed ok-ink-mid">
+                  <p className="mt-3 text-[16px] font-[700] leading-snug text-[#101114]">{l(currentWeek.hiddenTopic.title, lang)}</p>
+                  <p className="mt-2 text-[12px] leading-relaxed text-[#686b82]">
                     {hiddenReady
                       ? pick(lang, '실습과 연결된 시장 맥락이에요.', 'Market context connected to this week\u2019s work.')
                       : pick(lang, 'action을 완료하면 열려요.', 'Opens after you complete this week\u2019s action.')}
                   </p>
                   <div className="mt-4 flex items-center justify-between text-[12px]">
-                    <span className={hiddenReady ? 'text-[#2156B8]' : 'ok-ink-low'}>
+                    <span className={hiddenReady ? 'text-[#5741d8]' : 'text-[#9497a9]'}>
                       {hiddenReady ? (hiddenRead ? pick(lang, '읽음', 'Read') : pick(lang, '열림', 'Open')) : pick(lang, '잠금', 'Locked')}
                     </span>
-                    <ArrowRight size={13} className="ok-ink-low" />
+                    <ArrowRight size={13} className="text-[#9497a9]" />
                   </div>
                 </Link>
               )}
 
-              <div className="ok-paper-muted p-5">
-                <p className="text-[13px] font-semibold ok-ink-high">{pick(lang, '현재 기수 마감까지', 'Enrollment closes in')}</p>
+              <div className="rounded-xl bg-[#f7f7f8] p-5">
+                <p className="text-[13px] font-semibold text-[#101114]">{pick(lang, '현재 기수 마감까지', 'Enrollment closes in')}</p>
                 <div className="mt-4">
                   <CountdownTimer targetDate={SEMESTER_DEADLINE} surface="light" />
                 </div>
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                    <p className="text-[10px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, 'Hidden', 'Hidden')}</p>
-                    <p className="mt-1 text-[18px] font-[800] ok-tabular-nums ok-ink-high">{readHiddenTopics.length}/{totalHiddenTopics}</p>
+                  <div className="rounded-2xl border border-[#dedee5] bg-white px-4 py-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, 'Hidden', 'Hidden')}</p>
+                    <p className="mt-1 text-[18px] font-[800] tabular-nums text-[#101114]">{readHiddenTopics.length}/{totalHiddenTopics}</p>
                   </div>
-                  <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                    <p className="text-[10px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, 'Weekly', 'Weekly')}</p>
-                    <p className="mt-1 text-[18px] font-[800] ok-tabular-nums ok-ink-high">{completedWeeks}/{weeks.length}</p>
+                  <div className="rounded-2xl border border-[#dedee5] bg-white px-4 py-3">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, 'Weekly', 'Weekly')}</p>
+                    <p className="mt-1 text-[18px] font-[800] tabular-nums text-[#101114]">{completedWeeks}/{weeks.length}</p>
                   </div>
                 </div>
               </div>

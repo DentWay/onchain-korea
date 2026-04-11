@@ -48,34 +48,34 @@ export default function LessonDetail() {
   return (
     <div className="max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <section className="ok-workbench p-5 md:p-8 lg:p-10">
-          <div className="flex flex-wrap items-center gap-2 text-[12px] ok-ink-mid">
-            <Link to="/dashboard" className="transition-colors hover:text-[var(--text-high)]">{t('breadcrumb.dashboard')}</Link>
+        <section className="bg-white p-5 md:p-8 lg:p-10">
+          <div className="flex flex-wrap items-center gap-2 text-[12px] text-[#686b82]">
+            <Link to="/dashboard" className="transition-colors hover:text-[#101114]">{t('breadcrumb.dashboard')}</Link>
             <ChevronRight size={12} />
-            <Link to={`/week/${lesson.weekId}`} className="transition-colors hover:text-[var(--text-high)]">{t('common.week')} {lesson.weekId}</Link>
+            <Link to={`/week/${lesson.weekId}`} className="transition-colors hover:text-[#101114]">{t('common.week')} {lesson.weekId}</Link>
             <ChevronRight size={12} />
-            <span className="ok-ink-high">{l(lesson.title, lang).split(' — ')[0]}</span>
+            <span className="text-[#101114]">{l(lesson.title, lang).split(' — ')[0]}</span>
           </div>
 
           <header className="mt-5">
             <div className="flex flex-wrap items-center gap-2">
               {TypeIcon && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(59,130,246,0.10)] px-3 py-1 text-[11px] font-semibold text-[#2156B8]">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(87,65,216,0.16)] px-3 py-1 text-[11px] font-semibold text-[#7132f5]">
                   <TypeIcon size={12} />
                   <span>{cfg.label[lang] || cfg.label.ko}</span>
                 </span>
               )}
               {sourceTitle && (
-                <span className="inline-flex items-center rounded-full border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-3 py-1 text-[11px] ok-ink-mid">
+                <span className="inline-flex items-center rounded-full border border-[#dedee5] bg-[#f7f7f8] px-3 py-1 text-[11px] text-[#686b82]">
                   {sourceTitle}
                 </span>
               )}
             </div>
 
-            <h1 className="mt-4 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] leading-tight ok-ink-high">
+            <h1 className="mt-4 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] leading-tight text-[#101114]">
               {l(lesson.title, lang)}
             </h1>
-            <p className="mt-4 max-w-3xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
+            <p className="mt-4 max-w-3xl text-[14px] md:text-[15px] leading-relaxed text-[#686b82]">
               {pick(
                 lang,
                 hasQuiz
@@ -90,18 +90,18 @@ export default function LessonDetail() {
 
           <div className="mt-8 space-y-6">
             {content ? (
-              <article className="ok-reading-panel px-6 py-7 md:px-10 md:py-10 lg:px-12 lg:py-12">
-                <div className="ok-reading-copy mx-auto">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--app-divider)] pb-5">
-                    <div className="flex flex-wrap items-center gap-2 text-[12px] ok-ink-mid">
+              <article className="rounded-xl border border-[#dedee5] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.03)] px-6 py-7 md:px-10 md:py-10 lg:px-12 lg:py-12">
+                <div className="max-w-3xl mx-auto">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#dedee5] pb-5">
+                    <div className="flex flex-wrap items-center gap-2 text-[12px] text-[#686b82]">
                       <span>{pick(lang, '읽기 모드', 'Reading mode')}</span>
-                      <span className="h-1 w-1 rounded-full bg-[var(--app-ink-low)]" />
+                      <span className="h-1 w-1 rounded-full bg-[#9497a9]" />
                       <span>{passCopy}</span>
                     </div>
                     {quizStatus && (
-                      <div className="inline-flex items-center gap-3 rounded-full border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-2 text-[12px] ok-ink-mid">
+                      <div className="inline-flex items-center gap-3 rounded-full border border-[#dedee5] bg-[#f7f7f8] px-4 py-2 text-[12px] text-[#686b82]">
                         <span>{t('quiz.bestScore')}</span>
-                        <span className="ok-tabular-nums font-[700] ok-ink-high">
+                        <span className="tabular-nums font-[700] text-[#101114]">
                           {quizStatus.attempts > 0 ? `${quizStatus.bestScore}/${quizStatus.total}` : pick(lang, '기록 없음', 'No record')}
                         </span>
                       </div>
@@ -114,12 +114,12 @@ export default function LessonDetail() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.12 + index * 0.04 }}
-                      className={index > 0 ? 'mt-12 border-t border-[var(--app-divider)] pt-12' : 'mt-8'}
+                      className={index > 0 ? 'mt-12 border-t border-[#dedee5] pt-12' : 'mt-8'}
                     >
-                      <h2 className="text-[21px] md:text-[23px] font-[800] tracking-[-0.03em] ok-ink-high">{section.heading}</h2>
+                      <h2 className="text-[21px] md:text-[23px] font-[800] tracking-[-0.03em] text-[#101114]">{section.heading}</h2>
                       <div className="mt-5 space-y-5">
                         {section.content.split('\n\n').map((para, innerIndex) => (
-                          <p key={innerIndex} className="text-[16px] leading-[1.95] ok-ink-mid">
+                          <p key={innerIndex} className="text-[16px] leading-[1.95] text-[#686b82]">
                             {para}
                           </p>
                         ))}
@@ -132,16 +132,16 @@ export default function LessonDetail() {
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.22 }}
-                      className="mt-12 border-t border-[var(--app-divider)] pt-10"
+                      className="mt-12 border-t border-[#dedee5] pt-10"
                     >
                       <div className="flex items-center gap-2">
-                        <Lightbulb size={16} className="text-[#2156B8]" />
-                        <h3 className="text-[15px] font-[700] ok-ink-high">{t('lesson.keyTakeaways')}</h3>
+                        <Lightbulb size={16} className="text-[#5741d8]" />
+                        <h3 className="text-[15px] font-[700] text-[#101114]">{t('lesson.keyTakeaways')}</h3>
                       </div>
-                      <ul className="mt-4 divide-y divide-[var(--app-divider)] border-y border-[var(--app-divider)]">
+                      <ul className="mt-4 divide-y divide-[#dedee5] border-y border-[#dedee5]">
                         {content.keyTakeaways.map((item, index) => (
-                          <li key={index} className="flex items-start gap-3 py-4 text-[14px] leading-relaxed ok-ink-mid">
-                            <span className="mt-0.5 shrink-0 text-[11px] font-[700] text-[#79AFFF]">{index + 1}.</span>
+                          <li key={index} className="flex items-start gap-3 py-4 text-[14px] leading-relaxed text-[#686b82]">
+                            <span className="mt-0.5 shrink-0 text-[11px] font-[700] text-[#5741d8]">{index + 1}.</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -151,9 +151,9 @@ export default function LessonDetail() {
                 </div>
               </article>
             ) : (
-              <div className="ok-paper p-10 text-center">
-                <p className="text-[18px] font-[700] ok-ink-high">{t('lesson.preparing')}</p>
-                <p className="mt-3 text-[13px] leading-relaxed ok-ink-mid">
+              <div className="rounded-xl border border-[#dedee5] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-10 text-center">
+                <p className="text-[18px] font-[700] text-[#101114]">{t('lesson.preparing')}</p>
+                <p className="mt-3 text-[13px] leading-relaxed text-[#686b82]">
                   {t('lesson.preparingDesc').split('\n').map((line, index) => (
                     <span key={index}>
                       {line}
@@ -166,7 +166,7 @@ export default function LessonDetail() {
                     href={lesson.mediumUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ok-btn ok-btn-light mt-6 px-5 py-3 text-[13px]"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-[600] text-[#101114] transition-colors hover:bg-[#dedee5] mt-6"
                   >
                     {t('lesson.readOriginal')}
                     <ExternalLink size={14} />
@@ -175,15 +175,15 @@ export default function LessonDetail() {
               </div>
             )}
 
-            <section className="ok-paper overflow-hidden">
+            <section className="rounded-xl border border-[#dedee5] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.03)] overflow-hidden">
               <div className="px-6 py-6 md:px-8 lg:px-10">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                   <div className="max-w-3xl">
-                    <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{pick(lang, '다음 단계', 'Next step')}</p>
-                    <p className="mt-3 text-[22px] font-[800] tracking-[-0.04em] ok-ink-high">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">{pick(lang, '다음 단계', 'Next step')}</p>
+                    <p className="mt-3 text-[22px] font-[800] tracking-[-0.04em] text-[#101114]">
                       {done ? t('lesson.quizPassed') : pick(lang, '읽은 뒤 바로 퀴즈로 넘어가요', 'Read first, then move straight to the quiz')}
                     </p>
-                    <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">
+                    <p className="mt-2 text-[13px] leading-relaxed text-[#686b82]">
                       {done
                         ? pick(lang, '이 아티클은 통과됐어요. 다음 단계로 넘어가면 돼요.', 'This article is already cleared. Move to the next step.')
                         : passCopy}
@@ -191,30 +191,32 @@ export default function LessonDetail() {
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[420px]">
-                    <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                      <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.attempts')}</p>
-                      <p className="mt-2 text-[22px] font-[800] ok-tabular-nums ok-ink-high">{quizStatus?.attempts || 0}</p>
+                    <div className="rounded-xl border border-[#dedee5] bg-[#f7f7f8] px-4 py-3">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.attempts')}</p>
+                      <p className="mt-2 text-[22px] font-[800] tabular-nums text-[#101114]">{quizStatus?.attempts || 0}</p>
                     </div>
-                    <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                      <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.bestScore')}</p>
-                      <p className="mt-2 text-[22px] font-[800] ok-tabular-nums ok-ink-high">
+                    <div className="rounded-xl border border-[#dedee5] bg-[#f7f7f8] px-4 py-3">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.bestScore')}</p>
+                      <p className="mt-2 text-[22px] font-[800] tabular-nums text-[#101114]">
                         {quizStatus?.attempts ? `${quizStatus.bestScore}/${quizStatus.total}` : '-'}
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] px-4 py-3">
-                      <p className="text-[10px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '현재 상태', 'Current state')}</p>
-                      <p className="mt-2 text-[14px] font-[700] ok-ink-high">
+                    <div className="rounded-xl border border-[#dedee5] bg-[#f7f7f8] px-4 py-3">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#9497a9]">{pick(lang, '현재 상태', 'Current state')}</p>
+                      <p className="mt-2 text-[14px] font-[700] text-[#101114]">
                         {done ? t('lesson.quizPassed') : pick(lang, '퀴즈 대기', 'Waiting on quiz')}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3 border-t border-[var(--app-divider)] pt-5 sm:flex-row sm:flex-wrap">
+                <div className="mt-6 flex flex-col gap-3 border-t border-[#dedee5] pt-5 sm:flex-row sm:flex-wrap">
                   {hasQuiz && (
                     <Link
                       to={`/quiz/article/${lesson.id}`}
-                      className={`ok-btn px-5 py-3 text-[13px] ${done ? 'ok-btn-light' : 'ok-btn-primary'}`}
+                      className={done
+                        ? 'inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-[600] text-[#101114] transition-colors hover:bg-[#dedee5]'
+                        : 'inline-flex items-center gap-2 rounded-[56px] bg-[#5741d8] px-5 py-3 text-[13px] font-[600] text-white transition-colors hover:bg-[#4835b0]'}
                     >
                       {done
                         ? <><Check size={16} /> {t('lesson.quizPassed')}</>
@@ -224,13 +226,13 @@ export default function LessonDetail() {
                   {nextLesson && done && (
                     <Link
                       to={`/lesson/${nextLesson.id}`}
-                      className="ok-btn ok-btn-light px-5 py-3 text-[13px]"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-[600] text-[#101114] transition-colors hover:bg-[#dedee5]"
                     >
                       {t('lesson.nextLesson')}
                       <ChevronRight size={14} />
                     </Link>
                   )}
-                  <Link to={`/week/${lesson.weekId}`} className="ok-btn ok-btn-light px-5 py-3 text-[13px]">
+                  <Link to={`/week/${lesson.weekId}`} className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-[600] text-[#101114] transition-colors hover:bg-[#dedee5]">
                     <ArrowLeft size={14} />
                     {pick(lang, '주차로 돌아가기', 'Back to week')}
                   </Link>
@@ -239,7 +241,7 @@ export default function LessonDetail() {
                       href={lesson.mediumUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="ok-btn ok-btn-light px-5 py-3 text-[13px]"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-[600] text-[#101114] transition-colors hover:bg-[#dedee5]"
                     >
                       {t('lesson.readOriginalShort')}
                       <ExternalLink size={13} />

@@ -11,8 +11,8 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[var(--surface-0)]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(79,131,255,0.25)] border-t-[#4F83FF]" />
+      <div className="flex items-center justify-center h-screen bg-white">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(87,65,216,0.25)] border-t-[#5741d8]" />
       </div>
     )
   }
@@ -31,8 +31,8 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
 
   if (adminOnly && adminAccessLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[var(--surface-0)]">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(79,131,255,0.25)] border-t-[#4F83FF]" />
+      <div className="flex items-center justify-center h-screen bg-white">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(87,65,216,0.25)] border-t-[#5741d8]" />
       </div>
     )
   }

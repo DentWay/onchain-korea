@@ -38,18 +38,18 @@ function formatTime(seconds) {
 
 function getOptionTone({ selected, correct, wrong, answered }) {
   if (correct) {
-    return 'border-[rgba(74,222,128,0.22)] bg-[rgba(74,222,128,0.10)] text-[#15803D]'
+    return 'border-[rgba(20,158,97,0.22)] bg-[rgba(20,158,97,0.10)] text-[#026b3f]'
   }
   if (wrong) {
-    return 'border-[rgba(248,113,113,0.24)] bg-[rgba(248,113,113,0.10)] text-[#B42318]'
+    return 'border-[rgba(220,38,38,0.24)] bg-[rgba(220,38,38,0.08)] text-[#dc2626]'
   }
   if (selected) {
-    return 'border-[rgba(59,130,246,0.22)] bg-[var(--app-soft-bg-strong)] text-[var(--text-high)]'
+    return 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.06)] text-[#101114]'
   }
   if (answered) {
-    return 'border-[var(--app-soft-border)] bg-[rgba(255,255,255,0.03)] text-[var(--app-ink-low)]'
+    return 'border-[#dedee5] bg-white text-[#9497a9]'
   }
-  return 'border-[var(--app-soft-border)] bg-[var(--app-soft-bg)] text-[var(--text-high)] hover:bg-[var(--app-soft-bg-strong)] hover:border-[rgba(255,255,255,0.16)]'
+  return 'border-[#dedee5] bg-white text-[#101114] hover:bg-[#f7f7f8] hover:border-[#c8c8d0]'
 }
 
 export default function Quiz() {
@@ -235,25 +235,25 @@ export default function Quiz() {
     return (
       <div className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <section className="ok-workbench p-5 md:p-8 lg:p-10">
-            <Link to={backLink} className="inline-flex items-center gap-2 text-[12px] font-medium ok-ink-mid transition-colors hover:text-[var(--text-high)]">
+          <section className="bg-white border border-[#dedee5] rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 md:p-8 lg:p-10">
+            <Link to={backLink} className="inline-flex items-center gap-2 text-[12px] font-medium text-[#686b82] transition-colors hover:text-[#101114]">
               <ArrowLeft size={14} />
               <span>{t('week.back')}</span>
             </Link>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-              <div className="ok-paper p-6 md:p-8 lg:p-10">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(59,130,246,0.10)]">
-                  <Award size={26} className="text-[#2156B8]" />
+              <div className="bg-white border border-[#dedee5] rounded-[1.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-6 md:p-8 lg:p-10">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(87,65,216,0.10)]">
+                  <Award size={26} className="text-[#5741d8]" />
                 </div>
 
-                <p className="mt-6 text-[11px] uppercase tracking-[0.22em] ok-ink-low">
+                <p className="mt-6 text-[11px] uppercase tracking-[0.22em] text-[#9497a9]">
                   {isArticle ? t('quiz.articleQuiz') : t('quiz.weeklyTest')}
                 </p>
-                <h1 className="mt-3 max-w-3xl text-[28px] md:text-[36px] font-[800] tracking-[-0.05em] leading-tight ok-ink-high">
+                <h1 className="mt-3 max-w-3xl text-[28px] md:text-[36px] font-[800] tracking-[-0.05em] leading-tight text-[#101114]">
                   {quizTitle}
                 </h1>
-                <p className="mt-4 max-w-3xl text-[14px] md:text-[15px] leading-relaxed ok-ink-mid">
+                <p className="mt-4 max-w-3xl text-[14px] md:text-[15px] leading-relaxed text-[#686b82]">
                   {pick(
                     lang,
                     isArticle
@@ -265,55 +265,55 @@ export default function Quiz() {
                   )}
                 </p>
 
-                <div className="mt-8 grid gap-4 border-t border-[var(--app-divider)] pt-5 md:grid-cols-2">
+                <div className="mt-8 grid gap-4 border-t border-[#dedee5] pt-5 md:grid-cols-2">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '열리는 것', 'Unlocks')}</p>
-                    <p className="mt-2 text-[15px] font-[700] ok-ink-high">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '열리는 것', 'Unlocks')}</p>
+                    <p className="mt-2 text-[15px] font-[700] text-[#101114]">
                       {isArticle
-                        ? (nextArticle ? l(nextArticle.title, lang) : pick(lang, '이번 주 테스트', 'This week’s test'))
+                        ? (nextArticle ? l(nextArticle.title, lang) : pick(lang, '이번 주 테스트', 'This week\u2019s test'))
                         : (weeks.find((week) => week.id === Number(id) + 1) ? `Week ${Number(id) + 1}` : t('sidebar.certificate'))}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '응시 방식', 'Attempt mode')}</p>
-                    <p className="mt-2 text-[15px] font-[700] ok-ink-high">{pick(lang, '횟수 제한 없음', 'Unlimited retries')}</p>
-                    <p className="mt-1 text-[12px] leading-relaxed ok-ink-mid">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '응시 방식', 'Attempt mode')}</p>
+                    <p className="mt-2 text-[15px] font-[700] text-[#101114]">{pick(lang, '횟수 제한 없음', 'Unlimited retries')}</p>
+                    <p className="mt-1 text-[12px] leading-relaxed text-[#686b82]">
                       {pick(lang, '문제 순서와 보기 순서는 매번 바뀝니다.', 'Question order and answer order are shuffled every time.')}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <button onClick={handleStart} className="ok-btn ok-btn-primary px-8 py-3 text-[14px]">
+                  <button onClick={handleStart} className="inline-flex items-center justify-center gap-2 rounded-[56px] bg-[#5741d8] text-white font-semibold transition-colors hover:bg-[#7132f5] px-8 py-3 text-[14px]">
                     {status.attempts > 0 ? t('quiz.retry') : t('quiz.start')}
                   </button>
-                  <Link to={backLink} className="ok-btn ok-btn-light px-8 py-3 text-[14px]">
+                  <Link to={backLink} className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#eef0f3] text-[#101114] font-semibold border border-[#dedee5] transition-colors hover:bg-[#e2e4e9] px-8 py-3 text-[14px]">
                     {t('week.back')}
                   </Link>
                 </div>
               </div>
 
               <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-                <div className="ok-paper-muted p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '응시 정보', 'Attempt summary')}</p>
+                <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '응시 정보', 'Attempt summary')}</p>
                   <div className="mt-4 space-y-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '통과 기준', 'Pass threshold')}</p>
-                      <p className="mt-1 text-[24px] font-[800] ok-tabular-nums ok-ink-high">{passThreshold}/{total}</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{pick(lang, '통과 기준', 'Pass threshold')}</p>
+                      <p className="mt-1 text-[24px] font-[800] tabular-nums text-[#101114]">{passThreshold}/{total}</p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.attempts')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">{status.attempts}</p>
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.attempts')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">{status.attempts}</p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.bestScore')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.bestScore')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">
                         {status.attempts > 0 ? `${status.bestScore}/${status.total}` : pick(lang, '기록 없음', 'No record')}
                       </p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.passed')}</p>
-                      <p className="mt-1 text-[13px] font-[700] ok-ink-high">
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.passed')}</p>
+                      <p className="mt-1 text-[13px] font-[700] text-[#101114]">
                         {status.firstPassDate ? new Date(status.firstPassDate).toLocaleDateString() : pick(lang, '미통과', 'Not yet')}
                       </p>
                     </div>
@@ -336,41 +336,41 @@ export default function Quiz() {
     return (
       <div className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <section className="ok-workbench p-5 md:p-8 lg:p-10">
+          <section className="bg-white border border-[#dedee5] rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 md:p-8 lg:p-10">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Link to={backLink} className="inline-flex items-center gap-2 text-[12px] font-medium ok-ink-mid transition-colors hover:text-[var(--text-high)]">
+              <Link to={backLink} className="inline-flex items-center gap-2 text-[12px] font-medium text-[#686b82] transition-colors hover:text-[#101114]">
                 <ArrowLeft size={14} />
                 <span>{t('week.back')}</span>
               </Link>
-              <div className="flex items-center gap-4 text-[12px] ok-ink-mid">
+              <div className="flex items-center gap-4 text-[12px] text-[#686b82]">
                 <div className="flex items-center gap-2">
                   <Clock size={13} />
-                  <span className="ok-tabular-nums">{formatTime(elapsed)}</span>
+                  <span className="tabular-nums">{formatTime(elapsed)}</span>
                 </div>
-                <div className="h-4 w-px bg-[var(--app-divider)]" />
-                <div className="ok-tabular-nums">{currentIdx + 1}/{questions.length}</div>
+                <div className="h-4 w-px bg-[#dedee5]" />
+                <div className="tabular-nums">{currentIdx + 1}/{questions.length}</div>
               </div>
             </div>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
-              <div className="ok-paper p-6 md:p-8 lg:p-10">
-                <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">
+              <div className="bg-white border border-[#dedee5] rounded-[1.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-6 md:p-8 lg:p-10">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">
                   {isArticle ? t('quiz.articleQuiz') : t('quiz.weeklyTest')}
                 </p>
-                <h1 className="mt-2 max-w-3xl text-[24px] md:text-[32px] font-[800] tracking-[-0.05em] leading-tight ok-ink-high">{quizTitle}</h1>
+                <h1 className="mt-2 max-w-3xl text-[24px] md:text-[32px] font-[800] tracking-[-0.05em] leading-tight text-[#101114]">{quizTitle}</h1>
 
-                <div className="mt-5 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
+                <div className="mt-5 h-2 overflow-hidden rounded-full bg-[rgba(0,0,0,0.06)]">
                   <motion.div
-                    className="h-full rounded-full bg-[#3B82F6]"
+                    className="h-full rounded-full bg-[#5741d8]"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.3 }}
                   />
                 </div>
 
-                <div className="mt-4 flex flex-wrap items-center gap-3 text-[12px] ok-ink-mid">
+                <div className="mt-4 flex flex-wrap items-center gap-3 text-[12px] text-[#686b82]">
                   <span>{t('quiz.question')} {currentIdx + 1} {t('quiz.of')} {questions.length}</span>
-                  <span className="h-1 w-1 rounded-full bg-[var(--app-ink-low)]" />
+                  <span className="h-1 w-1 rounded-full bg-[#9497a9]" />
                   <span>{pick(lang, '현재 문제를 풀고 다음으로 넘어갑니다.', 'Finish this question and move to the next one.')}</span>
                 </div>
 
@@ -383,7 +383,7 @@ export default function Quiz() {
                     transition={{ duration: 0.2 }}
                     className="mt-8"
                   >
-                    <h2 className="text-[24px] md:text-[30px] font-[800] tracking-[-0.04em] leading-snug ok-ink-high">
+                    <h2 className="text-[24px] md:text-[30px] font-[800] tracking-[-0.04em] leading-snug text-[#101114]">
                       {lang === 'ko' ? question.q.ko : question.q.en}
                     </h2>
 
@@ -405,12 +405,12 @@ export default function Quiz() {
                           >
                             <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-[700] ${
                               correct
-                                ? 'border-[#16A34A] bg-[#16A34A] text-white'
+                                ? 'border-[#026b3f] bg-[#026b3f] text-white'
                                 : wrong
-                                  ? 'border-[#DC2626] bg-[#DC2626] text-white'
+                                  ? 'border-[#dc2626] bg-[#dc2626] text-white'
                                   : selected
-                                    ? 'border-[#3B82F6] bg-[rgba(59,130,246,0.10)] text-[#2156B8]'
-                                    : 'border-[var(--app-soft-border)] bg-[rgba(255,255,255,0.05)] ok-ink-mid'
+                                    ? 'border-[#5741d8] bg-[rgba(87,65,216,0.10)] text-[#5741d8]'
+                                    : 'border-[#dedee5] bg-[#f7f7f8] text-[#686b82]'
                             }`}>
                               {correct ? <Check size={12} strokeWidth={3} /> : wrong ? <X size={12} strokeWidth={3} /> : String.fromCharCode(65 + optionIndex)}
                             </span>
@@ -425,7 +425,7 @@ export default function Quiz() {
                     <AnimatePresence>
                       {answered && (
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 flex justify-end">
-                          <button type="button" onClick={handleNext} disabled={isSubmitting} className="ok-btn ok-btn-primary px-6 py-3 text-[13px] disabled:opacity-60 disabled:cursor-not-allowed">
+                          <button type="button" onClick={handleNext} disabled={isSubmitting} className="inline-flex items-center justify-center gap-2 rounded-[56px] bg-[#5741d8] text-white font-semibold transition-colors hover:bg-[#7132f5] px-6 py-3 text-[13px] disabled:opacity-60 disabled:cursor-not-allowed">
                             {isSubmitting ? t('auth.processing') : isLastQuestion ? t('quiz.submit') : t('quiz.next')}
                             <ChevronRight size={14} />
                           </button>
@@ -437,25 +437,25 @@ export default function Quiz() {
               </div>
 
               <aside className="xl:sticky xl:top-24 xl:self-start">
-                <div className="ok-paper-muted p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '풀이 정보', 'Session info')}</p>
+                <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '풀이 정보', 'Session info')}</p>
                   <div className="mt-4 space-y-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '현재 진행', 'Current progress')}</p>
-                      <p className="mt-1 text-[24px] font-[800] ok-tabular-nums ok-ink-high">{currentIdx + 1}/{questions.length}</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{pick(lang, '현재 진행', 'Current progress')}</p>
+                      <p className="mt-1 text-[24px] font-[800] tabular-nums text-[#101114]">{currentIdx + 1}/{questions.length}</p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '통과 기준', 'Pass threshold')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">{passThreshold}/{total}</p>
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{pick(lang, '통과 기준', 'Pass threshold')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">{passThreshold}/{total}</p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.bestScore')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.bestScore')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">
                         {status.attempts > 0 ? `${status.bestScore}/${status.total}` : pick(lang, '기록 없음', 'No record')}
                       </p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[12px] leading-relaxed ok-ink-mid">
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[12px] leading-relaxed text-[#686b82]">
                         {pick(
                           lang,
                           '오답이어도 바로 다음 문제로 넘어갈 수 있습니다. 마지막 문제까지 풀면 결과 화면에서 점수를 확인합니다.',
@@ -479,36 +479,36 @@ export default function Quiz() {
     return (
       <div className="max-w-6xl mx-auto">
         <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }}>
-          <section className="ok-workbench p-5 md:p-8 lg:p-10">
+          <section className="bg-white border border-[#dedee5] rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 md:p-8 lg:p-10">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-              <div className="ok-paper p-6 md:p-8 lg:p-10">
+              <div className="bg-white border border-[#dedee5] rounded-[1.5rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-6 md:p-8 lg:p-10">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.1, type: 'spring', stiffness: 220 }}
                   className={`flex h-[72px] w-[72px] items-center justify-center rounded-full ${
-                    passed ? 'bg-[rgba(74,222,128,0.12)]' : 'bg-[rgba(248,113,113,0.10)]'
+                    passed ? 'bg-[rgba(20,158,97,0.12)]' : 'bg-[rgba(220,38,38,0.08)]'
                   }`}
                 >
-                  {passed ? <Trophy size={30} className="text-[#15803D]" /> : <RotateCcw size={30} className="text-[#B42318]" />}
+                  {passed ? <Trophy size={30} className="text-[#026b3f]" /> : <RotateCcw size={30} className="text-[#dc2626]" />}
                 </motion.div>
 
-                <h2 className={`mt-6 text-[32px] font-[800] tracking-[-0.05em] ${passed ? 'text-[#15803D]' : 'text-[#B42318]'}`}>
+                <h2 className={`mt-6 text-[32px] font-[800] tracking-[-0.05em] ${passed ? 'text-[#026b3f]' : 'text-[#dc2626]'}`}>
                   {passed ? t('quiz.passed') : t('quiz.failed')}
                 </h2>
-                <p className="mt-2 text-[14px] ok-ink-mid">{quizTitle}</p>
+                <p className="mt-2 text-[14px] text-[#686b82]">{quizTitle}</p>
 
-                <div className="mt-8 border-t border-[var(--app-divider)] pt-5">
+                <div className="mt-8 border-t border-[#dedee5] pt-5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[12px] uppercase tracking-[0.18em] ok-ink-low">{t('quiz.score')}</span>
-                    <span className={`text-[30px] font-[800] ok-tabular-nums ${passed ? 'text-[#15803D]' : 'text-[#B42318]'}`}>
+                    <span className="text-[12px] uppercase tracking-[0.18em] text-[#9497a9]">{t('quiz.score')}</span>
+                    <span className={`text-[30px] font-[800] tabular-nums ${passed ? 'text-[#026b3f]' : 'text-[#dc2626]'}`}>
                       {score}/{total}
                     </span>
                   </div>
-                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[var(--app-track)]">
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-[rgba(0,0,0,0.06)]">
                     <motion.div
                       className="h-full rounded-full"
-                      style={{ background: passed ? '#16A34A' : '#DC2626' }}
+                      style={{ background: passed ? '#149e61' : '#dc2626' }}
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
                       transition={{ duration: 0.8, delay: 0.2 }}
@@ -517,23 +517,23 @@ export default function Quiz() {
                 </div>
 
                 {submitError && (
-                  <p className="mt-5 text-[12px] leading-relaxed ok-ink-mid">
+                  <p className="mt-5 text-[12px] leading-relaxed text-[#686b82]">
                     {submitError}
                   </p>
                 )}
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   {!passed && (
-                    <button type="button" onClick={handleStart} className="ok-btn ok-btn-primary px-6 py-3 text-[13px]">
+                    <button type="button" onClick={handleStart} className="inline-flex items-center justify-center gap-2 rounded-[56px] bg-[#5741d8] text-white font-semibold transition-colors hover:bg-[#7132f5] px-6 py-3 text-[13px]">
                       <RotateCcw size={14} />
                       {t('quiz.retry')}
                     </button>
                   )}
-                  <Link to={passed ? successLink : backLink} className="ok-btn ok-btn-light px-6 py-3 text-[13px]">
+                  <Link to={passed ? successLink : backLink} className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#eef0f3] text-[#101114] font-semibold border border-[#dedee5] transition-colors hover:bg-[#e2e4e9] px-6 py-3 text-[13px]">
                     {passed ? successLabel : t('week.back')}
                   </Link>
                   {passed && (
-                    <button type="button" onClick={handleStart} className="ok-btn ok-btn-light px-6 py-3 text-[13px]">
+                    <button type="button" onClick={handleStart} className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#eef0f3] text-[#101114] font-semibold border border-[#dedee5] transition-colors hover:bg-[#e2e4e9] px-6 py-3 text-[13px]">
                       <RotateCcw size={14} />
                       {t('quiz.retry')}
                     </button>
@@ -542,20 +542,20 @@ export default function Quiz() {
               </div>
 
               <aside className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-                <div className="ok-paper-muted p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '결과 요약', 'Result summary')}</p>
+                <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '결과 요약', 'Result summary')}</p>
                   <div className="mt-4 space-y-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{t('quiz.passThreshold')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">{passThreshold}/{total}</p>
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{t('quiz.passThreshold')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">{passThreshold}/{total}</p>
                     </div>
-                    <div className="border-t border-[var(--app-divider)] pt-4">
-                      <p className="text-[11px] uppercase tracking-[0.16em] ok-ink-low">{pick(lang, '소요 시간', 'Elapsed')}</p>
-                      <p className="mt-1 text-[20px] font-[800] ok-tabular-nums ok-ink-high">{formatTime(elapsed)}</p>
+                    <div className="border-t border-[#dedee5] pt-4">
+                      <p className="text-[11px] uppercase tracking-[0.16em] text-[#9497a9]">{pick(lang, '소요 시간', 'Elapsed')}</p>
+                      <p className="mt-1 text-[20px] font-[800] tabular-nums text-[#101114]">{formatTime(elapsed)}</p>
                     </div>
                     {!passed && (
-                      <div className="border-t border-[var(--app-divider)] pt-4">
-                        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-soft-border)] px-4 py-2 text-[12px] ok-ink-mid">
+                      <div className="border-t border-[#dedee5] pt-4">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-[#dedee5] px-4 py-2 text-[12px] text-[#686b82]">
                           <Lock size={13} />
                           <span>{pick(lang, '횟수 제한 없이 다시 풀 수 있습니다', 'Unlimited retries available')}</span>
                         </div>

@@ -8,7 +8,7 @@ import Footer from '../components/landing/Footer'
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-[var(--surface-0)] text-[var(--text-high)] overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0b0d] overflow-x-hidden">
       <Nav />
       <HeroStage />
       <div className="relative z-10">

@@ -29,7 +29,7 @@ export default function FomoBanner({ onVisibilityChange }) {
     : `Start with the 4-week foundation · ${count > 0 ? `${count}/200 enrolled` : '200 spots'} · closes Apr 30`
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-accent">
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-[#5741d8]">
       <div className="max-w-5xl mx-auto px-4 h-9 flex items-center justify-between">
         <p className="text-[11px] text-white font-medium truncate flex-1">
           {bannerCopy}

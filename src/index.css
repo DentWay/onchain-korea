@@ -46,31 +46,49 @@ div:has(> a[href*="splinetool.com"]),
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-full: 9999px;
+
+  /* Onchain Korea Design System — Coinbase × Kraken */
+  --okr-purple: #5741d8;
+  --okr-purple-light: #7132f5;
+  --okr-purple-subtle: rgba(133,91,251,0.16);
+  --okr-blue: #0052ff;
+  --okr-blue-hover: #578bfa;
+  --okr-purple-hover: #828fff;
+  --okr-near-black: #0a0b0d;
+  --okr-dark-card: #282b31;
+  --okr-cool-gray: #686b82;
+  --okr-silver: #9497a9;
+  --okr-border: #dedee5;
+  --okr-light-surface: #eef0f3;
+  --okr-text-dark: #101114;
+  --okr-green: #149e61;
+  --okr-green-badge-bg: rgba(20,158,97,0.16);
+  --okr-green-badge-text: #026b3f;
+  --okr-orange: #dd5b00;
 }
 
 [data-app-theme='dark'] {
   --app-workbench-bg:
-    radial-gradient(circle at top right, rgba(96, 165, 250, 0.12), transparent 30%),
-    radial-gradient(circle at top left, rgba(205, 49, 58, 0.10), transparent 24%),
-    linear-gradient(180deg, rgba(18, 20, 26, 0.96) 0%, rgba(11, 12, 16, 0.98) 100%);
-  --app-workbench-border: rgba(255, 255, 255, 0.08);
-  --app-workbench-shadow: 0 28px 70px rgba(0, 0, 0, 0.36);
-  --app-paper-bg: rgba(20, 22, 29, 0.88);
-  --app-paper-hover-bg: rgba(24, 27, 35, 0.94);
-  --app-paper-muted-bg: rgba(14, 16, 22, 0.78);
-  --app-paper-muted-hover-bg: rgba(18, 20, 27, 0.84);
-  --app-paper-border: rgba(255, 255, 255, 0.08);
-  --app-ink-high: rgba(255, 255, 255, 0.92);
-  --app-ink-mid: rgba(255, 255, 255, 0.66);
-  --app-ink-low: rgba(255, 255, 255, 0.40);
-  --app-soft-bg: rgba(255, 255, 255, 0.05);
-  --app-soft-bg-strong: rgba(255, 255, 255, 0.08);
-  --app-soft-border: rgba(255, 255, 255, 0.10);
-  --app-track: rgba(255, 255, 255, 0.10);
-  --app-divider: rgba(255, 255, 255, 0.08);
-  --app-light-btn-bg: rgba(255, 255, 255, 0.06);
-  --app-light-btn-hover-bg: rgba(255, 255, 255, 0.10);
-  --app-light-btn-border: rgba(255, 255, 255, 0.10);
+    radial-gradient(ellipse 80% 60% at 50% 30%, rgba(87,65,216,0.03) 0%, transparent 60%),
+    #ffffff;
+  --app-workbench-border: rgba(0, 0, 0, 0.06);
+  --app-workbench-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+  --app-paper-bg: #ffffff;
+  --app-paper-hover-bg: #fafafa;
+  --app-paper-muted-bg: #f7f7f8;
+  --app-paper-muted-hover-bg: #f0f0f2;
+  --app-paper-border: #dedee5;
+  --app-ink-high: #101114;
+  --app-ink-mid: #686b82;
+  --app-ink-low: #9497a9;
+  --app-soft-bg: rgba(0, 0, 0, 0.03);
+  --app-soft-bg-strong: rgba(0, 0, 0, 0.05);
+  --app-soft-border: rgba(0, 0, 0, 0.08);
+  --app-track: rgba(0, 0, 0, 0.06);
+  --app-divider: #dedee5;
+  --app-light-btn-bg: #eef0f3;
+  --app-light-btn-hover-bg: #e2e4e9;
+  --app-light-btn-border: #dedee5;
 }
 
 [data-app-theme='light'] {
@@ -95,6 +113,32 @@ div:has(> a[href*="splinetool.com"]),
   --app-light-btn-bg: rgba(255, 255, 255, 0.72);
   --app-light-btn-hover-bg: rgba(255, 255, 255, 0.92);
   --app-light-btn-border: rgba(19, 22, 27, 0.10);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-app-theme]) {
+    --app-workbench-bg:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(87,65,216,0.03) 0%, transparent 60%),
+      #ffffff;
+    --app-workbench-border: rgba(0, 0, 0, 0.06);
+    --app-workbench-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+    --app-paper-bg: #ffffff;
+    --app-paper-hover-bg: #fafafa;
+    --app-paper-muted-bg: #f7f7f8;
+    --app-paper-muted-hover-bg: #f0f0f2;
+    --app-paper-border: #dedee5;
+    --app-ink-high: #101114;
+    --app-ink-mid: #686b82;
+    --app-ink-low: #9497a9;
+    --app-soft-bg: rgba(0, 0, 0, 0.03);
+    --app-soft-bg-strong: rgba(0, 0, 0, 0.05);
+    --app-soft-border: rgba(0, 0, 0, 0.08);
+    --app-track: rgba(0, 0, 0, 0.06);
+    --app-divider: #dedee5;
+    --app-light-btn-bg: #eef0f3;
+    --app-light-btn-hover-bg: #e2e4e9;
+    --app-light-btn-border: #dedee5;
+  }
 }
 
 /* ─── Base ─── */
@@ -321,11 +365,11 @@ body {
 }
 
 .ok-btn-primary {
-  background: var(--accent);
+  background: #5741d8;
   color: white;
 }
 .ok-btn-primary:hover {
-  background: #2563EB;
+  background: #828fff;
 }
 
 .ok-btn-ghost {
@@ -634,6 +678,92 @@ body {
   backface-visibility: hidden;
   transform-style: preserve-3d;
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.18));
+}
+
+/* ─── Onchain Korea Design System — Landing Components ─── */
+.okr-pill-purple {
+  background: var(--okr-purple);
+  color: #ffffff;
+  padding: 13px 24px;
+  border-radius: 56px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.16px;
+  transition: background 0.2s;
+}
+.okr-pill-purple:hover { background: var(--okr-purple-hover); }
+
+.okr-pill-blue {
+  background: var(--okr-blue);
+  color: #ffffff;
+  padding: 13px 24px;
+  border-radius: 56px;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.16px;
+  transition: background 0.2s;
+}
+.okr-pill-blue:hover { background: var(--okr-blue-hover); }
+
+.okr-btn-secondary {
+  background: var(--okr-light-surface);
+  color: var(--okr-near-black);
+  padding: 13px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+.okr-btn-secondary:hover { background: #e2e4e9; }
+
+.okr-card {
+  background: #ffffff;
+  border: 1px solid rgba(91,97,110,0.2);
+  border-radius: 12px;
+  box-shadow: rgba(0,0,0,0.03) 0px 4px 24px;
+}
+
+.okr-card-dark {
+  background: var(--okr-dark-card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
+.okr-badge-success {
+  background: var(--okr-green-badge-bg);
+  color: var(--okr-green-badge-text);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.okr-badge-neutral {
+  background: rgba(104,107,130,0.12);
+  color: #484b5e;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.okr-badge-purple {
+  background: var(--okr-purple-subtle);
+  color: var(--okr-purple-light);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Section alternation */
+.okr-section-dark {
+  background: var(--okr-near-black);
+  color: #ffffff;
+}
+.okr-section-light {
+  background: #ffffff;
+  color: var(--okr-text-dark);
 }
 
 @supports (padding-bottom: env(safe-area-inset-bottom)) {

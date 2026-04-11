@@ -6,9 +6,9 @@ function pad(n) { return String(n).padStart(2, '0') }
 export default function CountdownTimer({ targetDate, compact = false, surface = 'dark' }) {
   const { t } = useLang()
   const [time, setTime] = useState(getTimeLeft(targetDate))
-  const primaryTone = surface === 'light' ? 'ok-ink-high' : 'text-white/80'
-  const secondaryTone = surface === 'light' ? 'ok-ink-low' : 'text-white/30'
-  const closedTone = surface === 'light' ? 'ok-ink-low' : 'text-white/40'
+  const primaryTone = surface === 'light' ? 'text-[#101114]' : 'text-white/80'
+  const secondaryTone = surface === 'light' ? 'text-[#9497a9]' : 'text-white/30'
+  const closedTone = surface === 'light' ? 'text-[#9497a9]' : 'text-white/40'
 
   useEffect(() => {
     const id = setInterval(() => setTime(getTimeLeft(targetDate)), 1000)
@@ -25,7 +25,7 @@ export default function CountdownTimer({ targetDate, compact = false, surface = 
 
   if (compact) {
     return (
-      <div className="flex items-center gap-1 text-[12px] ok-tabular-nums">
+      <div className="flex items-center gap-1 text-[12px] tabular-nums">
         <span className={`${primaryTone} font-semibold`}>{time.days}d</span>
         <span className={secondaryTone}>:</span>
         <span className={`${primaryTone} font-semibold`}>{pad(time.hours)}h</span>
@@ -46,7 +46,7 @@ export default function CountdownTimer({ targetDate, compact = false, surface = 
     <div className="flex items-center gap-2">
       {units.map((u, i) => (
         <div key={i} className="flex flex-col items-center">
-          <span className={`text-xl md:text-2xl font-bold ok-tabular-nums leading-none ${surface === 'light' ? 'ok-ink-high' : 'text-white'}`}>
+          <span className={`text-xl md:text-2xl font-bold tabular-nums leading-none ${surface === 'light' ? 'text-[#101114]' : 'text-white'}`}>
             {u.value}
           </span>
           <span className={`text-[9px] mt-1 uppercase tracking-wider ${secondaryTone}`}>{u.label}</span>

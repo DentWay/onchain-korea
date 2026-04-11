@@ -35,7 +35,7 @@ const stats = [
 ]
 
 const sourceMap = [
-  { label: 'Semester 1', units: 8, tone: 'bg-[#79AFFF]' },
+  { label: 'Semester 1', units: 8, tone: 'bg-[#7132f5]' },
   { label: 'Semester 2', units: 8, tone: 'bg-[#4F8DFF]' },
   { label: 'Tokens', units: 7, tone: 'bg-[rgba(255,255,255,0.22)]' },
   { label: 'DeFi', units: 6, tone: 'bg-[rgba(255,255,255,0.14)]' },
@@ -90,10 +90,10 @@ export default function GreedSignals() {
                 <span className="ok-section-label">
                   {pick(lang, 'Public Signals', 'Public Signals')}
                 </span>
-                <h2 className="mt-4 whitespace-pre-line text-[32px] font-bold tracking-tight text-[var(--text-high)] md:text-[44px] md:leading-[1.15]">
+                <h2 className="mt-4 whitespace-pre-line text-[32px] font-bold tracking-tight text-white md:text-[44px] md:leading-[1.15]">
                   {pick(lang, '왜 이 구조를 가져왔는지,\n공개 데이터로 설명해요', 'Why we chose this model,\nexplained with public data')}
                 </h2>
-                <p className="mt-4 max-w-2xl whitespace-pre-line text-[15px] leading-[1.8] text-[var(--text-mid)]">
+                <p className="mt-4 max-w-2xl whitespace-pre-line text-[15px] leading-[1.8] text-[#9497a9]">
                   {pick(
                     lang,
                     'GREED Academy의 공개 결과와 워크숍 사례를 보면,\n초보자에게는 순서 있는 학습 흐름과 바로 해보는 실습이\n가장 잘 작동했어요.\n\nOnChain Korea는 그 구조를\n한국 사용자 흐름에 맞춰 다시 짰어요.',
@@ -115,13 +115,13 @@ export default function GreedSignals() {
                       className="rounded-[24px] border border-[rgba(255,255,255,0.10)] bg-[rgba(255,255,255,0.04)] px-5 py-5"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(59,130,246,0.12)] text-[#79AFFF]">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(87,65,216,0.12)] text-[#7132f5]">
                           <Icon size={16} />
                         </div>
-                        <span className="text-[9px] uppercase tracking-[0.18em] text-[var(--text-low)] leading-tight">{item.source}</span>
+                        <span className="text-[9px] uppercase tracking-[0.18em] text-[rgba(255,255,255,0.40)] leading-tight">{item.source}</span>
                       </div>
-                      <p className="mt-4 text-[32px] font-[800] tracking-[-0.05em] text-[var(--text-high)]">{item.value}</p>
-                      <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-mid)]">{item.title[lang] || item.title.ko}</p>
+                      <p className="mt-4 text-[32px] font-[800] tracking-[-0.05em] text-white">{item.value}</p>
+                      <p className="mt-1.5 text-[13px] leading-relaxed text-[#9497a9]">{item.title[lang] || item.title.ko}</p>
                     </motion.div>
                   )
                 })}
@@ -130,11 +130,11 @@ export default function GreedSignals() {
 
             <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
               <div className="rounded-[28px] border border-[rgba(255,255,255,0.10)] bg-[rgba(255,255,255,0.04)] px-6 py-6">
-                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[var(--text-low)]">
-                  <Coins size={14} className="text-[#79AFFF]" />
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-[rgba(255,255,255,0.40)]">
+                  <Coins size={14} className="text-[#7132f5]" />
                   <span>{pick(lang, '공개 소스 맵', 'Public source map')}</span>
                 </div>
-                <h3 className="mt-3 text-[22px] font-[800] tracking-[-0.04em] text-[var(--text-high)]">
+                <h3 className="mt-3 text-[22px] font-[800] tracking-[-0.04em] text-white">
                   {pick(lang, '29개 공개 유닛을 한국형 8주 경로로 재구성했습니다', '29 public units, repackaged into 8 Korean weeks')}
                 </h3>
                 <div className="mt-6 overflow-hidden rounded-full border border-[rgba(255,255,255,0.08)]">
@@ -153,9 +153,9 @@ export default function GreedSignals() {
                     <div key={item.label} className="flex items-center justify-between rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
                       <div className="flex items-center gap-3">
                         <span className={`h-2.5 w-2.5 rounded-full ${item.tone}`} />
-                        <span className="text-[13px] text-[var(--text-mid)]">{item.label}</span>
+                        <span className="text-[13px] text-[#9497a9]">{item.label}</span>
                       </div>
-                      <span className="text-[14px] font-semibold text-[var(--text-high)]">{item.units}</span>
+                      <span className="text-[14px] font-semibold text-white">{item.units}</span>
                     </div>
                   ))}
                 </div>
@@ -172,17 +172,17 @@ export default function GreedSignals() {
                     className="py-5"
                   >
                     <div className="flex items-start gap-4">
-                      <span className="mt-0.5 shrink-0 text-[11px] font-bold tracking-[0.18em] text-[#79AFFF]">
+                      <span className="mt-0.5 shrink-0 text-[11px] font-bold tracking-[0.18em] text-[#7132f5]">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <div>
-                        <h3 className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--text-high)]">
+                        <h3 className="text-[18px] font-semibold tracking-[-0.02em] text-white">
                           {item.title[lang] || item.title.ko}
                         </h3>
-                        <p className="mt-2 text-[14px] leading-relaxed text-[var(--text-mid)]">
+                        <p className="mt-2 text-[14px] leading-relaxed text-[#9497a9]">
                           {item.desc[lang] || item.desc.ko}
                         </p>
-                        <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-[var(--text-low)]">
+                        <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-[rgba(255,255,255,0.40)]">
                           {item.source}
                         </p>
                       </div>
@@ -192,7 +192,7 @@ export default function GreedSignals() {
               </div>
             </div>
 
-            <p className="mt-6 text-[12px] leading-relaxed text-[var(--text-low)]">
+            <p className="mt-6 text-[12px] leading-relaxed text-[rgba(255,255,255,0.40)]">
               {pick(
                 lang,
                 'Sources: GREED Academy learn hub, Semester 1/2 about pages, Athens recap, public workshop pages, and a public participant write-up.',

@@ -52,34 +52,34 @@ export default function Sidebar({ onClose }) {
   }
 
   return (
-    <aside className="w-[236px] h-screen bg-[rgba(12,13,17,0.96)] text-[var(--text-high)] flex flex-col p-3 shrink-0 border-r border-[var(--border)]">
+    <aside className="w-[236px] h-screen bg-white text-[#101114] flex flex-col p-3 shrink-0 border-r border-[#dedee5]">
       <div className="px-1 mb-2 flex items-start justify-between">
         <div>
           <Link to="/" className="block hover:opacity-80 transition-opacity">
-            <BrandLockup surface="dark" className="origin-left scale-[0.82]" />
+            <BrandLockup surface="light" className="origin-left scale-[0.82]" />
           </Link>
           <div className="flex items-center gap-1.5 mt-2">
-            <p className="text-[10px] text-[var(--text-low)]">{t('sidebar.tagline')}</p>
+            <p className="text-[10px] text-[#9497a9]">{t('sidebar.tagline')}</p>
           </div>
         </div>
-        <button onClick={onClose} aria-label="Close menu / 메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[var(--surface-2)] transition-colors mt-0.5">
-          <X size={16} className="text-[var(--text-low)]" />
+        <button onClick={onClose} aria-label="Close menu / 메뉴 닫기" className="md:hidden p-1 rounded-lg hover:bg-[#f7f7f8] transition-colors mt-0.5">
+          <X size={16} className="text-[#9497a9]" />
         </button>
       </div>
 
       <nav aria-label="Main navigation" className="mt-4 flex-1 overflow-y-auto">
         {navItems.map((group) => (
           <div key={group.label}>
-            <p className="text-[9px] text-[var(--text-low)] uppercase tracking-[0.22em] px-2 mt-5 mb-1.5">{group.label}</p>
+            <p className="text-[9px] text-[#9497a9] uppercase tracking-[0.22em] px-2 mt-5 mb-1.5">{group.label}</p>
             {group.items.map((item) => {
               const Icon = item.icon
               const isActive = location.pathname === item.to || (item.matchPrefix && location.pathname.startsWith(item.matchPrefix))
-              const className = `flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] mb-1 transition-all ${isActive ? 'bg-[rgba(59,130,246,0.12)] text-[var(--text-high)]' : 'hover:bg-[rgba(255,255,255,0.05)] text-[var(--text-mid)]'}`
+              const className = `flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] mb-1 transition-all ${isActive ? 'bg-[rgba(87,65,216,0.08)] text-[#5741d8]' : 'hover:bg-[#f7f7f8] text-[#686b82]'}`
 
               if (item.href) {
                 return (
                   <a key={item.text} href={item.href} onClick={onClose} className={className}>
-                    <Icon size={15} className={isActive ? 'text-accent-soft' : 'text-[var(--text-low)]'} />
+                    <Icon size={15} className={isActive ? 'text-[#5741d8]' : 'text-[#9497a9]'} />
                     <span>{item.text}</span>
                   </a>
                 )
@@ -87,7 +87,7 @@ export default function Sidebar({ onClose }) {
 
               return (
                 <NavLink key={item.text} to={item.to} onClick={onClose} className={className}>
-                  <Icon size={15} className={isActive ? 'text-accent-soft' : 'text-[var(--text-low)]'} />
+                  <Icon size={15} className={isActive ? 'text-[#5741d8]' : 'text-[#9497a9]'} />
                   <span>{item.text}</span>
                 </NavLink>
               )
@@ -96,22 +96,22 @@ export default function Sidebar({ onClose }) {
         ))}
       </nav>
 
-      <div className="border-t border-[var(--border)] pt-3 mt-2">
+      <div className="border-t border-[#dedee5] pt-3 mt-2">
         <div className="px-2 py-1">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[10px] text-[var(--text-low)]">{t('sidebar.progress')}</p>
-            <p className="text-[10px] text-accent-soft font-semibold ok-tabular-nums">{overallProgress}%</p>
+            <p className="text-[10px] text-[#9497a9]">{t('sidebar.progress')}</p>
+            <p className="text-[10px] text-[#5741d8] font-semibold tabular-nums">{overallProgress}%</p>
           </div>
-          <div className="ok-progress-track"><div className="ok-progress-fill" style={{ width: `${overallProgress}%` }} /></div>
-          <p className="text-[10px] text-[var(--text-low)] mt-2">{t('common.week')} {activeWeek} {t('sidebar.weekProgress')}</p>
+          <div className="h-1.5 rounded-full bg-[#eef0f3] overflow-hidden"><div className="h-full rounded-full bg-[#5741d8] transition-all duration-500" style={{ width: `${overallProgress}%` }} /></div>
+          <p className="text-[10px] text-[#9497a9] mt-2">{t('common.week')} {activeWeek} {t('sidebar.weekProgress')}</p>
           {supabaseEnabled && user && (
-            <div className="pt-3 mt-3 border-t border-[var(--border)]">
+            <div className="pt-3 mt-3 border-t border-[#dedee5]">
               <div className="flex items-center justify-between">
                 <div className="min-w-0 mr-2">
-                  <span className="text-[11px] text-[var(--text-mid)] truncate block">{displayName}</span>
-                  {isAdmin && <span className="text-[10px] text-[#79AFFF]">Admin</span>}
+                  <span className="text-[11px] text-[#686b82] truncate block">{displayName}</span>
+                  {isAdmin && <span className="text-[10px] text-[#5741d8]">Admin</span>}
                 </div>
-                <button type="button" onClick={handleSignOut} className="inline-flex items-center gap-1.5 text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors shrink-0" title={t('auth.signOut')} aria-label={t('auth.signOut')}>
+                <button type="button" onClick={handleSignOut} className="inline-flex items-center gap-1.5 text-[#9497a9] hover:text-[#686b82] transition-colors shrink-0" title={t('auth.signOut')} aria-label={t('auth.signOut')}>
                   <LogOut size={14} />
                   <span className="text-[11px]">{t('auth.signOut')}</span>
                 </button>
@@ -120,7 +120,7 @@ export default function Sidebar({ onClose }) {
                 <button
                   type="button"
                   onClick={handleLockAdmin}
-                  className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors"
+                  className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-[#9497a9] hover:text-[#686b82] transition-colors"
                 >
                   <LockKeyhole size={13} />
                   <span>{pick(lang, '관리자 잠금', 'Lock Admin')}</span>

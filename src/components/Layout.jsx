@@ -101,29 +101,29 @@ export default function Layout() {
   }
 
   return (
-    <div data-app-theme="dark" className="flex h-screen overflow-hidden bg-[var(--surface-0)] text-[var(--text-high)]">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-3 focus:bg-accent focus:text-white">Skip to content</a>
-      <div className={`ok-sidebar-overlay md:hidden ${sidebarOpen ? 'active' : ''}`} onClick={() => setSidebarOpen(false)} />
+    <div data-app-theme="dark" className="flex h-screen overflow-hidden bg-white text-[#101114]">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-3 focus:bg-[#5741d8] focus:text-white">Skip to content</a>
+      <div className={`fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setSidebarOpen(false)} />
       <div className={`fixed md:relative z-50 md:z-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
       <main id="main-content" className="flex-1 overflow-y-auto relative">
-        <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-[var(--surface-0)]/95 backdrop-blur-xl border-b border-[var(--border)]">
-          <button onClick={() => setSidebarOpen(true)} aria-label="Open menu / 메뉴 열기" className="p-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"><Menu size={20} className="text-[var(--text-mid)]" /></button>
+        <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-white/95 backdrop-blur-xl border-b border-[#dedee5]">
+          <button onClick={() => setSidebarOpen(true)} aria-label="Open menu / 메뉴 열기" className="p-1.5 rounded-lg hover:bg-[#f7f7f8] transition-colors"><Menu size={20} className="text-[#686b82]" /></button>
           <Link to="/" className="shrink-0">
-            <BrandLockup surface="dark" className="origin-center scale-[0.68]" />
+            <BrandLockup surface="light" className="origin-center scale-[0.68]" />
           </Link>
-          <LangToggle className="bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-mid)] hover:bg-[var(--surface-2)] text-[11px]" />
+          <LangToggle className="bg-[#f7f7f8] border border-[#dedee5] text-[#686b82] hover:bg-[#eef0f3] text-[11px]" />
         </div>
-        <div className="hidden md:block sticky top-0 z-40 border-b border-[var(--app-divider)] bg-[rgba(12,13,17,0.88)] px-6 py-3 backdrop-blur-xl">
+        <div className="hidden md:block sticky top-0 z-40 border-b border-[#dedee5] bg-white/95 px-6 py-3 backdrop-blur-xl">
           <div className="flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-3">
               <Link to="/dashboard" className="shrink-0 transition-opacity hover:opacity-80">
-                <BrandLockup surface="dark" className="origin-left scale-[0.62]" />
+                <BrandLockup surface="light" className="origin-left scale-[0.62]" />
               </Link>
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--text-low)]">{chrome.label}</p>
-                <p className="mt-1 text-[12px] text-[var(--text-mid)] truncate">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[#9497a9]">{chrome.label}</p>
+                <p className="mt-1 text-[12px] text-[#686b82] truncate">
                   {chrome.hint}
                 </p>
               </div>
@@ -135,43 +135,43 @@ export default function Layout() {
                   {canAccessAdminGate && (
                     <a
                       href={ADMIN_ACCESS_PATH}
-                      className="inline-flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium text-[#79AFFF] transition-colors hover:text-[#AFCBFF]"
+                      className="inline-flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium text-[#5741d8] transition-colors hover:text-[#7b6be6]"
                     >
                       <Shield size={12} />
                       <span>{t('sidebar.admin')}</span>
                     </a>
                   )}
-                  {canAccessAdminGate && <div className="w-px h-3.5 bg-[rgba(255,255,255,0.08)]" />}
+                  {canAccessAdminGate && <div className="w-px h-3.5 bg-[#dedee5]" />}
                   <Link
                     to="/settings"
-                    className="inline-flex max-w-[220px] items-center gap-1.5 truncate px-2 py-1.5 text-[11px] font-medium text-[var(--text-mid)] transition-colors hover:text-[var(--text-high)]"
+                    className="inline-flex max-w-[220px] items-center gap-1.5 truncate px-2 py-1.5 text-[11px] font-medium text-[#686b82] transition-colors hover:text-[#101114]"
                   >
                     <UserCircle2 size={12} />
                     <span className="truncate">{displayName}</span>
                   </Link>
-                  {isAdmin && <span className="rounded-full bg-[rgba(59,130,246,0.12)] px-2 py-1 text-[10px] font-semibold text-[#79AFFF]">Admin</span>}
+                  {isAdmin && <span className="rounded-full bg-[rgba(87,65,216,0.1)] px-2 py-1 text-[10px] font-semibold text-[#5741d8]">Admin</span>}
                   {isAdmin && adminAccessGranted && (
                     <>
-                      <div className="w-px h-3.5 bg-[rgba(255,255,255,0.08)]" />
-                      <button type="button" onClick={handleLockAdmin} className="flex items-center gap-1.5 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors">
+                      <div className="w-px h-3.5 bg-[#dedee5]" />
+                      <button type="button" onClick={handleLockAdmin} className="flex items-center gap-1.5 text-[11px] text-[#9497a9] hover:text-[#686b82] transition-colors">
                         <LockKeyhole size={11} />
                         <span>{lang === 'ko' ? '관리자 잠금' : 'Lock Admin'}</span>
                       </button>
                     </>
                   )}
-                  <div className="w-px h-3.5 bg-[rgba(255,255,255,0.08)]" />
-                  <button type="button" onClick={handleSignOut} className="flex items-center gap-1.5 text-[11px] text-[var(--text-low)] hover:text-[var(--text-mid)] transition-colors">
+                  <div className="w-px h-3.5 bg-[#dedee5]" />
+                  <button type="button" onClick={handleSignOut} className="flex items-center gap-1.5 text-[11px] text-[#9497a9] hover:text-[#686b82] transition-colors">
                     <LogOut size={11} />
                     <span>{t('auth.signOut')}</span>
                   </button>
-                  <div className="w-px h-3.5 bg-[rgba(255,255,255,0.08)]" />
+                  <div className="w-px h-3.5 bg-[#dedee5]" />
                 </>
               )}
-              <LangToggle className="text-[var(--text-mid)] hover:text-[var(--text-high)] text-[11px]" />
+              <LangToggle className="text-[#686b82] hover:text-[#101114] text-[11px]" />
             </div>
           </div>
         </div>
-        <div className="p-4 md:px-6 md:pb-6 ok-page-enter"><Outlet /></div>
+        <div className="p-4 md:px-6 md:pb-6"><Outlet /></div>
       </main>
     </div>
   )

@@ -23,10 +23,10 @@ export default function HiddenTopics() {
   return (
     <div className="max-w-5xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <section className="ok-workbench p-5 md:p-8">
+        <section className="bg-white border border-[#dedee5] rounded-[2rem] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 md:p-8">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-2 text-[12px] font-medium ok-ink-mid transition-colors hover:text-[var(--text-high)]"
+            className="inline-flex items-center gap-2 text-[12px] font-medium text-[#686b82] transition-colors hover:text-[#101114]"
           >
             <ArrowLeft size={14} />
             <span>{t('week.back')}</span>
@@ -34,19 +34,19 @@ export default function HiddenTopics() {
 
           <header className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] uppercase tracking-[0.2em] ok-ink-low">{t('hidden.title')}</p>
-              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] ok-ink-high">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-[#9497a9]">{t('hidden.title')}</p>
+              <h1 className="mt-2 text-[30px] md:text-[40px] font-[800] tracking-[-0.05em] text-[#101114]">
                 {pick(lang, '주차별 시장 맥락 모음', 'Weekly market-context archive')}
               </h1>
-              <p className="mt-3 text-[14px] leading-relaxed ok-ink-mid">{t('hidden.desc')}</p>
+              <p className="mt-3 text-[14px] leading-relaxed text-[#686b82]">{t('hidden.desc')}</p>
             </div>
 
-            <div className="ok-paper-muted px-5 py-4 md:px-6 md:py-5">
-              <p className="text-[11px] uppercase tracking-[0.18em] ok-ink-low">{pick(lang, '읽은 토픽', 'Topics read')}</p>
-              <p className="mt-2 text-[36px] font-[800] tracking-[-0.05em] ok-tabular-nums ok-ink-high">
+            <div className="bg-[#f7f7f8] border border-[#dedee5] rounded-[1.5rem] px-5 py-4 md:px-6 md:py-5">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-[#9497a9]">{pick(lang, '읽은 토픽', 'Topics read')}</p>
+              <p className="mt-2 text-[36px] font-[800] tracking-[-0.05em] tabular-nums text-[#101114]">
                 {readHiddenTopics.length}/{weeks.length}
               </p>
-              <p className="mt-2 text-[12px] ok-ink-mid">
+              <p className="mt-2 text-[12px] text-[#686b82]">
                 {pick(lang, '실습을 마친 주차부터 순서대로 열려요.', 'Topics open week by week after actions are completed.')}
               </p>
             </div>
@@ -68,34 +68,34 @@ export default function HiddenTopics() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className={`ok-paper overflow-hidden ${locked ? 'opacity-70' : ''}`}
+                  className={`bg-white border border-[#dedee5] rounded-[1.5rem] overflow-hidden ${locked ? 'opacity-70' : ''}`}
                 >
                   <div className="px-5 md:px-6 py-5">
                     <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(59,130,246,0.08)] px-2.5 py-1 text-[10px] font-semibold text-[#2156B8]">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(87,65,216,0.08)] px-2.5 py-1 text-[10px] font-semibold text-[#5741d8]">
                             <Flame size={11} />
                             <span>Week {week.id}</span>
                           </span>
                           {locked && (
-                            <span className="inline-flex items-center gap-1 rounded-full border border-[var(--app-soft-border)] px-2.5 py-1 text-[10px] font-semibold ok-ink-low">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#dedee5] px-2.5 py-1 text-[10px] font-semibold text-[#9497a9]">
                               <Lock size={11} />
                               <span>{pick(lang, '잠금', 'Locked')}</span>
                             </span>
                           )}
                           {isRead && (
-                            <span className="rounded-full bg-[rgba(74,222,128,0.12)] px-2.5 py-1 text-[10px] font-semibold text-[#15803D]">
+                            <span className="rounded-full bg-[rgba(20,158,97,0.16)] px-2.5 py-1 text-[10px] font-semibold text-[#026b3f]">
                               {t('hidden.complete')}
                             </span>
                           )}
                         </div>
 
-                        <h2 className="mt-3 text-[22px] font-[800] tracking-[-0.04em] ok-ink-high">{l(hiddenTopic.title, lang)}</h2>
+                        <h2 className="mt-3 text-[22px] font-[800] tracking-[-0.04em] text-[#101114]">{l(hiddenTopic.title, lang)}</h2>
                         {hiddenTopic.desc && (
-                          <p className="mt-2 text-[13px] leading-relaxed ok-ink-mid">{l(hiddenTopic.desc, lang)}</p>
+                          <p className="mt-2 text-[13px] leading-relaxed text-[#686b82]">{l(hiddenTopic.desc, lang)}</p>
                         )}
-                        <div className="mt-3 flex flex-wrap gap-3 text-[12px] ok-ink-mid">
+                        <div className="mt-3 flex flex-wrap gap-3 text-[12px] text-[#686b82]">
                           <span>{l(hiddenTopic.readTime, lang)}</span>
                           <span>{t('hidden.action')}: {l(hiddenTopic.action, lang)}</span>
                           {hiddenTopic.forumCount > 0 && <span>{hiddenTopic.forumCount}{t('week.participating')}</span>}
@@ -106,7 +106,7 @@ export default function HiddenTopics() {
                         {content && !locked && (
                           <button
                             onClick={() => toggle(week.id)}
-                            className="ok-btn ok-btn-light px-4 py-2.5 text-[12px]"
+                            className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#eef0f3] text-[#101114] font-semibold border border-[#dedee5] transition-colors hover:bg-[#e2e4e9] px-4 py-2.5 text-[12px]"
                           >
                             <ChevronDown size={14} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                             {isExpanded ? t('hidden.collapse') : t('hidden.readArticle')}
@@ -114,14 +114,14 @@ export default function HiddenTopics() {
                         )}
 
                         {locked ? (
-                          <div className="inline-flex items-center gap-2 rounded-full border border-[var(--app-soft-border)] px-4 py-2.5 text-[12px] ok-ink-mid">
+                          <div className="inline-flex items-center gap-2 rounded-full border border-[#dedee5] px-4 py-2.5 text-[12px] text-[#686b82]">
                             <Lock size={13} />
                             <span>{!weekOpen ? t('week.completePrevLesson') : t('week.completeActionForHidden')}</span>
                           </div>
                         ) : (
                           <button
                             onClick={() => toggleHiddenTopic(week.id)}
-                            className={`ok-btn px-4 py-2.5 text-[12px] ${isRead ? 'ok-btn-light' : 'ok-btn-primary'}`}
+                            className={`inline-flex items-center justify-center gap-2 font-semibold transition-colors px-4 py-2.5 text-[12px] ${isRead ? 'rounded-[12px] bg-[#eef0f3] text-[#101114] border border-[#dedee5] hover:bg-[#e2e4e9]' : 'rounded-[56px] bg-[#5741d8] text-white hover:bg-[#7132f5]'}`}
                           >
                             {isRead ? t('hidden.readComplete') : t('hidden.markRead')}
                           </button>
@@ -138,29 +138,29 @@ export default function HiddenTopics() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.28 }}
                       >
-                        <div className="border-t border-[var(--app-divider)] bg-[var(--app-soft-bg)] px-5 md:px-6 pt-5 pb-6">
+                        <div className="border-t border-[#dedee5] bg-[#f7f7f8] px-5 md:px-6 pt-5 pb-6">
                           <div className="space-y-6">
                             {content.sections.map((section, sectionIndex) => (
                               <div key={sectionIndex}>
-                                <h3 className="text-[18px] font-[700] tracking-[-0.03em] ok-ink-high">{section.heading}</h3>
+                                <h3 className="text-[18px] font-[700] tracking-[-0.03em] text-[#101114]">{section.heading}</h3>
                                 <div className="mt-3 space-y-3">
                                   {section.content.split('\n\n').map((para, paraIndex) => (
-                                    <p key={paraIndex} className="text-[14px] leading-relaxed ok-ink-mid">{para}</p>
+                                    <p key={paraIndex} className="text-[14px] leading-relaxed text-[#686b82]">{para}</p>
                                   ))}
                                 </div>
                               </div>
                             ))}
 
                             {content.keyTakeaways && (
-                              <div className="rounded-[24px] border border-[var(--app-soft-border)] bg-[var(--app-soft-bg-strong)] p-5">
+                              <div className="rounded-[24px] border border-[#dedee5] bg-white p-5">
                                 <div className="flex items-center gap-2">
-                                  <Lightbulb size={15} className="text-[#2156B8]" />
-                                  <h4 className="text-[14px] font-[700] ok-ink-high">{t('hidden.keyTakeaways')}</h4>
+                                  <Lightbulb size={15} className="text-[#5741d8]" />
+                                  <h4 className="text-[14px] font-[700] text-[#101114]">{t('hidden.keyTakeaways')}</h4>
                                 </div>
                                 <ul className="mt-4 space-y-2">
                                   {content.keyTakeaways.map((item, takeawayIndex) => (
-                                    <li key={takeawayIndex} className="flex items-start gap-2 text-[13px] leading-relaxed ok-ink-mid">
-                                      <span className="mt-1 shrink-0 text-[#2156B8]">•</span>
+                                    <li key={takeawayIndex} className="flex items-start gap-2 text-[13px] leading-relaxed text-[#686b82]">
+                                      <span className="mt-1 shrink-0 text-[#5741d8]">•</span>
                                       <span>{item}</span>
                                     </li>
                                   ))}
