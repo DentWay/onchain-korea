@@ -5,3 +5,16 @@ dist
 .env.local
 .env*.local
 .claude/
+
+# Local QA / scratch artifacts
+.codex-tmp/
+test-results/
+playwright-*.png
+local-*.png
+prod-*.png
+admin-access-prod.png
+auth-prod.png
+dash-prod.png
+tmp-*.spec.js
+tmp-*.spec.mjs
+action_plan_2026_04_W2.md
