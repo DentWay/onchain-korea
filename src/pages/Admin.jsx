@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import {
   AlertTriangle,
   ArrowRight,
@@ -24,12 +24,14 @@ const DAY_MS = 24 * 60 * 60 * 1000
 const totalLessons = weeks.reduce((sum, week) => sum + (week.lessons?.length || 0), 0)
 const totalActions = weeks.reduce((sum, week) => sum + (week.actions?.length || 0), 0)
 const totalHiddenTopics = weeks.filter((week) => week.hiddenTopic).length
+const ADMIN_TAB_IDS = new Set(['dashboard', 'leaderboard', 'analytics'])
 
 function pick(lang, ko, en) { return lang === 'ko' ? ko : en }
 function parseDate(value) { const t = value ? new Date(value).getTime() : 0; return Number.isFinite(t) ? t : 0 }
 function maxDate(...v) { return v.reduce((a, b) => (parseDate(b) > parseDate(a) ? b : a), null) }
 function ratio(part, total) { return total > 0 ? Math.round((part / total) * 100) : 0 }
 function clamp(value) { return Math.max(0, Math.min(100, value)) }
+function resolveAdminTab(value) { return ADMIN_TAB_IDS.has(value) ? value : 'dashboard' }
 
 function formatDate(lang, value) {
   if (!value) return pick(lang, '-', '-')
@@ -137,11 +139,12 @@ function Meter({ value, color = '#5741d8', height = 6 }) {
 export default function Admin() {
   const { isAdmin, supabaseEnabled } = useAuth()
   const { lang } = useLang()
-  const [tab, setTab] = useState('dashboard')
+  const [searchParams, setSearchParams] = useSearchParams()
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [weekFilter, setWeekFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
+  const tab = resolveAdminTab(searchParams.get('view'))
 
   const CACHE_KEY = 'ok-admin-data'
   const CACHE_TTL = 5 * 60 * 1000
@@ -173,6 +176,22 @@ export default function Admin() {
   }, [supabaseEnabled])
 
   useEffect(() => { if (isAdmin) void loadAdminData(false) }, [isAdmin, loadAdminData])
+
+  useEffect(() => {
+    const currentView = searchParams.get('view')
+    const resolvedView = resolveAdminTab(currentView)
+    if (currentView !== resolvedView) {
+      const nextParams = new URLSearchParams(searchParams)
+      nextParams.set('view', resolvedView)
+      setSearchParams(nextParams, { replace: true })
+    }
+  }, [searchParams, setSearchParams])
+
+  const setTab = useCallback((nextTab) => {
+    const nextParams = new URLSearchParams(searchParams)
+    nextParams.set('view', resolveAdminTab(nextTab))
+    setSearchParams(nextParams, { replace: true })
+  }, [searchParams, setSearchParams])
 
   const statusOptions = useMemo(() => [
     { value: 'all', label: pick(lang, '전체', 'All') },
@@ -409,7 +428,7 @@ export default function Admin() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
-                        <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '클릭 없이 운영 흐름을 봐요', 'See the whole flow at a glance')}</h3>
+                        <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '운영 흐름을 한눈에 확인합니다', 'Review the operating flow at a glance')}</h3>
                       </div>
                       <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
                         <Target size={16} />
@@ -440,7 +459,7 @@ export default function Admin() {
                   <div className="grid gap-5">
                     <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                       <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '병목 주차', 'Bottleneck Weeks')}</p>
-                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '어디서 막히는지 먼저 봐요', 'Find the friction points first')}</h3>
+                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '병목 구간을 먼저 확인합니다', 'Review the friction points first')}</h3>
                       <div className="mt-4 space-y-3">
                         {dashboardInsights.bottlenecks.slice(0, 4).map((week) => (
                           <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
@@ -462,7 +481,7 @@ export default function Admin() {
                           </div>
                         ))}
                         {dashboardInsights.bottlenecks.length === 0 && (
-                          <p className="text-[12px] text-white/40">{pick(lang, '주차 데이터가 아직 없어요', 'No week bottlenecks yet')}</p>
+                          <p className="text-[12px] text-white/40">{pick(lang, '주차 데이터가 없습니다', 'No week bottlenecks yet')}</p>
                         )}
                       </div>
                     </div>
@@ -489,7 +508,7 @@ export default function Admin() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '위험군 큐', 'At-risk Queue')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '지금 바로 확인할 학습자', 'Learners to check now')}</h3>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 확인 대상 학습자', 'Priority learners to review')}</h3>
                       </div>
                       <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
                         <AlertTriangle size={16} />
@@ -517,7 +536,7 @@ export default function Admin() {
                         </button>
                       ))}
                       {dashboardInsights.riskQueue.length === 0 && (
-                        <p className="text-[12px] text-white/40">{pick(lang, '바로 확인할 위험군이 아직 없어요', 'No urgent risk queue right now')}</p>
+                        <p className="text-[12px] text-white/40">{pick(lang, '우선 확인 대상이 없습니다', 'No urgent risk queue right now')}</p>
                       )}
                     </div>
                   </div>
@@ -558,7 +577,7 @@ export default function Admin() {
                         </div>
                       ))}
                       {dashboardInsights.lowPassQuizzes.length === 0 && (
-                        <p className="text-[12px] text-white/40">{pick(lang, '아직 퀴즈 데이터가 없어요', 'No quiz data yet')}</p>
+                        <p className="text-[12px] text-white/40">{pick(lang, '퀴즈 데이터가 없습니다', 'No quiz data yet')}</p>
                       )}
                     </div>
                   </div>
@@ -647,7 +666,7 @@ export default function Admin() {
                         </div>
                       </>
                     ) : (
-                      <p className="py-8 text-center text-[12px] text-white/40">{pick(lang, '학습자를 선택해봐요', 'Select a learner')}</p>
+                      <p className="py-8 text-center text-[12px] text-white/40">{pick(lang, '학습자를 선택하세요', 'Select a learner')}</p>
                     )}
                   </aside>
                 </div>
