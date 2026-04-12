@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import {
   AlertTriangle,
   ArrowRight,
@@ -150,6 +150,7 @@ export default function Admin() {
   const CACHE_TTL = 5 * 60 * 1000
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [lastLoadedAt, setLastLoadedAt] = useState(() => Date.now())
   const [rawQuizRows, setRawQuizRows] = useState([])
   const [rows, setRows] = useState(() => {
     try { const c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null'); if (c && Date.now() - c.ts < CACHE_TTL) return c.rows } catch {} return []
@@ -158,7 +159,15 @@ export default function Admin() {
   const loadAdminData = useCallback(async (force = false) => {
     if (!supabaseEnabled || !supabase) { setRows([]); setError(''); return }
     if (!force) {
-      try { const c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null'); if (c && Date.now() - c.ts < CACHE_TTL && c.rows.length > 0) { setRows(c.rows); setRawQuizRows(c.quiz || []); return } } catch {}
+      try {
+        const c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null')
+        if (c && Date.now() - c.ts < CACHE_TTL && c.rows.length > 0) {
+          setRows(c.rows)
+          setRawQuizRows(c.quiz || [])
+          setLastLoadedAt(c.ts || Date.now())
+          return
+        }
+      } catch {}
     }
     setLoading(true); setError('')
     try {
@@ -171,7 +180,9 @@ export default function Admin() {
       if (qErr) { setRows([]); setError(`[${pRes.error ? 'profiles' : prRes.error ? 'user_progress' : 'quiz_results'}] ${qErr.message || JSON.stringify(qErr)}`); return }
       const built = buildLearnerRows(pRes.data || [], prRes.data || [], qRes.data || [])
       setRows(built); setRawQuizRows(qRes.data || [])
-      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ rows: built, quiz: qRes.data || [], ts: Date.now() })) } catch {}
+      const nowTs = Date.now()
+      setLastLoadedAt(nowTs)
+      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ rows: built, quiz: qRes.data || [], ts: nowTs })) } catch {}
     } catch (e) { setRows([]); setError(e?.message || 'unknown') } finally { setLoading(false) }
   }, [supabaseEnabled])
 
@@ -236,6 +247,18 @@ export default function Admin() {
   const weekDistribution = useMemo(() => {
     return weeks.map((w) => ({ weekId: w.id, title: l(w.title, lang), count: rows.filter((r) => r.currentWeek === w.id).length }))
   }, [rows, lang])
+
+  const contentBlueprint = useMemo(() => {
+    return weeks.map((week) => ({
+      weekId: week.id,
+      title: l(week.title, lang),
+      lessons: week.lessons?.length || 0,
+      actions: week.actions?.length || 0,
+      hasHidden: Boolean(week.hiddenTopic),
+      testQuestions: week.weeklyTest?.questionCount || 0,
+      phase: week.id <= 4 ? pick(lang, '기본 트랙', 'Core track') : pick(lang, '심화 트랙', 'Advanced track'),
+    }))
+  }, [lang])
 
   const dashboardInsights = useMemo(() => {
     const now = Date.now()
@@ -335,9 +358,16 @@ export default function Admin() {
       <section className="rounded-2xl bg-[#101114] text-white p-5 md:p-8">
         {/* Header */}
         <header className="flex items-center justify-between gap-4">
-          <h1 className="text-[24px] font-[800] tracking-[-0.05em] text-white/92 md:text-[28px]">
-            {pick(lang, '운영 콘솔', 'Admin Console')}
-          </h1>
+          <div>
+            <h1 className="text-[24px] font-[800] tracking-[-0.05em] text-white/92 md:text-[28px]">
+              {pick(lang, '운영 콘솔', 'Admin Console')}
+            </h1>
+            <div className="mt-2 inline-flex items-center gap-2 text-[11px] text-white/46">
+              <Clock3 size={12} />
+              <span>{pick(lang, '마지막 동기화', 'Last sync')}</span>
+              <span className="text-white/70">{formatDate(lang, lastLoadedAt)}</span>
+            </div>
+          </div>
           <button onClick={() => void loadAdminData(true)} className="inline-flex items-center justify-center rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.06)] text-white/66 hover:bg-[rgba(255,255,255,0.1)] transition-colors px-3 py-2 text-[11px]" disabled={loading}>
             <RefreshCcw size={13} className={loading ? 'animate-spin' : ''} />
           </button>
@@ -423,6 +453,68 @@ export default function Admin() {
             {/* ─── Dashboard Tab ─── */}
             {tab === 'dashboard' && (
               <div className="mt-5 space-y-5">
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 단위를 바로 확인합니다', 'Review the eight-week operating units')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <LayoutDashboard size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                      {contentBlueprint.map((week) => (
+                        <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-[11px] font-semibold text-white/92">W{week.weekId}</p>
+                            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${week.weekId <= 4 ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
+                              {week.phase}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-[13px] font-semibold text-white/86">{week.title}</p>
+                          <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
+                            <div>{pick(lang, `아티클 ${week.lessons}`, `${week.lessons} lessons`)}</div>
+                            <div>{pick(lang, `실습 ${week.actions}`, `${week.actions} labs`)}</div>
+                            <div>{pick(lang, `히든 ${week.hasHidden ? 1 : 0}`, `${week.hasHidden ? 1 : 0} hidden`)}</div>
+                            <div>{pick(lang, `테스트 ${week.testQuestions}문항`, `${week.testQuestions} test Qs`)}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '관리자 바로가기', 'Admin Shortcuts')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '자주 쓰는 운영 화면으로 바로 이동합니다', 'Jump to the most-used views')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <ArrowRight size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      {[
+                        { to: '/dashboard', title: pick(lang, '학습자 홈', 'Learner dashboard'), meta: pick(lang, '실제 학습자 화면 기준으로 현재 공개 상태 확인', 'Check the live learner-facing dashboard') },
+                        { to: '/week/1', title: pick(lang, 'Week 1 콘텐츠', 'Week 1 content'), meta: pick(lang, '기본 트랙 시작점 검수', 'Review the core-track entry point') },
+                        { to: '/week/5', title: pick(lang, 'Week 5 콘텐츠', 'Week 5 content'), meta: pick(lang, '심화 트랙 시작점 검수', 'Review the advanced-track unlock point') },
+                        { to: '/hidden', title: pick(lang, '히든 토픽', 'Hidden topics'), meta: pick(lang, '히든 토픽 공개 구조 점검', 'Review hidden-topic visibility') },
+                        { to: '/certificate', title: pick(lang, '수료 증명', 'Proof of Attendance'), meta: pick(lang, '수료 조건 및 결과 화면 검수', 'Review proof requirements and result state') },
+                      ].map((item) => (
+                        <Link key={item.to} to={item.to} className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]">
+                          <div className="min-w-0">
+                            <p className="text-[13px] font-semibold text-white/92">{item.title}</p>
+                            <p className="mt-1 text-[11px] text-white/46">{item.meta}</p>
+                          </div>
+                          <ArrowRight size={15} className="shrink-0 text-white/38" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
                     <div className="flex items-start justify-between gap-4">
