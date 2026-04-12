@@ -16,11 +16,14 @@ import {
   Users,
 } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
+import { getWeekPlan } from '../data/programBlueprint'
+import { articleQuizzes, weeklyTests } from '../data/quizzes'
 import { supabase } from '../lib/supabase'
 import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
 
 const DAY_MS = 24 * 60 * 60 * 1000
+const ARTICLE_QUIZ_TARGET = 10
 const totalLessons = weeks.reduce((sum, week) => sum + (week.lessons?.length || 0), 0)
 const totalActions = weeks.reduce((sum, week) => sum + (week.actions?.length || 0), 0)
 const totalHiddenTopics = weeks.filter((week) => week.hiddenTopic).length
@@ -248,16 +251,51 @@ export default function Admin() {
     return weeks.map((w) => ({ weekId: w.id, title: l(w.title, lang), count: rows.filter((r) => r.currentWeek === w.id).length }))
   }, [rows, lang])
 
-  const contentBlueprint = useMemo(() => {
-    return weeks.map((week) => ({
-      weekId: week.id,
-      title: l(week.title, lang),
-      lessons: week.lessons?.length || 0,
-      actions: week.actions?.length || 0,
-      hasHidden: Boolean(week.hiddenTopic),
-      testQuestions: week.weeklyTest?.questionCount || 0,
-      phase: week.id <= 4 ? pick(lang, '기본 트랙', 'Core track') : pick(lang, '심화 트랙', 'Advanced track'),
-    }))
+  const contentAudit = useMemo(() => {
+    const weeksAudit = weeks.map((week) => {
+      const weekPlan = getWeekPlan(week.id)
+      const lessonQuizCounts = week.lessons.map((lesson) => articleQuizzes[lesson.id]?.length || 0)
+      const articleQuizReadyCount = lessonQuizCounts.filter((count) => count >= ARTICLE_QUIZ_TARGET).length
+      const weeklyTestQuestionCount = weeklyTests[week.id]?.length || 0
+      const requiredWeeklyQuestions = week.weeklyTest?.questionCount || weekPlan?.weeklyTest?.questionCount || 0
+      const plannedReplacementCount = weekPlan?.articles?.filter((article) => article.status === 'planned-replace').length || 0
+      const hasStructure = (week.lessons?.length || 0) === 3 && (week.actions?.length || 0) >= 1 && Boolean(week.hiddenTopic) && requiredWeeklyQuestions > 0
+      const quizzesReady = articleQuizReadyCount === (week.lessons?.length || 0) && weeklyTestQuestionCount >= requiredWeeklyQuestions
+
+      let status = 'review'
+      if (!hasStructure) status = 'missing'
+      else if (plannedReplacementCount > 0) status = 'planned'
+      else if (quizzesReady) status = 'ready'
+
+      return {
+        weekId: week.id,
+        title: l(week.title, lang),
+        lessons: week.lessons?.length || 0,
+        actions: week.actions?.length || 0,
+        hasHidden: Boolean(week.hiddenTopic),
+        requiredWeeklyQuestions,
+        weeklyTestQuestionCount,
+        articleQuizReadyCount,
+        plannedReplacementCount,
+        phase: week.id <= 4 ? pick(lang, '기본 트랙', 'Core track') : pick(lang, '심화 트랙', 'Advanced track'),
+        status,
+      }
+    })
+
+    const readyWeeks = weeksAudit.filter((week) => week.status === 'ready').length
+    const reviewWeeks = weeksAudit.filter((week) => week.status === 'review').length
+    const plannedWeeks = weeksAudit.filter((week) => week.status === 'planned').length
+    const articleQuizReadyTotal = weeksAudit.reduce((sum, week) => sum + week.articleQuizReadyCount, 0)
+    const weeklyTestsReady = weeksAudit.filter((week) => week.weeklyTestQuestionCount >= week.requiredWeeklyQuestions && week.requiredWeeklyQuestions > 0).length
+
+    return {
+      weeksAudit,
+      readyWeeks,
+      reviewWeeks,
+      plannedWeeks,
+      articleQuizReadyTotal,
+      weeklyTestsReady,
+    }
   }, [lang])
 
   const dashboardInsights = useMemo(() => {
@@ -458,14 +496,43 @@ export default function Admin() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 단위를 바로 확인합니다', 'Review the eight-week operating units')}</h3>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 규격과 검수 상태를 확인합니다', 'Review the eight-week structure and audit status')}</h3>
                       </div>
                       <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
                         <LayoutDashboard size={16} />
                       </span>
                     </div>
                     <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                      {contentBlueprint.map((week) => (
+                      {[
+                        {
+                          label: pick(lang, '준비 완료 주차', 'Ready weeks'),
+                          value: `${contentAudit.readyWeeks}/${weeks.length}`,
+                          tone: 'text-[#4ADE80]',
+                        },
+                        {
+                          label: pick(lang, '검토 필요 주차', 'Weeks in review'),
+                          value: `${contentAudit.reviewWeeks}`,
+                          tone: contentAudit.reviewWeeks > 0 ? 'text-[#FBBF24]' : 'text-white/88',
+                        },
+                        {
+                          label: pick(lang, '아티클 퀴즈', 'Article quizzes'),
+                          value: `${contentAudit.articleQuizReadyTotal}/${totalLessons}`,
+                          tone: 'text-[#A78BFA]',
+                        },
+                        {
+                          label: pick(lang, '주간 테스트', 'Weekly tests'),
+                          value: `${contentAudit.weeklyTestsReady}/${weeks.length}`,
+                          tone: contentAudit.plannedWeeks > 0 ? 'text-[#FCA5A5]' : 'text-white/88',
+                        },
+                      ].map((item) => (
+                        <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                          <p className={`mt-2 text-[22px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                      {contentAudit.weeksAudit.map((week) => (
                         <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-[11px] font-semibold text-white/92">W{week.weekId}</p>
@@ -474,11 +541,39 @@ export default function Admin() {
                             </span>
                           </div>
                           <p className="mt-2 text-[13px] font-semibold text-white/86">{week.title}</p>
+                          <div className="mt-2 flex items-center gap-2">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                                week.status === 'ready'
+                                  ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                                  : week.status === 'planned'
+                                    ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                                    : week.status === 'review'
+                                      ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                      : 'bg-[rgba(255,255,255,0.06)] text-white/56'
+                              }`}
+                            >
+                              {week.status === 'ready'
+                                ? pick(lang, '준비 완료', 'Ready')
+                                : week.status === 'planned'
+                                  ? pick(lang, '교체 예정', 'Planned replace')
+                                  : week.status === 'review'
+                                    ? pick(lang, '검토 필요', 'Needs review')
+                                    : pick(lang, '구성 점검', 'Structure issue')}
+                            </span>
+                          </div>
                           <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
                             <div>{pick(lang, `아티클 ${week.lessons}`, `${week.lessons} lessons`)}</div>
                             <div>{pick(lang, `실습 ${week.actions}`, `${week.actions} labs`)}</div>
                             <div>{pick(lang, `히든 ${week.hasHidden ? 1 : 0}`, `${week.hasHidden ? 1 : 0} hidden`)}</div>
-                            <div>{pick(lang, `테스트 ${week.testQuestions}문항`, `${week.testQuestions} test Qs`)}</div>
+                            <div>{pick(lang, `테스트 ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`, `${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions} test Qs`)}</div>
+                          </div>
+                          <div className="mt-2 text-[11px] text-white/46">
+                            {pick(
+                              lang,
+                              `아티클 퀴즈 ${week.articleQuizReadyCount}/${week.lessons} 완료${week.plannedReplacementCount > 0 ? ` · 교체 예정 ${week.plannedReplacementCount}` : ''}`,
+                              `Article quizzes ${week.articleQuizReadyCount}/${week.lessons}${week.plannedReplacementCount > 0 ? ` · ${week.plannedReplacementCount} planned replace` : ''}`
+                            )}
                           </div>
                         </div>
                       ))}
