@@ -1,5 +1,5 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
-import { ArrowRight, Gauge, KeyRound, ShieldCheck, UserCheck } from 'lucide-react'
+import { ArrowRight, BarChart3, Gauge, KeyRound, ShieldCheck, Trophy, UserCheck } from 'lucide-react'
 import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
 import AdminGateFrame from '../components/admin/AdminGateFrame'
@@ -47,16 +47,16 @@ export default function AdminEntry() {
   const steps = [
     {
       icon: UserCheck,
-      title: pick(lang, '승인된 계정으로 로그인', 'Sign in with an approved account'),
+      title: pick(lang, '승인된 계정 로그인', 'Approved account sign-in'),
       desc: pick(
         lang,
-        '일반 사용자 경로와 분리된 운영 경로입니다. 승인된 관리자 계정으로 먼저 로그인해야 해요.',
+        '공개 학습자 동선과 분리된 운영 경로입니다. 승인된 관리자 계정으로 먼저 로그인해야 합니다.',
         'This route is separated from the public learner flow. Start by signing in with an approved admin account.'
       ),
     },
     {
       icon: KeyRound,
-      title: pick(lang, '운영 비밀번호 확인', 'Verify the operations password'),
+      title: pick(lang, '운영 비밀번호 검증', 'Operations password verification'),
       desc: pick(
         lang,
         '비밀번호는 서버에서 확인하고, 성공하면 이 브라우저 세션에서만 관리자 잠금이 해제됩니다.',
@@ -65,12 +65,30 @@ export default function AdminEntry() {
     },
     {
       icon: Gauge,
-      title: pick(lang, '운영 콘솔에서 바로 판단', 'Read the console at a glance'),
+      title: pick(lang, '운영 콘솔 진입', 'Open the operations console'),
       desc: pick(
         lang,
-        '콘솔 첫 화면에서 KPI, 퍼널, 병목 주차, 위험군 큐를 바로 확인할 수 있게 구성했습니다.',
+        '콘솔 첫 화면에서 KPI, 전환, 병목 주차, 위험군 분포를 우선 확인하도록 구성합니다.',
         'The console is structured to show KPI, funnel, bottlenecks, and the at-risk queue immediately.'
       ),
+    },
+  ]
+
+  const consoleCards = [
+    {
+      icon: Gauge,
+      title: pick(lang, '운영 대시보드', 'Operations dashboard'),
+      desc: pick(lang, '활성, 정체, 수료, 콘텐츠 검수 상태를 먼저 확인합니다.', 'Review active, stalled, completed, and content audit status first.'),
+    },
+    {
+      icon: Trophy,
+      title: pick(lang, '학습자 랭킹', 'Learner leaderboard'),
+      desc: pick(lang, '주차, 진행률, 퀴즈/테스트 통과 현황을 비교합니다.', 'Compare week, progress, and quiz/test completion across learners.'),
+    },
+    {
+      icon: BarChart3,
+      title: pick(lang, '학습 분석', 'Learning analytics'),
+      desc: pick(lang, '주차 분포와 난도 데이터를 통해 개입 지점을 정합니다.', 'Use week distribution and difficulty data to choose intervention points.'),
     },
   ]
 
@@ -144,32 +162,54 @@ export default function AdminEntry() {
           </div>
         </div>
 
-        {!user ? (
-          <Link
-            to="/auth"
-            state={{ from: ADMIN_ACCESS_PATH }}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5741d8] px-6 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#7132f5]"
-          >
-            <span>{pick(lang, '승인 계정으로 로그인', 'Sign in')}</span>
-            <ArrowRight size={16} />
-          </Link>
-        ) : canAccessAdminGate ? (
-          <Link
-            to={ADMIN_ACCESS_PATH}
-            state={{ from: destination }}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5741d8] px-6 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#7132f5]"
-          >
-            <span>{pick(lang, '잠금 해제로 이동', 'Continue to unlock')}</span>
-            <ArrowRight size={16} />
-          </Link>
-        ) : (
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-full border border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] px-6 py-3 text-[13px] font-semibold text-[#fca5a5]"
-          >
-            {pick(lang, '승인된 계정이 필요해요', 'Approved account required')}
-          </button>
-        )}
+        <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-5 py-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#686b82]">
+            {pick(lang, '콘솔 구성', 'Console modules')}
+          </p>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            {consoleCards.map((card) => {
+              const Icon = card.icon
+              return (
+                <div key={card.title} className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]">
+                    <Icon size={18} />
+                  </div>
+                  <h3 className="mt-4 text-[14px] font-semibold text-[#f3f4f6]">{card.title}</h3>
+                  <p className="mt-2 text-[12px] leading-relaxed text-[#a0a3b5]">{card.desc}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {!user ? (
+            <Link
+              to="/auth"
+              state={{ from: ADMIN_ACCESS_PATH }}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5741d8] px-6 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#7132f5]"
+            >
+              <span>{pick(lang, '승인 계정으로 로그인', 'Sign in')}</span>
+              <ArrowRight size={16} />
+            </Link>
+          ) : canAccessAdminGate ? (
+            <Link
+              to={ADMIN_ACCESS_PATH}
+              state={{ from: destination }}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5741d8] px-6 py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#7132f5]"
+            >
+              <span>{pick(lang, '잠금 해제로 이동', 'Continue to unlock')}</span>
+              <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-full border border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] px-6 py-3 text-[13px] font-semibold text-[#fca5a5]"
+            >
+              {pick(lang, '승인 계정 필요', 'Approved account required')}
+            </button>
+          )}
+        </div>
       </div>
     </AdminGateFrame>
   )

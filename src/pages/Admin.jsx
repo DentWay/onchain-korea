@@ -35,6 +35,27 @@ function maxDate(...v) { return v.reduce((a, b) => (parseDate(b) > parseDate(a) 
 function ratio(part, total) { return total > 0 ? Math.round((part / total) * 100) : 0 }
 function clamp(value) { return Math.max(0, Math.min(100, value)) }
 function resolveAdminTab(value) { return ADMIN_TAB_IDS.has(value) ? value : 'dashboard' }
+function isLearnerStarted(row) { return row.progressPct > 0 || row.quizAttempts > 0 || row.completedActions > 0 }
+function isCertificateEligible(row) {
+  return row.completedLessons >= Math.ceil(totalLessons * 0.8) &&
+    row.completedActions >= 3 &&
+    row.readHiddenTopics >= 2
+}
+function isWeekMember(row, week) {
+  const lessonIds = week.lessons.map((lesson) => lesson.id)
+  const actionIds = week.actions.map((action) => action.id)
+  return row.currentWeek >= week.id ||
+    lessonIds.some((id) => row.completedLessonIds.includes(id)) ||
+    actionIds.some((id) => row.completedActionIds.includes(id)) ||
+    row.readHiddenTopicIds.includes(week.id) ||
+    row.weeklyPassedIds.includes(String(week.id))
+}
+function metricToneClass(value) {
+  if (value >= 80) return 'border-[rgba(74,222,128,0.20)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]'
+  if (value >= 55) return 'border-[rgba(251,191,36,0.20)] bg-[rgba(251,191,36,0.10)] text-[#FBBF24]'
+  if (value > 0) return 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
+  return 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/46'
+}
 
 function formatDate(lang, value) {
   if (!value) return pick(lang, '-', '-')
@@ -53,7 +74,7 @@ function resolveQuizLabel(lang, quizType, quizId) {
 function getLearnerStage(row) {
   if (row.isAdmin) return 'admin'
   if (row.weeklyPassedCount >= weeks.length || row.articlePassedCount >= totalLessons) return 'completed'
-  if (row.progressPct === 0 && row.quizAttempts === 0 && row.completedActions === 0) return 'not-started'
+  if (!isLearnerStarted(row)) return 'not-started'
   if (row.lastActivityTs > 0 && Date.now() - row.lastActivityTs > 7 * DAY_MS) return 'stalled'
   return 'active'
 }
@@ -298,9 +319,123 @@ export default function Admin() {
     }
   }, [lang])
 
+  const inactivityDistribution = useMemo(() => {
+    const now = Date.now()
+    const buckets = [
+      { key: 'active', label: pick(lang, '0-2일', '0-2d'), count: 0, color: '#4ADE80' },
+      { key: 'monitor', label: pick(lang, '3-6일', '3-6d'), count: 0, color: '#A78BFA' },
+      { key: 'risk', label: pick(lang, '7-13일', '7-13d'), count: 0, color: '#FBBF24' },
+      { key: 'cold', label: pick(lang, '14일+', '14d+'), count: 0, color: '#F87171' },
+      { key: 'none', label: pick(lang, '미시작', 'Not started'), count: 0, color: '#6B7280' },
+    ]
+
+    for (const row of rows) {
+      if (!row.lastActivityTs || !isLearnerStarted(row)) {
+        buckets[4].count += 1
+        continue
+      }
+      const days = (now - row.lastActivityTs) / DAY_MS
+      if (days < 3) buckets[0].count += 1
+      else if (days < 7) buckets[1].count += 1
+      else if (days < 14) buckets[2].count += 1
+      else buckets[3].count += 1
+    }
+
+    return buckets.map((bucket) => ({
+      ...bucket,
+      pct: ratio(bucket.count, rows.length),
+    }))
+  }, [rows, lang])
+
+  const certificateReadiness = useMemo(() => {
+    const lessonRequirement = Math.ceil(totalLessons * 0.8)
+    const buckets = [
+      { key: 'eligible', label: pick(lang, '수료 가능', 'Eligible'), count: 0, color: '#4ADE80' },
+      { key: 'almost', label: pick(lang, '거의 도달', 'Almost there'), count: 0, color: '#A78BFA' },
+      { key: 'building', label: pick(lang, '진행 중', 'Building'), count: 0, color: '#FBBF24' },
+      { key: 'early', label: pick(lang, '초기 단계', 'Early'), count: 0, color: '#6B7280' },
+    ]
+
+    for (const row of rows) {
+      let met = 0
+      if (row.completedLessons >= lessonRequirement) met += 1
+      if (row.completedActions >= 3) met += 1
+      if (row.readHiddenTopics >= 2) met += 1
+
+      if (met === 3) buckets[0].count += 1
+      else if (met === 2) buckets[1].count += 1
+      else if (met === 1) buckets[2].count += 1
+      else buckets[3].count += 1
+    }
+
+    return {
+      lessonRequirement,
+      buckets: buckets.map((bucket) => ({
+        ...bucket,
+        pct: ratio(bucket.count, rows.length),
+      })),
+    }
+  }, [rows, lang])
+
+  const weekPerformanceGrid = useMemo(() => {
+    return weeks.map((week) => {
+      const lessonIds = week.lessons.map((lesson) => lesson.id)
+      const actionIds = week.actions.map((action) => action.id)
+      const memberRows = rows.filter((row) => isWeekMember(row, week))
+
+      const base = memberRows.length
+      const articleRate = base > 0
+        ? Math.round((memberRows.reduce((sum, row) => sum + (lessonIds.filter((id) => row.completedLessonIds.includes(id)).length / lessonIds.length), 0) / base) * 100)
+        : 0
+      const actionRate = base > 0
+        ? Math.round((memberRows.filter((row) => actionIds.some((id) => row.completedActionIds.includes(id))).length / base) * 100)
+        : 0
+      const weeklyRate = base > 0
+        ? Math.round((memberRows.filter((row) => row.weeklyPassedIds.includes(String(week.id))).length / base) * 100)
+        : 0
+
+      return {
+        weekId: week.id,
+        title: l(week.title, lang),
+        learners: base,
+        articleRate,
+        actionRate,
+        weeklyRate,
+      }
+    })
+  }, [rows, lang])
+
+  const unlockConversion = useMemo(() => {
+    return weeks.map((week) => {
+      const lessonIds = week.lessons.map((lesson) => lesson.id)
+      const actionIds = week.actions.map((action) => action.id)
+      const enteredRows = rows.filter((row) => isWeekMember(row, week))
+
+      const entered = enteredRows.length
+      const articlePassed = enteredRows.filter((row) => lessonIds.every((id) => row.completedLessonIds.includes(id))).length
+      const actionDone = enteredRows.filter((row) => actionIds.some((id) => row.completedActionIds.includes(id))).length
+      const hiddenRead = enteredRows.filter((row) => row.readHiddenTopicIds.includes(week.id)).length
+      const weeklyPassed = enteredRows.filter((row) => row.weeklyPassedIds.includes(String(week.id))).length
+      const nextUnlocked = week.id < weeks.length
+        ? enteredRows.filter((row) => row.currentWeek > week.id).length
+        : enteredRows.filter((row) => isCertificateEligible(row)).length
+
+      return {
+        weekId: week.id,
+        title: l(week.title, lang),
+        entered,
+        articlePassed,
+        actionDone,
+        hiddenRead,
+        weeklyPassed,
+        nextUnlocked,
+      }
+    })
+  }, [rows, lang])
+
   const dashboardInsights = useMemo(() => {
     const now = Date.now()
-    const startedRows = rows.filter((r) => r.progressPct > 0 || r.quizAttempts > 0 || r.completedActions > 0)
+    const startedRows = rows.filter((r) => isLearnerStarted(r))
     const activeRows = rows.filter((r) => r.lastActivityTs > 0 && now - r.lastActivityTs <= 7 * DAY_MS)
     const completedRows = rows.filter((r) => getLearnerStage(r) === 'completed')
     const stalledRows = rows.filter((r) => getLearnerStage(r) === 'stalled')
@@ -610,12 +745,200 @@ export default function Admin() {
                   </div>
                 </div>
 
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '활동 신선도', 'Activity Freshness')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '최근 활동 기준으로 정체 구간을 분류합니다', 'Segment learners by last activity recency')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <Clock3 size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                      <div className="flex h-3 w-full">
+                        {inactivityDistribution.map((bucket) => (
+                          <div
+                            key={bucket.key}
+                            className="h-full transition-all"
+                            style={{
+                              width: `${bucket.pct}%`,
+                              background: bucket.color,
+                              opacity: bucket.count > 0 ? 1 : 0.18,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                      {inactivityDistribution.map((bucket) => (
+                        <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
+                            <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                          </div>
+                          <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
+                          <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '수료 준비도', 'Certificate Readiness')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '수료 조건 충족 단계별 분포입니다', 'Distribution by certificate readiness')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <GraduationCap size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                      <div className="flex h-3 w-full">
+                        {certificateReadiness.buckets.map((bucket) => (
+                          <div
+                            key={bucket.key}
+                            className="h-full transition-all"
+                            style={{
+                              width: `${bucket.pct}%`,
+                              background: bucket.color,
+                              opacity: bucket.count > 0 ? 1 : 0.18,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                      {certificateReadiness.buckets.map((bucket) => (
+                        <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
+                            <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                          </div>
+                          <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
+                          <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-3">
+                      {[
+                        { label: pick(lang, '레슨 기준', 'Lesson target'), value: `${certificateReadiness.lessonRequirement}/${totalLessons}` },
+                        { label: pick(lang, '액션 기준', 'Action target'), value: '3' },
+                        { label: pick(lang, '히든 기준', 'Hidden target'), value: '2' },
+                      ].map((item) => (
+                        <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-3">
+                          <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                          <p className="mt-2 text-[18px] font-[800] tabular-nums text-white/88">{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 unlock 전환', 'Weekly Unlock Conversion')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '진입부터 다음 단계까지 어디서 줄어드는지 봅니다', 'See where learners drop between entry and next unlock')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <Target size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-2">
+                      {unlockConversion.map((week) => {
+                        const nextLabel = week.weekId === weeks.length ? pick(lang, '수료', 'Certified') : pick(lang, '다음 단계', 'Next unlock')
+                        const steps = [
+                          { label: pick(lang, '진입', 'Entry'), count: week.entered },
+                          { label: pick(lang, '아티클', 'Articles'), count: week.articlePassed },
+                          { label: pick(lang, '실습', 'Action'), count: week.actionDone },
+                          { label: pick(lang, '히든', 'Hidden'), count: week.hiddenRead },
+                          { label: pick(lang, '테스트', 'Test'), count: week.weeklyPassed },
+                          { label: nextLabel, count: week.nextUnlocked },
+                        ]
+                        return (
+                          <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
+                                <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.nextUnlocked}</p>
+                                <p className="mt-1 text-[10px] text-white/40">{pick(lang, '최종 도달', 'Reached end')}</p>
+                              </div>
+                            </div>
+                            <div className="mt-4 grid grid-cols-3 gap-2">
+                              {steps.map((step) => (
+                                <div key={`${week.weekId}-${step.label}`} className="rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] px-3 py-2">
+                                  <p className="text-[9px] uppercase tracking-[0.14em] text-white/38">{step.label}</p>
+                                  <p className="mt-1 text-[16px] font-[800] tabular-nums text-white/88">{step.count}</p>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="mt-4">
+                              <div className="mb-2 flex items-center justify-between text-[11px] text-white/44">
+                                <span>{pick(lang, '다음 단계 전환률', 'Next-step conversion')}</span>
+                                <span className="tabular-nums text-white/72">{ratio(week.nextUnlocked, week.entered)}%</span>
+                              </div>
+                              <Meter value={ratio(week.nextUnlocked, week.entered)} color="#5741d8" height={7} />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 실행 강도', 'Week Performance Grid')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '아티클, 액션, 테스트 강도를 함께 봅니다', 'Review article, action, and test intensity together')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <BarChart3 size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-4 grid gap-3">
+                      {weekPerformanceGrid.map((week) => (
+                        <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
+                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.learners}</p>
+                              <p className="mt-1 text-[10px] text-white/40">{pick(lang, '진입 인원', 'Entered')}</p>
+                            </div>
+                          </div>
+                          <div className="mt-4 grid grid-cols-3 gap-2">
+                            {[
+                              { label: pick(lang, '아티클', 'Articles'), value: week.articleRate },
+                              { label: pick(lang, '실습', 'Action'), value: week.actionRate },
+                              { label: pick(lang, '테스트', 'Test'), value: week.weeklyRate },
+                            ].map((metric) => (
+                              <div key={`${week.weekId}-${metric.label}`} className={`rounded-lg border px-3 py-3 ${metricToneClass(metric.value)}`}>
+                                <p className="text-[9px] uppercase tracking-[0.14em] opacity-80">{metric.label}</p>
+                                <p className="mt-2 text-[20px] font-[800] tabular-nums">{metric.value}%</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
-                        <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '운영 흐름을 한눈에 확인합니다', 'Review the operating flow at a glance')}</h3>
+                        <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '등록부터 수료까지 전환을 확인합니다', 'Track conversion from registration to completion')}</h3>
                       </div>
                       <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
                         <Target size={16} />

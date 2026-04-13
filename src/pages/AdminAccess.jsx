@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowRight, KeyRound, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react'
+import { ArrowRight, BarChart3, Gauge, KeyRound, LockKeyhole, ShieldCheck, Trophy, UserCheck } from 'lucide-react'
 import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
 import AdminGateFrame from '../components/admin/AdminGateFrame'
@@ -112,16 +112,34 @@ export default function AdminAccess() {
     },
   ]
 
+  const consoleCards = [
+    {
+      icon: Gauge,
+      title: pick(lang, '운영 대시보드', 'Operations dashboard'),
+      desc: pick(lang, '활성, 정체, 수료, 콘텐츠 검수 상태를 먼저 봅니다.', 'See active, stalled, completed, and content audit status first.'),
+    },
+    {
+      icon: Trophy,
+      title: pick(lang, '학습자 랭킹', 'Learner leaderboard'),
+      desc: pick(lang, '주차, 진행률, 테스트 통과 상태를 빠르게 비교합니다.', 'Compare week, progress, and test completion quickly.'),
+    },
+    {
+      icon: BarChart3,
+      title: pick(lang, '학습 분석', 'Learning analytics'),
+      desc: pick(lang, '주차별 전환과 난도 경고를 보고 개입 우선순위를 정합니다.', 'Use conversion and difficulty alerts to set intervention priorities.'),
+    },
+  ]
+
   return (
     <AdminGateFrame
       backTo={user ? '/dashboard' : '/'}
       backLabel={pick(lang, '홈으로', 'Back')}
       topLabel="Admin Access"
       eyebrow={pick(lang, '운영 잠금 해제', 'Operations Unlock')}
-      title={pick(lang, '관리자 잠금을 해제해요', 'Unlock admin access')}
+      title={pick(lang, '관리자 세션 잠금 해제', 'Unlock the admin session')}
       description={pick(
         lang,
-        '승인된 관리자 계정으로 로그인한 뒤 운영 비밀번호를 확인하면 관리자 콘솔이 열립니다. 일반 사용자 내비게이션에는 이 단계가 노출되지 않습니다.',
+        '승인된 관리자 계정 로그인과 운영 비밀번호 검증이 모두 끝나면 관리자 콘솔이 열립니다. 이 단계는 공개 학습자 내비게이션과 분리되어 유지됩니다.',
         'After signing in with an approved admin account, verify the operations password to open the console. This step is never exposed in the public learner navigation.'
       )}
       chips={chips}
@@ -170,12 +188,12 @@ export default function AdminAccess() {
           <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-5">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-[#c4b5fd]" />
-              <p className="text-[12px] font-semibold text-[#f3f4f6]">{pick(lang, '로그인이 먼저 필요해요', 'You need to sign in first')}</p>
+              <p className="text-[12px] font-semibold text-[#f3f4f6]">{pick(lang, '로그인 필요', 'Sign-in required')}</p>
             </div>
             <p className="mt-3 text-[14px] leading-relaxed text-[#a0a3b5]">
               {pick(
                 lang,
-                '관리자 잠금 해제는 승인된 관리자 계정 로그인 뒤에만 진행할 수 있습니다.',
+                '관리자 잠금 해제는 승인된 관리자 계정 로그인 이후에만 진행할 수 있습니다.',
                 'Admin unlock is available only after you sign in with an approved admin account.'
               )}
             </p>
@@ -192,11 +210,11 @@ export default function AdminAccess() {
       ) : !canAccessAdminGate ? (
         <div className="space-y-4">
           <div className="rounded-[24px] border border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] px-5 py-5">
-            <p className="text-[12px] font-semibold text-[#fecaca]">{pick(lang, '이 계정은 승인되지 않았어요', 'This account is not approved')}</p>
+            <p className="text-[12px] font-semibold text-[#fecaca]">{pick(lang, '이 계정은 승인되지 않았습니다', 'This account is not approved')}</p>
             <p className="mt-3 text-[14px] leading-relaxed text-[#fca5a5]">
               {pick(
                 lang,
-                `현재 계정(${currentEmail || 'unknown'})은 관리자 접근 대상이 아닙니다. 승인된 계정으로 다시 로그인해야 해요.`,
+                `현재 계정(${currentEmail || 'unknown'})은 관리자 접근 대상이 아닙니다. 승인된 계정으로 다시 로그인해야 합니다.`,
                 `The current account (${currentEmail || 'unknown'}) is not approved for admin access. Sign in again with an approved account.`
               )}
             </p>
@@ -211,6 +229,28 @@ export default function AdminAccess() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-3 md:grid-cols-3">
+            {[
+              {
+                label: pick(lang, '현재 계정', 'Current account'),
+                value: currentEmail || '-',
+              },
+              {
+                label: pick(lang, '도착 경로', 'Destination'),
+                value: destination,
+              },
+              {
+                label: pick(lang, '검증 방식', 'Verification'),
+                value: pick(lang, '서버 검증 + 세션 쿠키', 'Server check + session cookie'),
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-[#686b82]">{item.label}</p>
+                <p className="mt-2 break-all text-[13px] font-semibold text-[#f3f4f6]">{item.value}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-5">
             <label htmlFor="admin-password" className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#686b82]">
               {pick(lang, '관리자 비밀번호', 'Admin password')}
@@ -227,10 +267,30 @@ export default function AdminAccess() {
             <p className="mt-3 text-[12px] leading-relaxed text-[#a0a3b5]">
               {pick(
                 lang,
-                '비밀번호는 서버에서 검증합니다. 성공하면 현재 브라우저 세션에서만 관리자 콘솔이 열립니다.',
+                '비밀번호는 서버에서 검증합니다. 검증이 끝나면 현재 브라우저 세션에 한해 관리자 콘솔 접근이 열립니다.',
                 'The password is verified on the server. A successful check opens admin mode only in the current browser session.'
               )}
             </p>
+          </div>
+
+          <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-5 py-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#686b82]">
+              {pick(lang, '잠금 해제 후 열리는 화면', 'What opens after unlock')}
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-3">
+              {consoleCards.map((card) => {
+                const Icon = card.icon
+                return (
+                  <div key={card.title} className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]">
+                      <Icon size={18} />
+                    </div>
+                    <h3 className="mt-4 text-[14px] font-semibold text-[#f3f4f6]">{card.title}</h3>
+                    <p className="mt-2 text-[12px] leading-relaxed text-[#a0a3b5]">{card.desc}</p>
+                  </div>
+                )
+              })}
+            </div>
           </div>
 
           {error && (
