@@ -36,10 +36,15 @@ function ratio(part, total) { return total > 0 ? Math.round((part / total) * 100
 function clamp(value) { return Math.max(0, Math.min(100, value)) }
 function resolveAdminTab(value) { return ADMIN_TAB_IDS.has(value) ? value : 'dashboard' }
 function isLearnerStarted(row) { return row.progressPct > 0 || row.quizAttempts > 0 || row.completedActions > 0 }
+function countCertificateRequirements(row) {
+  let met = 0
+  if (row.completedLessons >= Math.ceil(totalLessons * 0.8)) met += 1
+  if (row.completedActions >= 3) met += 1
+  if (row.readHiddenTopics >= 2) met += 1
+  return met
+}
 function isCertificateEligible(row) {
-  return row.completedLessons >= Math.ceil(totalLessons * 0.8) &&
-    row.completedActions >= 3 &&
-    row.readHiddenTopics >= 2
+  return countCertificateRequirements(row) === 3
 }
 function isWeekMember(row, week) {
   const lessonIds = week.lessons.map((lesson) => lesson.id)
@@ -55,6 +60,20 @@ function metricToneClass(value) {
   if (value >= 55) return 'border-[rgba(251,191,36,0.20)] bg-[rgba(251,191,36,0.10)] text-[#FBBF24]'
   if (value > 0) return 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
   return 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/46'
+}
+function matchesOpsSegment(row, segment) {
+  switch (segment) {
+    case 'urgent':
+      return getLearnerStage(row) === 'stalled' || (row.avgScore > 0 && row.avgScore < 60)
+    case 'quiz-recovery':
+      return row.quizAttempts >= 3 && (row.articlePassedCount === 0 || row.avgScore < 70)
+    case 'inactive':
+      return getLearnerStage(row) === 'not-started'
+    case 'near-finish':
+      return !isCertificateEligible(row) && countCertificateRequirements(row) === 2
+    default:
+      return true
+  }
 }
 
 function formatDate(lang, value) {
@@ -167,6 +186,7 @@ export default function Admin() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [weekFilter, setWeekFilter] = useState('all')
+  const [focusSegment, setFocusSegment] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
   const tab = resolveAdminTab(searchParams.get('view'))
 
@@ -228,6 +248,14 @@ export default function Admin() {
     setSearchParams(nextParams, { replace: true })
   }, [searchParams, setSearchParams])
 
+  const openLearnerRow = useCallback((learnerId) => {
+    setSearch('')
+    setStatusFilter('all')
+    setWeekFilter('all')
+    setFocusSegment('all')
+    setSelectedId(learnerId)
+  }, [])
+
   const statusOptions = useMemo(() => [
     { value: 'all', label: pick(lang, '전체', 'All') },
     { value: 'active', label: pick(lang, '진행', 'Active') },
@@ -250,6 +278,10 @@ export default function Admin() {
       return true
     }).sort((a, b) => b.lastActivityTs - a.lastActivityTs || b.progressPct - a.progressPct)
   }, [rows, search, statusFilter, weekFilter])
+
+  const visibleRows = useMemo(() => {
+    return filtered.filter((row) => !row.isAdmin && matchesOpsSegment(row, focusSegment))
+  }, [filtered, focusSegment])
 
   // Analytics: quiz difficulty
   const quizAnalytics = useMemo(() => {
@@ -377,6 +409,45 @@ export default function Admin() {
     }
   }, [rows, lang])
 
+  const interventionGroups = useMemo(() => {
+    const groups = [
+      {
+        key: 'urgent',
+        title: pick(lang, '즉시 개입', 'Immediate intervention'),
+        desc: pick(lang, '정체 상태이거나 평균 점수가 매우 낮은 학습자', 'Stalled learners or learners with very low average scores'),
+        tone: 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]',
+      },
+      {
+        key: 'quiz-recovery',
+        title: pick(lang, '퀴즈 회복군', 'Quiz recovery'),
+        desc: pick(lang, '반복 응시 중인데 아티클 통과가 밀리는 학습자', 'Learners retrying quizzes without clearing article gates'),
+        tone: 'border-[rgba(251,191,36,0.20)] bg-[rgba(251,191,36,0.10)] text-[#FBBF24]',
+      },
+      {
+        key: 'inactive',
+        title: pick(lang, '미시작 대기군', 'Inactive starters'),
+        desc: pick(lang, '등록은 됐지만 아직 시작하지 않은 계정', 'Accounts that registered but never actually started'),
+        tone: 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/72',
+      },
+      {
+        key: 'near-finish',
+        title: pick(lang, '수료 직전군', 'Near-finish learners'),
+        desc: pick(lang, '수료 조건 3개 중 2개를 충족한 학습자', 'Learners who already meet 2 of the 3 completion requirements'),
+        tone: 'border-[rgba(74,222,128,0.20)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]',
+      },
+    ]
+
+    return groups.map((group) => {
+      const matched = rows.filter((row) => !row.isAdmin && matchesOpsSegment(row, group.key))
+      return {
+        ...group,
+        count: matched.length,
+        avgWeek: matched.length > 0 ? Math.round(matched.reduce((sum, row) => sum + row.currentWeek, 0) / matched.length) : 0,
+        samples: matched.slice(0, 3).map((row) => row.displayName),
+      }
+    })
+  }, [rows, lang])
+
   const weekPerformanceGrid = useMemo(() => {
     return weeks.map((week) => {
       const lessonIds = week.lessons.map((lesson) => lesson.id)
@@ -432,6 +503,59 @@ export default function Admin() {
       }
     })
   }, [rows, lang])
+
+  const conversionDrilldown = useMemo(() => {
+    return unlockConversion
+      .map((week) => {
+        const nextLabel = week.weekId === weeks.length ? pick(lang, '수료', 'Certified') : pick(lang, '다음 단계', 'Next unlock')
+        const steps = [
+          { label: pick(lang, '진입', 'Entry'), count: week.entered },
+          { label: pick(lang, '아티클', 'Articles'), count: week.articlePassed },
+          { label: pick(lang, '실습', 'Action'), count: week.actionDone },
+          { label: pick(lang, '히든', 'Hidden'), count: week.hiddenRead },
+          { label: pick(lang, '테스트', 'Test'), count: week.weeklyPassed },
+          { label: nextLabel, count: week.nextUnlocked },
+        ]
+
+        let largestDrop = { from: steps[0].label, to: steps[1].label, count: 0, pct: 0 }
+        for (let index = 0; index < steps.length - 1; index += 1) {
+          const current = steps[index]
+          const next = steps[index + 1]
+          const dropCount = Math.max(0, current.count - next.count)
+          const dropPct = ratio(dropCount, current.count)
+          if (dropPct > largestDrop.pct || (dropPct === largestDrop.pct && dropCount > largestDrop.count)) {
+            largestDrop = { from: current.label, to: next.label, count: dropCount, pct: dropPct }
+          }
+        }
+
+        return {
+          ...week,
+          largestDrop,
+          endRate: ratio(week.nextUnlocked, week.entered),
+        }
+      })
+      .sort((a, b) => b.largestDrop.pct - a.largestDrop.pct || b.largestDrop.count - a.largestDrop.count)
+  }, [unlockConversion, lang])
+
+  const contentAuditQueue = useMemo(() => {
+    const severityRank = { missing: 3, review: 2, planned: 1, ready: 0 }
+    return contentAudit.weeksAudit
+      .filter((week) => week.status !== 'ready')
+      .map((week) => {
+        const issues = []
+        if (week.status === 'missing') issues.push(pick(lang, '운영 기본 구조 점검 필요', 'Core structure needs work'))
+        if (week.articleQuizReadyCount < week.lessons) issues.push(pick(lang, `아티클 퀴즈 ${week.articleQuizReadyCount}/${week.lessons}`, `Article quiz ${week.articleQuizReadyCount}/${week.lessons}`))
+        if (week.weeklyTestQuestionCount < week.requiredWeeklyQuestions) issues.push(pick(lang, `주간 테스트 ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`, `Weekly test ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`))
+        if (week.plannedReplacementCount > 0) issues.push(pick(lang, `교체 예정 ${week.plannedReplacementCount}`, `${week.plannedReplacementCount} planned replacements`))
+
+        return {
+          ...week,
+          issues,
+          severity: severityRank[week.status] || 0,
+        }
+      })
+      .sort((a, b) => b.severity - a.severity || b.weekId - a.weekId)
+  }, [contentAudit, lang])
 
   const dashboardInsights = useMemo(() => {
     const now = Date.now()
@@ -506,17 +630,17 @@ export default function Admin() {
     }
   }, [rows, quizAnalytics, weekDistribution, lang])
 
-  const selectedRow = filtered.find((r) => r.id === selectedId) || null
+  const selectedRow = visibleRows.find((r) => r.id === selectedId) || null
 
   useEffect(() => {
-    if (filtered.length === 0) {
+    if (visibleRows.length === 0) {
       if (selectedId !== null) setSelectedId(null)
       return
     }
-    if (!selectedId || !filtered.some((row) => row.id === selectedId)) {
-      setSelectedId(filtered[0].id)
+    if (!selectedId || !visibleRows.some((row) => row.id === selectedId)) {
+      setSelectedId(visibleRows[0].id)
     }
-  }, [filtered, selectedId])
+  }, [visibleRows, selectedId])
 
   if (supabaseEnabled && !isAdmin) return <Navigate to="/dashboard" replace />
 
@@ -745,6 +869,101 @@ export default function Admin() {
                   </div>
                 </div>
 
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 개입 보드', 'Intervention board')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 대응 그룹을 자동으로 분류합니다', 'Auto-group the learners that need different responses')}</h3>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setFocusSegment('all')}
+                        className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                          focusSegment === 'all'
+                            ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
+                            : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/58 hover:text-white/82'
+                        }`}
+                      >
+                        {pick(lang, '전체 보기', 'View all')}
+                      </button>
+                    </div>
+                    <div className="mt-4 grid gap-3 md:grid-cols-2">
+                      {interventionGroups.map((group) => (
+                        <button
+                          key={group.key}
+                          type="button"
+                          onClick={() => setFocusSegment(group.key)}
+                          className={`rounded-2xl border px-4 py-4 text-left transition-colors ${group.tone} ${focusSegment === group.key ? 'ring-1 ring-white/12' : 'hover:bg-[rgba(255,255,255,0.05)]'}`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-[14px] font-semibold">{group.title}</p>
+                              <p className="mt-2 text-[12px] leading-relaxed opacity-80">{group.desc}</p>
+                            </div>
+                            <p className="text-[24px] font-[800] tabular-nums">{group.count}</p>
+                          </div>
+                          <div className="mt-4 flex items-center justify-between gap-3 text-[11px] opacity-80">
+                            <span>{pick(lang, `평균 W${group.avgWeek || '-'}`, group.avgWeek ? `Avg W${group.avgWeek}` : 'Avg -')}</span>
+                            <span className="truncate">{group.samples.length > 0 ? group.samples.join(' · ') : pick(lang, '대상 없음', 'No learners')}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 검수 우선순위', 'Content audit queue')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '바로 손봐야 하는 주차를 모읍니다', 'Pull the weeks that need direct content work')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <LayoutDashboard size={16} />
+                      </span>
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {contentAuditQueue.slice(0, 6).map((week) => (
+                        <Link
+                          key={week.weekId}
+                          to={`/week/${week.weekId}`}
+                          className="block rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="text-[12px] font-semibold text-white/68">W{week.weekId}</p>
+                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                            </div>
+                            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                              week.status === 'missing'
+                                ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                                : week.status === 'review'
+                                  ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                  : 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]'
+                            }`}>
+                              {week.status === 'missing'
+                                ? pick(lang, '구성 점검', 'Structure')
+                                : week.status === 'review'
+                                  ? pick(lang, '검토 필요', 'Review')
+                                  : pick(lang, '교체 예정', 'Planned')}
+                            </span>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {week.issues.map((issue) => (
+                              <span key={`${week.weekId}-${issue}`} className="rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-2.5 py-1 text-[10px] text-white/64">
+                                {issue}
+                              </span>
+                            ))}
+                          </div>
+                        </Link>
+                      ))}
+                      {contentAuditQueue.length === 0 && (
+                        <p className="text-[12px] text-white/40">{pick(lang, '검수 큐가 비어 있습니다', 'The audit queue is clear')}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                     <div className="flex items-start justify-between gap-4">
@@ -933,6 +1152,52 @@ export default function Admin() {
                   </div>
                 </div>
 
+                <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '전환 드릴다운', 'Conversion drilldown')}</p>
+                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '주차별 가장 큰 이탈 지점을 추려냅니다', 'Surface the biggest drop-off point in each week')}</h3>
+                    </div>
+                    <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                      <Target size={16} />
+                    </span>
+                  </div>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    {conversionDrilldown.map((week) => (
+                      <Link
+                        key={`drill-${week.weekId}`}
+                        to={`/week/${week.weekId}`}
+                        className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-[11px] font-semibold text-white/62">W{week.weekId}</p>
+                          <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                            week.largestDrop.pct >= 45
+                              ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                              : week.largestDrop.pct >= 25
+                                ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                          }`}>
+                            {week.largestDrop.pct}% drop
+                          </span>
+                        </div>
+                        <p className="mt-2 text-[14px] font-semibold text-white/92">{week.title}</p>
+                        <p className="mt-3 text-[12px] text-white/60">
+                          {week.largestDrop.from} → {week.largestDrop.to}
+                        </p>
+                        <div className="mt-3 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                          <span>{pick(lang, '이탈 수', 'Lost')}</span>
+                          <span className="tabular-nums text-white/82">{week.largestDrop.count}</span>
+                        </div>
+                        <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                          <span>{pick(lang, '최종 전환률', 'End conversion')}</span>
+                          <span className="tabular-nums text-white/82">{week.endRate}%</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
                     <div className="flex items-start justify-between gap-4">
@@ -1029,7 +1294,7 @@ export default function Admin() {
                         <button
                           key={row.id}
                           type="button"
-                          onClick={() => setSelectedId(row.id)}
+                          onClick={() => openLearnerRow(row.id)}
                           className="flex w-full items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-left transition-colors hover:bg-[rgba(255,255,255,0.05)]"
                         >
                           <div className="min-w-0 flex-1">
@@ -1102,13 +1367,24 @@ export default function Admin() {
                           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={pick(lang, '검색', 'Search')}
                             className="w-full bg-transparent text-[12px] text-white/92 placeholder:text-white/40 outline-none" />
                         </label>
+                        <button
+                          type="button"
+                          onClick={() => setFocusSegment('all')}
+                          className={`rounded-xl border px-3 py-2 text-[11px] font-semibold transition-colors ${
+                            focusSegment === 'all'
+                              ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
+                              : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-white/58 hover:text-white/82'
+                          }`}
+                        >
+                          {pick(lang, '개입 필터 해제', 'Clear ops filter')}
+                        </button>
                         <FilterSelect label={pick(lang, '상태', 'Status')} value={statusFilter} onChange={setStatusFilter} options={statusOptions} />
                         <FilterSelect label={pick(lang, '주차', 'Week')} value={weekFilter} onChange={setWeekFilter} options={weekOptions} />
-                        <span className="text-[11px] text-white/40 tabular-nums">{filtered.length}</span>
+                        <span className="text-[11px] text-white/40 tabular-nums">{visibleRows.length}</span>
                       </div>
                     </div>
                     <div className="divide-y divide-[rgba(255,255,255,0.06)] max-h-[600px] overflow-y-auto">
-                      {filtered.map((row) => (
+                      {visibleRows.map((row) => (
                         <button key={row.id} type="button" onClick={() => setSelectedId(row.id)}
                           className={`flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors ${row.id === selectedId ? 'bg-[rgba(87,65,216,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
                           <div className="min-w-0 flex-1">
@@ -1126,6 +1402,11 @@ export default function Admin() {
                           </div>
                         </button>
                       ))}
+                      {visibleRows.length === 0 && (
+                        <div className="px-5 py-10 text-center text-[12px] text-white/40">
+                          {pick(lang, '현재 필터에 맞는 학습자가 없습니다', 'No learners match the current filters')}
+                        </div>
+                      )}
                     </div>
                   </div>
 
