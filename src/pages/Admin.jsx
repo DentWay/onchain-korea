@@ -6,14 +6,12 @@ import {
   BarChart3,
   Clock3,
   Filter,
-  Gauge,
   GraduationCap,
   LayoutDashboard,
   RefreshCcw,
   Search,
   Target,
   Trophy,
-  Users,
 } from 'lucide-react'
 import { weeks, l } from '../data/curriculum'
 import { getWeekPlan } from '../data/programBlueprint'
@@ -27,14 +25,14 @@ const ARTICLE_QUIZ_TARGET = 10
 const totalLessons = weeks.reduce((sum, week) => sum + (week.lessons?.length || 0), 0)
 const totalActions = weeks.reduce((sum, week) => sum + (week.actions?.length || 0), 0)
 const totalHiddenTopics = weeks.filter((week) => week.hiddenTopic).length
-const ADMIN_TAB_IDS = new Set(['dashboard', 'leaderboard', 'analytics'])
+const ADMIN_TAB_IDS = new Set(['overview', 'interventions', 'content', 'analytics', 'leaderboard'])
 
 function pick(lang, ko, en) { return lang === 'ko' ? ko : en }
 function parseDate(value) { const t = value ? new Date(value).getTime() : 0; return Number.isFinite(t) ? t : 0 }
 function maxDate(...v) { return v.reduce((a, b) => (parseDate(b) > parseDate(a) ? b : a), null) }
 function ratio(part, total) { return total > 0 ? Math.round((part / total) * 100) : 0 }
 function clamp(value) { return Math.max(0, Math.min(100, value)) }
-function resolveAdminTab(value) { return ADMIN_TAB_IDS.has(value) ? value : 'dashboard' }
+function resolveAdminTab(value) { return ADMIN_TAB_IDS.has(value) ? value : 'overview' }
 function isLearnerStarted(row) { return row.progressPct > 0 || row.quizAttempts > 0 || row.completedActions > 0 }
 function countCertificateRequirements(row) {
   let met = 0
@@ -240,12 +238,6 @@ export default function Admin() {
       nextParams.set('view', resolvedView)
       setSearchParams(nextParams, { replace: true })
     }
-  }, [searchParams, setSearchParams])
-
-  const setTab = useCallback((nextTab) => {
-    const nextParams = new URLSearchParams(searchParams)
-    nextParams.set('view', resolveAdminTab(nextTab))
-    setSearchParams(nextParams, { replace: true })
   }, [searchParams, setSearchParams])
 
   const openLearnerRow = useCallback((learnerId) => {
@@ -644,11 +636,33 @@ export default function Admin() {
 
   if (supabaseEnabled && !isAdmin) return <Navigate to="/dashboard" replace />
 
-  const tabs = [
-    { id: 'dashboard', icon: LayoutDashboard, label: pick(lang, '대시보드', 'Dashboard') },
-    { id: 'leaderboard', icon: Trophy, label: pick(lang, '리더보드', 'Leaderboard') },
-    { id: 'analytics', icon: BarChart3, label: pick(lang, '분석', 'Analytics') },
-  ]
+  const sectionMeta = {
+    overview: {
+      label: pick(lang, '운영 개요', 'Overview'),
+      desc: pick(lang, '운영 핵심 지표와 전반 상태만 먼저 봅니다', 'Start with the highest-level operating signals'),
+    },
+    interventions: {
+      label: pick(lang, '개입 보드', 'Interventions'),
+      desc: pick(lang, '누구에게 어떤 방식으로 개입할지 정리합니다', 'Group the learners who need action next'),
+    },
+    content: {
+      label: pick(lang, '콘텐츠 검수', 'Content Audit'),
+      desc: pick(lang, '주차별 운영 규격과 검수 우선순위를 봅니다', 'Review content structure and audit priority by week'),
+    },
+    analytics: {
+      label: pick(lang, '학습 분석', 'Analytics'),
+      desc: pick(lang, '주차별 전환, 병목, 난도 지표를 봅니다', 'Review conversion, bottlenecks, and difficulty signals'),
+    },
+    leaderboard: {
+      label: pick(lang, '학습자 랭킹', 'Leaderboard'),
+      desc: pick(lang, '진행률과 통과 상태를 학습자 기준으로 비교합니다', 'Compare learners by progress and completion'),
+    },
+  }
+
+  const isOverviewTab = tab === 'overview'
+  const isInterventionsTab = tab === 'interventions'
+  const isContentTab = tab === 'content'
+  const isAnalyticsTab = tab === 'analytics'
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -670,72 +684,47 @@ export default function Admin() {
           </button>
         </header>
 
-        {/* Summary row */}
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            {
-              icon: Users,
-              label: pick(lang, '전체 학습자', 'Learners'),
-              value: rows.length,
-              meta: pick(lang, '관리 대상 전체', 'Total tracked'),
-              tone: 'text-white/92',
-            },
-            {
-              icon: Gauge,
-              label: pick(lang, '최근 7일 활성', 'Active 7d'),
-              value: dashboardInsights.activeRows.length,
-              meta: `${ratio(dashboardInsights.activeRows.length, rows.length)}%`,
-              tone: 'text-[#A78BFA]',
-            },
-            {
-              icon: AlertTriangle,
-              label: pick(lang, '주의 필요', 'Needs Attention'),
-              value: dashboardInsights.attentionRows.length,
-              meta: pick(lang, '정체 또는 저득점', 'Stalled or low score'),
-              tone: dashboardInsights.attentionRows.length > 0 ? 'text-[#FCA5A5]' : 'text-white/92',
-            },
-            {
-              icon: GraduationCap,
-              label: pick(lang, '수료', 'Completed'),
-              value: dashboardInsights.completedRows.length,
-              meta: `${ratio(dashboardInsights.completedRows.length, rows.length)}%`,
-              tone: 'text-[#4ADE80]',
-            },
-          ].map((item) => {
-            const Icon = item.icon
-            return (
-              <div key={item.label} className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
-                    <p className={`mt-2 text-[28px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
-                  </div>
-                  <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                    <Icon size={16} />
-                  </span>
-                </div>
-                <p className="mt-2 text-[11px] text-white/50">{item.meta}</p>
-              </div>
-            )
-          })}
+        <div className="mt-4 rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-5 py-4">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-white/40">{sectionMeta[tab]?.label}</p>
+          <p className="mt-2 text-[14px] text-white/66">{sectionMeta[tab]?.desc}</p>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-5 flex gap-1 border-b border-[rgba(255,255,255,0.06)]">
-          {tabs.map((t) => {
-            const Icon = t.icon
-            const active = tab === t.id
-            return (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold transition-colors border-b-2 -mb-px ${
-                  active ? 'border-[#5741d8] text-[#a78bfa]' : 'border-transparent text-white/40 hover:text-white/66'
-                }`}>
-                <Icon size={14} />
-                <span>{t.label}</span>
-              </button>
-            )
-          })}
-        </div>
+        {isOverviewTab && (
+          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                label: pick(lang, '전체 학습자', 'Learners'),
+                value: rows.length,
+                meta: pick(lang, '운영 대상 전체', 'Total tracked accounts'),
+                tone: 'text-white/92',
+              },
+              {
+                label: pick(lang, '최근 7일 활성', '7d active'),
+                value: dashboardInsights.activeRows.length,
+                meta: `${ratio(dashboardInsights.activeRows.length, rows.length)}%`,
+                tone: 'text-[#A78BFA]',
+              },
+              {
+                label: pick(lang, '주의 필요', 'Needs attention'),
+                value: dashboardInsights.attentionRows.length,
+                meta: pick(lang, '정체 또는 저득점', 'Stalled or low score'),
+                tone: 'text-[#FBBF24]',
+              },
+              {
+                label: pick(lang, '수료', 'Completed'),
+                value: dashboardInsights.completedRows.length,
+                meta: `${ratio(dashboardInsights.completedRows.length, rows.length)}%`,
+                tone: 'text-[#4ADE80]',
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                <p className={`mt-2 text-[28px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
+                <p className="mt-2 text-[11px] text-white/44">{item.meta}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {error && (
           <div className="mt-4 rounded-xl bg-[rgba(248,113,113,0.08)] px-4 py-3 text-[13px] text-[#FCA5A5]">{error}</div>
@@ -747,171 +736,130 @@ export default function Admin() {
           </div>
         ) : (
           <>
-            {/* ─── Dashboard Tab ─── */}
-            {tab === 'dashboard' && (
+            {(isOverviewTab || isInterventionsTab || isContentTab || isAnalyticsTab) && (
               <div className="mt-5 space-y-5">
-                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 규격과 검수 상태를 확인합니다', 'Review the eight-week structure and audit status')}</h3>
-                      </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <LayoutDashboard size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                      {[
-                        {
-                          label: pick(lang, '준비 완료 주차', 'Ready weeks'),
-                          value: `${contentAudit.readyWeeks}/${weeks.length}`,
-                          tone: 'text-[#4ADE80]',
-                        },
-                        {
-                          label: pick(lang, '검토 필요 주차', 'Weeks in review'),
-                          value: `${contentAudit.reviewWeeks}`,
-                          tone: contentAudit.reviewWeeks > 0 ? 'text-[#FBBF24]' : 'text-white/88',
-                        },
-                        {
-                          label: pick(lang, '아티클 퀴즈', 'Article quizzes'),
-                          value: `${contentAudit.articleQuizReadyTotal}/${totalLessons}`,
-                          tone: 'text-[#A78BFA]',
-                        },
-                        {
-                          label: pick(lang, '주간 테스트', 'Weekly tests'),
-                          value: `${contentAudit.weeklyTestsReady}/${weeks.length}`,
-                          tone: contentAudit.plannedWeeks > 0 ? 'text-[#FCA5A5]' : 'text-white/88',
-                        },
-                      ].map((item) => (
-                        <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                          <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
-                          <p className={`mt-2 text-[22px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
+                {isContentTab && (
+                  <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 규격과 검수 상태를 확인합니다', 'Review the eight-week structure and audit status')}</h3>
                         </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                      {contentAudit.weeksAudit.map((week) => (
-                        <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-[11px] font-semibold text-white/92">W{week.weekId}</p>
-                            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${week.weekId <= 4 ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
-                              {week.phase}
-                            </span>
-                          </div>
-                          <p className="mt-2 text-[13px] font-semibold text-white/86">{week.title}</p>
-                          <div className="mt-2 flex items-center gap-2">
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                                week.status === 'ready'
-                                  ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
-                                  : week.status === 'planned'
-                                    ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
-                                    : week.status === 'review'
-                                      ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
-                                      : 'bg-[rgba(255,255,255,0.06)] text-white/56'
-                              }`}
-                            >
-                              {week.status === 'ready'
-                                ? pick(lang, '준비 완료', 'Ready')
-                                : week.status === 'planned'
-                                  ? pick(lang, '교체 예정', 'Planned replace')
-                                  : week.status === 'review'
-                                    ? pick(lang, '검토 필요', 'Needs review')
-                                    : pick(lang, '구성 점검', 'Structure issue')}
-                            </span>
-                          </div>
-                          <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
-                            <div>{pick(lang, `아티클 ${week.lessons}`, `${week.lessons} lessons`)}</div>
-                            <div>{pick(lang, `실습 ${week.actions}`, `${week.actions} labs`)}</div>
-                            <div>{pick(lang, `히든 ${week.hasHidden ? 1 : 0}`, `${week.hasHidden ? 1 : 0} hidden`)}</div>
-                            <div>{pick(lang, `테스트 ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`, `${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions} test Qs`)}</div>
-                          </div>
-                          <div className="mt-2 text-[11px] text-white/46">
-                            {pick(
-                              lang,
-                              `아티클 퀴즈 ${week.articleQuizReadyCount}/${week.lessons} 완료${week.plannedReplacementCount > 0 ? ` · 교체 예정 ${week.plannedReplacementCount}` : ''}`,
-                              `Article quizzes ${week.articleQuizReadyCount}/${week.lessons}${week.plannedReplacementCount > 0 ? ` · ${week.plannedReplacementCount} planned replace` : ''}`
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '관리자 바로가기', 'Admin Shortcuts')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '자주 쓰는 운영 화면으로 바로 이동합니다', 'Jump to the most-used views')}</h3>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <LayoutDashboard size={16} />
+                        </span>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <ArrowRight size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      {[
-                        { to: '/dashboard', title: pick(lang, '학습자 홈', 'Learner dashboard'), meta: pick(lang, '실제 학습자 화면 기준으로 현재 공개 상태 확인', 'Check the live learner-facing dashboard') },
-                        { to: '/week/1', title: pick(lang, 'Week 1 콘텐츠', 'Week 1 content'), meta: pick(lang, '기본 트랙 시작점 검수', 'Review the core-track entry point') },
-                        { to: '/week/5', title: pick(lang, 'Week 5 콘텐츠', 'Week 5 content'), meta: pick(lang, '심화 트랙 시작점 검수', 'Review the advanced-track unlock point') },
-                        { to: '/hidden', title: pick(lang, '히든 토픽', 'Hidden topics'), meta: pick(lang, '히든 토픽 공개 구조 점검', 'Review hidden-topic visibility') },
-                        { to: '/certificate', title: pick(lang, '수료 증명', 'Proof of Attendance'), meta: pick(lang, '수료 조건 및 결과 화면 검수', 'Review proof requirements and result state') },
-                      ].map((item) => (
-                        <Link key={item.to} to={item.to} className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]">
-                          <div className="min-w-0">
-                            <p className="text-[13px] font-semibold text-white/92">{item.title}</p>
-                            <p className="mt-1 text-[11px] text-white/46">{item.meta}</p>
+                      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        {[
+                          {
+                            label: pick(lang, '준비 완료 주차', 'Ready weeks'),
+                            value: `${contentAudit.readyWeeks}/${weeks.length}`,
+                            tone: 'text-[#4ADE80]',
+                          },
+                          {
+                            label: pick(lang, '검토 필요 주차', 'Weeks in review'),
+                            value: `${contentAudit.reviewWeeks}`,
+                            tone: contentAudit.reviewWeeks > 0 ? 'text-[#FBBF24]' : 'text-white/88',
+                          },
+                          {
+                            label: pick(lang, '아티클 퀴즈', 'Article quizzes'),
+                            value: `${contentAudit.articleQuizReadyTotal}/${totalLessons}`,
+                            tone: 'text-[#A78BFA]',
+                          },
+                          {
+                            label: pick(lang, '주간 테스트', 'Weekly tests'),
+                            value: `${contentAudit.weeklyTestsReady}/${weeks.length}`,
+                            tone: contentAudit.plannedWeeks > 0 ? 'text-[#FCA5A5]' : 'text-white/88',
+                          },
+                        ].map((item) => (
+                          <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                            <p className={`mt-2 text-[22px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
                           </div>
-                          <ArrowRight size={15} className="shrink-0 text-white/38" />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 개입 보드', 'Intervention board')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 대응 그룹을 자동으로 분류합니다', 'Auto-group the learners that need different responses')}</h3>
+                        ))}
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setFocusSegment('all')}
-                        className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
-                          focusSegment === 'all'
-                            ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
-                            : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/58 hover:text-white/82'
-                        }`}
-                      >
-                        {pick(lang, '전체 보기', 'View all')}
-                      </button>
-                    </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2">
-                      {interventionGroups.map((group) => (
-                        <button
-                          key={group.key}
-                          type="button"
-                          onClick={() => setFocusSegment(group.key)}
-                          className={`rounded-2xl border px-4 py-4 text-left transition-colors ${group.tone} ${focusSegment === group.key ? 'ring-1 ring-white/12' : 'hover:bg-[rgba(255,255,255,0.05)]'}`}
-                        >
-                          <div className="flex items-start justify-between gap-3">
-                            <div>
-                              <p className="text-[14px] font-semibold">{group.title}</p>
-                              <p className="mt-2 text-[12px] leading-relaxed opacity-80">{group.desc}</p>
+                      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        {contentAudit.weeksAudit.map((week) => (
+                          <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-[11px] font-semibold text-white/92">W{week.weekId}</p>
+                              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${week.weekId <= 4 ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
+                                {week.phase}
+                              </span>
                             </div>
-                            <p className="text-[24px] font-[800] tabular-nums">{group.count}</p>
+                            <p className="mt-2 text-[13px] font-semibold text-white/86">{week.title}</p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                                  week.status === 'ready'
+                                    ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                                    : week.status === 'planned'
+                                      ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                                      : week.status === 'review'
+                                        ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                        : 'bg-[rgba(255,255,255,0.06)] text-white/56'
+                                }`}
+                              >
+                                {week.status === 'ready'
+                                  ? pick(lang, '준비 완료', 'Ready')
+                                  : week.status === 'planned'
+                                    ? pick(lang, '교체 예정', 'Planned replace')
+                                    : week.status === 'review'
+                                      ? pick(lang, '검토 필요', 'Needs review')
+                                      : pick(lang, '구성 점검', 'Structure issue')}
+                              </span>
+                            </div>
+                            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
+                              <div>{pick(lang, `아티클 ${week.lessons}`, `${week.lessons} lessons`)}</div>
+                              <div>{pick(lang, `실습 ${week.actions}`, `${week.actions} labs`)}</div>
+                              <div>{pick(lang, `히든 ${week.hasHidden ? 1 : 0}`, `${week.hasHidden ? 1 : 0} hidden`)}</div>
+                              <div>{pick(lang, `테스트 ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`, `${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions} test Qs`)}</div>
+                            </div>
+                            <div className="mt-2 text-[11px] text-white/46">
+                              {pick(
+                                lang,
+                                `아티클 퀴즈 ${week.articleQuizReadyCount}/${week.lessons} 완료${week.plannedReplacementCount > 0 ? ` · 교체 예정 ${week.plannedReplacementCount}` : ''}`,
+                                `Article quizzes ${week.articleQuizReadyCount}/${week.lessons}${week.plannedReplacementCount > 0 ? ` · ${week.plannedReplacementCount} planned replace` : ''}`
+                              )}
+                            </div>
                           </div>
-                          <div className="mt-4 flex items-center justify-between gap-3 text-[11px] opacity-80">
-                            <span>{pick(lang, `평균 W${group.avgWeek || '-'}`, group.avgWeek ? `Avg W${group.avgWeek}` : 'Avg -')}</span>
-                            <span className="truncate">{group.samples.length > 0 ? group.samples.join(' · ') : pick(lang, '대상 없음', 'No learners')}</span>
-                          </div>
-                        </button>
-                      ))}
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '관리자 바로가기', 'Admin Shortcuts')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '검수 대상 화면으로 바로 이동합니다', 'Jump directly into the audit surfaces')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <ArrowRight size={16} />
+                        </span>
+                      </div>
+                      <div className="mt-4 space-y-2">
+                        {[
+                          { to: '/dashboard', title: pick(lang, '학습자 홈', 'Learner dashboard'), meta: pick(lang, '실제 공개 상태를 확인합니다', 'Check the live learner-facing dashboard') },
+                          { to: '/week/1', title: pick(lang, 'Week 1 콘텐츠', 'Week 1 content'), meta: pick(lang, '기본 트랙 시작점 검수', 'Review the core-track entry point') },
+                          { to: '/week/5', title: pick(lang, 'Week 5 콘텐츠', 'Week 5 content'), meta: pick(lang, '심화 트랙 시작점 검수', 'Review the advanced-track unlock point') },
+                          { to: '/hidden', title: pick(lang, '히든 토픽', 'Hidden topics'), meta: pick(lang, '히든 토픽 공개 구조 점검', 'Review hidden-topic visibility') },
+                          { to: '/certificate', title: pick(lang, '수료 증명', 'Proof of Attendance'), meta: pick(lang, '수료 조건 및 결과 화면 검수', 'Review proof requirements and result state') },
+                        ].map((item) => (
+                          <Link key={item.to} to={item.to} className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]">
+                            <div className="min-w-0">
+                              <p className="text-[13px] font-semibold text-white/92">{item.title}</p>
+                              <p className="mt-1 text-[11px] text-white/46">{item.meta}</p>
+                            </div>
+                            <ArrowRight size={15} className="shrink-0 text-white/38" />
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                )}
 
+                {isContentTab && (
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
@@ -922,7 +870,7 @@ export default function Admin() {
                         <LayoutDashboard size={16} />
                       </span>
                     </div>
-                    <div className="mt-4 space-y-3">
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                       {contentAuditQueue.slice(0, 6).map((week) => (
                         <Link
                           key={week.weekId}
@@ -962,360 +910,375 @@ export default function Admin() {
                       )}
                     </div>
                   </div>
-                </div>
+                )}
 
-                <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                {isInterventionsTab && (
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '활동 신선도', 'Activity Freshness')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '최근 활동 기준으로 정체 구간을 분류합니다', 'Segment learners by last activity recency')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 개입 보드', 'Intervention board')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 대응 그룹을 자동으로 분류합니다', 'Auto-group the learners that need different responses')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <Clock3 size={16} />
-                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setFocusSegment('all')}
+                        className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                          focusSegment === 'all'
+                            ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
+                            : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/58 hover:text-white/82'
+                        }`}
+                      >
+                        {pick(lang, '전체 보기', 'View all')}
+                      </button>
                     </div>
-                    <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
-                      <div className="flex h-3 w-full">
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                      {interventionGroups.map((group) => (
+                        <button
+                          key={group.key}
+                          type="button"
+                          onClick={() => setFocusSegment(group.key)}
+                          className={`rounded-2xl border px-4 py-4 text-left transition-colors ${group.tone} ${focusSegment === group.key ? 'ring-1 ring-white/12' : 'hover:bg-[rgba(255,255,255,0.05)]'}`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-[14px] font-semibold">{group.title}</p>
+                              <p className="mt-2 text-[12px] leading-relaxed opacity-80">{group.desc}</p>
+                            </div>
+                            <p className="text-[24px] font-[800] tabular-nums">{group.count}</p>
+                          </div>
+                          <div className="mt-4 flex items-center justify-between gap-3 text-[11px] opacity-80">
+                            <span>{pick(lang, `평균 W${group.avgWeek || '-'}`, group.avgWeek ? `Avg W${group.avgWeek}` : 'Avg -')}</span>
+                            <span className="truncate">{group.samples.length > 0 ? group.samples.join(' · ') : pick(lang, '대상 없음', 'No learners')}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {isOverviewTab && (
+                  <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '활동 신선도', 'Activity Freshness')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '최근 활동 기준으로 정체 구간을 분류합니다', 'Segment learners by last activity recency')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <Clock3 size={16} />
+                        </span>
+                      </div>
+                      <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                        <div className="flex h-3 w-full">
+                          {inactivityDistribution.map((bucket) => (
+                            <div
+                              key={bucket.key}
+                              className="h-full transition-all"
+                              style={{
+                                width: `${bucket.pct}%`,
+                                background: bucket.color,
+                                opacity: bucket.count > 0 ? 1 : 0.18,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                         {inactivityDistribution.map((bucket) => (
-                          <div
-                            key={bucket.key}
-                            className="h-full transition-all"
-                            style={{
-                              width: `${bucket.pct}%`,
-                              background: bucket.color,
-                              opacity: bucket.count > 0 ? 1 : 0.18,
-                            }}
-                          />
+                          <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
+                              <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                            </div>
+                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
+                            <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                          </div>
                         ))}
                       </div>
                     </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                      {inactivityDistribution.map((bucket) => (
-                        <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
-                            <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
-                          </div>
-                          <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
-                          <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '수료 준비도', 'Certificate Readiness')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '수료 조건 충족 단계별 분포입니다', 'Distribution by certificate readiness')}</h3>
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '수료 준비도', 'Certificate Readiness')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '수료 조건 충족 단계별 분포입니다', 'Distribution by certificate readiness')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <GraduationCap size={16} />
+                        </span>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <GraduationCap size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
-                      <div className="flex h-3 w-full">
+                      <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                        <div className="flex h-3 w-full">
+                          {certificateReadiness.buckets.map((bucket) => (
+                            <div
+                              key={bucket.key}
+                              className="h-full transition-all"
+                              style={{
+                                width: `${bucket.pct}%`,
+                                background: bucket.color,
+                                opacity: bucket.count > 0 ? 1 : 0.18,
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         {certificateReadiness.buckets.map((bucket) => (
-                          <div
-                            key={bucket.key}
-                            className="h-full transition-all"
-                            style={{
-                              width: `${bucket.pct}%`,
-                              background: bucket.color,
-                              opacity: bucket.count > 0 ? 1 : 0.18,
-                            }}
-                          />
+                          <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
+                              <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                            </div>
+                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
+                            <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 grid gap-3 md:grid-cols-3">
+                        {[
+                          { label: pick(lang, '레슨 기준', 'Lesson target'), value: `${certificateReadiness.lessonRequirement}/${totalLessons}` },
+                          { label: pick(lang, '액션 기준', 'Action target'), value: '3' },
+                          { label: pick(lang, '히든 기준', 'Hidden target'), value: '2' },
+                        ].map((item) => (
+                          <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-3">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                            <p className="mt-2 text-[18px] font-[800] tabular-nums text-white/88">{item.value}</p>
+                          </div>
                         ))}
                       </div>
                     </div>
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                      {certificateReadiness.buckets.map((bucket) => (
-                        <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
-                            <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
-                          </div>
-                          <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
-                          <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-3">
-                      {[
-                        { label: pick(lang, '레슨 기준', 'Lesson target'), value: `${certificateReadiness.lessonRequirement}/${totalLessons}` },
-                        { label: pick(lang, '액션 기준', 'Action target'), value: '3' },
-                        { label: pick(lang, '히든 기준', 'Hidden target'), value: '2' },
-                      ].map((item) => (
-                        <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-3">
-                          <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
-                          <p className="mt-2 text-[18px] font-[800] tabular-nums text-white/88">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 unlock 전환', 'Weekly Unlock Conversion')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '진입부터 다음 단계까지 어디서 줄어드는지 봅니다', 'See where learners drop between entry and next unlock')}</h3>
+                {isAnalyticsTab && (
+                  <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 unlock 전환', 'Weekly Unlock Conversion')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '진입부터 다음 단계까지 어디서 줄어드는지 봅니다', 'See where learners drop between entry and next unlock')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <Target size={16} />
+                        </span>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <Target size={16} />
-                      </span>
+                      <div className="mt-4 grid gap-3 md:grid-cols-2">
+                        {unlockConversion.map((week) => {
+                          const nextLabel = week.weekId === weeks.length ? pick(lang, '수료', 'Certified') : pick(lang, '다음 단계', 'Next unlock')
+                          const steps = [
+                            { label: pick(lang, '진입', 'Entry'), count: week.entered },
+                            { label: pick(lang, '아티클', 'Articles'), count: week.articlePassed },
+                            { label: pick(lang, '실습', 'Action'), count: week.actionDone },
+                            { label: pick(lang, '히든', 'Hidden'), count: week.hiddenRead },
+                            { label: pick(lang, '테스트', 'Test'), count: week.weeklyPassed },
+                            { label: nextLabel, count: week.nextUnlocked },
+                          ]
+                          return (
+                            <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                              <div className="flex items-start justify-between gap-3">
+                                <div>
+                                  <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
+                                  <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.nextUnlocked}</p>
+                                  <p className="mt-1 text-[10px] text-white/40">{pick(lang, '최종 도달', 'Reached end')}</p>
+                                </div>
+                              </div>
+                              <div className="mt-4 grid grid-cols-3 gap-2">
+                                {steps.map((step) => (
+                                  <div key={`${week.weekId}-${step.label}`} className="rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] px-3 py-2">
+                                    <p className="text-[9px] uppercase tracking-[0.14em] text-white/38">{step.label}</p>
+                                    <p className="mt-1 text-[16px] font-[800] tabular-nums text-white/88">{step.count}</p>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="mt-4">
+                                <div className="mb-2 flex items-center justify-between text-[11px] text-white/44">
+                                  <span>{pick(lang, '다음 단계 전환률', 'Next-step conversion')}</span>
+                                  <span className="tabular-nums text-white/72">{ratio(week.nextUnlocked, week.entered)}%</span>
+                                </div>
+                                <Meter value={ratio(week.nextUnlocked, week.entered)} color="#5741d8" height={7} />
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2">
-                      {unlockConversion.map((week) => {
-                        const nextLabel = week.weekId === weeks.length ? pick(lang, '수료', 'Certified') : pick(lang, '다음 단계', 'Next unlock')
-                        const steps = [
-                          { label: pick(lang, '진입', 'Entry'), count: week.entered },
-                          { label: pick(lang, '아티클', 'Articles'), count: week.articlePassed },
-                          { label: pick(lang, '실습', 'Action'), count: week.actionDone },
-                          { label: pick(lang, '히든', 'Hidden'), count: week.hiddenRead },
-                          { label: pick(lang, '테스트', 'Test'), count: week.weeklyPassed },
-                          { label: nextLabel, count: week.nextUnlocked },
-                        ]
-                        return (
+
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 실행 강도', 'Week Performance Grid')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '아티클, 액션, 테스트 강도를 함께 봅니다', 'Review article, action, and test intensity together')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <BarChart3 size={16} />
+                        </span>
+                      </div>
+                      <div className="mt-4 grid gap-3">
+                        {weekPerformanceGrid.map((week) => (
                           <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
-                            <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center justify-between gap-3">
                               <div>
                                 <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
                                 <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.nextUnlocked}</p>
-                                <p className="mt-1 text-[10px] text-white/40">{pick(lang, '최종 도달', 'Reached end')}</p>
+                                <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.learners}</p>
+                                <p className="mt-1 text-[10px] text-white/40">{pick(lang, '진입 인원', 'Entered')}</p>
                               </div>
                             </div>
                             <div className="mt-4 grid grid-cols-3 gap-2">
-                              {steps.map((step) => (
-                                <div key={`${week.weekId}-${step.label}`} className="rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] px-3 py-2">
-                                  <p className="text-[9px] uppercase tracking-[0.14em] text-white/38">{step.label}</p>
-                                  <p className="mt-1 text-[16px] font-[800] tabular-nums text-white/88">{step.count}</p>
+                              {[
+                                { label: pick(lang, '아티클', 'Articles'), value: week.articleRate },
+                                { label: pick(lang, '실습', 'Action'), value: week.actionRate },
+                                { label: pick(lang, '테스트', 'Test'), value: week.weeklyRate },
+                              ].map((metric) => (
+                                <div key={`${week.weekId}-${metric.label}`} className={`rounded-lg border px-3 py-3 ${metricToneClass(metric.value)}`}>
+                                  <p className="text-[9px] uppercase tracking-[0.14em] opacity-80">{metric.label}</p>
+                                  <p className="mt-2 text-[20px] font-[800] tabular-nums">{metric.value}%</p>
                                 </div>
                               ))}
                             </div>
-                            <div className="mt-4">
-                              <div className="mb-2 flex items-center justify-between text-[11px] text-white/44">
-                                <span>{pick(lang, '다음 단계 전환률', 'Next-step conversion')}</span>
-                                <span className="tabular-nums text-white/72">{ratio(week.nextUnlocked, week.entered)}%</span>
-                              </div>
-                              <Meter value={ratio(week.nextUnlocked, week.entered)} color="#5741d8" height={7} />
-                            </div>
                           </div>
-                        )
-                      })}
+                        ))}
+                      </div>
                     </div>
                   </div>
+                )}
 
+                {isAnalyticsTab && (
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 실행 강도', 'Week Performance Grid')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '아티클, 액션, 테스트 강도를 함께 봅니다', 'Review article, action, and test intensity together')}</h3>
-                      </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <BarChart3 size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-4 grid gap-3">
-                      {weekPerformanceGrid.map((week) => (
-                        <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
-                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.learners}</p>
-                              <p className="mt-1 text-[10px] text-white/40">{pick(lang, '진입 인원', 'Entered')}</p>
-                            </div>
-                          </div>
-                          <div className="mt-4 grid grid-cols-3 gap-2">
-                            {[
-                              { label: pick(lang, '아티클', 'Articles'), value: week.articleRate },
-                              { label: pick(lang, '실습', 'Action'), value: week.actionRate },
-                              { label: pick(lang, '테스트', 'Test'), value: week.weeklyRate },
-                            ].map((metric) => (
-                              <div key={`${week.weekId}-${metric.label}`} className={`rounded-lg border px-3 py-3 ${metricToneClass(metric.value)}`}>
-                                <p className="text-[9px] uppercase tracking-[0.14em] opacity-80">{metric.label}</p>
-                                <p className="mt-2 text-[20px] font-[800] tabular-nums">{metric.value}%</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '전환 드릴다운', 'Conversion drilldown')}</p>
-                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '주차별 가장 큰 이탈 지점을 추려냅니다', 'Surface the biggest drop-off point in each week')}</h3>
-                    </div>
-                    <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                      <Target size={16} />
-                    </span>
-                  </div>
-                  <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    {conversionDrilldown.map((week) => (
-                      <Link
-                        key={`drill-${week.weekId}`}
-                        to={`/week/${week.weekId}`}
-                        className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-[11px] font-semibold text-white/62">W{week.weekId}</p>
-                          <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                            week.largestDrop.pct >= 45
-                              ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
-                              : week.largestDrop.pct >= 25
-                                ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
-                                : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
-                          }`}>
-                            {week.largestDrop.pct}% drop
-                          </span>
-                        </div>
-                        <p className="mt-2 text-[14px] font-semibold text-white/92">{week.title}</p>
-                        <p className="mt-3 text-[12px] text-white/60">
-                          {week.largestDrop.from} → {week.largestDrop.to}
-                        </p>
-                        <div className="mt-3 flex items-center justify-between gap-3 text-[11px] text-white/48">
-                          <span>{pick(lang, '이탈 수', 'Lost')}</span>
-                          <span className="tabular-nums text-white/82">{week.largestDrop.count}</span>
-                        </div>
-                        <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-white/48">
-                          <span>{pick(lang, '최종 전환률', 'End conversion')}</span>
-                          <span className="tabular-nums text-white/82">{week.endRate}%</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
-                        <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '등록부터 수료까지 전환을 확인합니다', 'Track conversion from registration to completion')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '전환 드릴다운', 'Conversion drilldown')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '주차별 가장 큰 이탈 지점을 추려냅니다', 'Surface the biggest drop-off point in each week')}</h3>
                       </div>
                       <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
                         <Target size={16} />
                       </span>
                     </div>
-                    <div className="mt-5 space-y-4">
-                      {dashboardInsights.funnel.map((stage) => (
-                        <div key={stage.key} className="grid gap-2 md:grid-cols-[minmax(140px,180px)_minmax(0,1fr)_auto] md:items-center">
-                          <div>
-                            <p className="text-[12px] font-semibold text-white/88">{stage.label}</p>
-                            <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/38">{stage.pctFromPrev}% {pick(lang, '전 단계 대비', 'from prev')}</p>
-                          </div>
-                          <div className="space-y-2">
-                            <Meter value={stage.pctFromTop} color={stage.color} height={8} />
-                            <div className="flex items-center justify-between text-[11px] text-white/44">
-                              <span>{pick(lang, '전체 대비', 'of all')}</span>
-                              <span className="tabular-nums">{stage.pctFromTop}%</span>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-[22px] font-[800] tabular-nums text-white/92">{stage.count}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid gap-5">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '병목 주차', 'Bottleneck Weeks')}</p>
-                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '병목 구간을 먼저 확인합니다', 'Review the friction points first')}</h3>
-                      <div className="mt-4 space-y-3">
-                        {dashboardInsights.bottlenecks.slice(0, 4).map((week) => (
-                          <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                            <div className="flex items-center justify-between gap-3">
-                              <div>
-                                <p className="text-[12px] font-semibold text-white/92">W{week.weekId} · {week.title}</p>
-                                <p className="mt-1 text-[11px] text-white/44">
-                                  {pick(lang, `${week.learners}명 진행 중 · 평균 ${week.avgProgress}%`, `${week.learners} learners · avg ${week.avgProgress}%`)}
-                                </p>
-                              </div>
-                              <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${week.attention > 0 ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
-                                {pick(lang, `주의 ${week.attention}`, `${week.attention} alerts`)}
-                              </span>
-                            </div>
-                            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
-                              <div>{pick(lang, `정체 ${week.stalled}`, `Stalled ${week.stalled}`)}</div>
-                              <div>{pick(lang, `저득점 ${week.lowScore}`, `Low score ${week.lowScore}`)}</div>
-                            </div>
-                          </div>
-                        ))}
-                        {dashboardInsights.bottlenecks.length === 0 && (
-                          <p className="text-[12px] text-white/40">{pick(lang, '주차 데이터가 없습니다', 'No week bottlenecks yet')}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차 분포', 'Week Distribution')}</p>
-                      <div className="mt-4 space-y-2.5">
-                        {weekDistribution.map((week) => (
-                          <div key={week.weekId} className="flex items-center gap-3">
-                            <span className="w-8 shrink-0 text-[11px] font-semibold text-white/58">W{week.weekId}</span>
-                            <div className="flex-1">
-                              <Meter value={(week.count / dashboardInsights.weekMax) * 100} color="#5741d8" height={7} />
-                            </div>
-                            <span className="w-8 shrink-0 text-right text-[12px] font-[700] tabular-nums text-white/88">{week.count}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '위험군 큐', 'At-risk Queue')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 확인 대상 학습자', 'Priority learners to review')}</h3>
-                      </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
-                        <AlertTriangle size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      {dashboardInsights.riskQueue.map((row) => (
-                        <button
-                          key={row.id}
-                          type="button"
-                          onClick={() => openLearnerRow(row.id)}
-                          className="flex w-full items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-left transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                      {conversionDrilldown.map((week) => (
+                        <Link
+                          key={`drill-${week.weekId}`}
+                          to={`/week/${week.weekId}`}
+                          className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
                         >
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <p className="truncate text-[13px] font-semibold text-white/92">{row.displayName}</p>
-                              {stageBadge(lang, row.stage)}
-                            </div>
-                            <p className="mt-1 truncate text-[11px] text-white/46">{row.reasons.join(' · ')}</p>
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-[11px] font-semibold text-white/62">W{week.weekId}</p>
+                            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                              week.largestDrop.pct >= 45
+                                ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                                : week.largestDrop.pct >= 25
+                                  ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                  : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                            }`}>
+                              {week.largestDrop.pct}% drop
+                            </span>
                           </div>
-                          <div className="shrink-0 text-right">
-                            <p className="text-[12px] font-semibold tabular-nums text-white/70">W{row.currentWeek}</p>
-                            <p className="mt-1 text-[10px] text-white/40">{formatDate(lang, row.lastActivityAt)}</p>
+                          <p className="mt-2 text-[14px] font-semibold text-white/92">{week.title}</p>
+                          <p className="mt-3 text-[12px] text-white/60">
+                            {week.largestDrop.from} → {week.largestDrop.to}
+                          </p>
+                          <div className="mt-3 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                            <span>{pick(lang, '이탈 수', 'Lost')}</span>
+                            <span className="tabular-nums text-white/82">{week.largestDrop.count}</span>
                           </div>
-                        </button>
+                          <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                            <span>{pick(lang, '최종 전환률', 'End conversion')}</span>
+                            <span className="tabular-nums text-white/82">{week.endRate}%</span>
+                          </div>
+                        </Link>
                       ))}
-                      {dashboardInsights.riskQueue.length === 0 && (
-                        <p className="text-[12px] text-white/40">{pick(lang, '우선 확인 대상이 없습니다', 'No urgent risk queue right now')}</p>
-                      )}
                     </div>
                   </div>
+                )}
 
+                {isOverviewTab && (
+                  <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
+                          <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '등록부터 수료까지 전환을 확인합니다', 'Track conversion from registration to completion')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <Target size={16} />
+                        </span>
+                      </div>
+                      <div className="mt-5 space-y-4">
+                        {dashboardInsights.funnel.map((stage) => (
+                          <div key={stage.key} className="grid gap-2 md:grid-cols-[minmax(140px,180px)_minmax(0,1fr)_auto] md:items-center">
+                            <div>
+                              <p className="text-[12px] font-semibold text-white/88">{stage.label}</p>
+                              <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/38">{stage.pctFromPrev}% {pick(lang, '전 단계 대비', 'from prev')}</p>
+                            </div>
+                            <div className="space-y-2">
+                              <Meter value={stage.pctFromTop} color={stage.color} height={8} />
+                              <div className="flex items-center justify-between text-[11px] text-white/44">
+                                <span>{pick(lang, '전체 대비', 'of all')}</span>
+                                <span className="tabular-nums">{stage.pctFromTop}%</span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[22px] font-[800] tabular-nums text-white/92">{stage.count}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid gap-5">
+                      <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '병목 주차', 'Bottleneck Weeks')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '병목 구간을 먼저 확인합니다', 'Review the friction points first')}</h3>
+                        <div className="mt-4 space-y-3">
+                          {dashboardInsights.bottlenecks.slice(0, 4).map((week) => (
+                            <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                              <div className="flex items-center justify-between gap-3">
+                                <div>
+                                  <p className="text-[12px] font-semibold text-white/92">W{week.weekId} · {week.title}</p>
+                                  <p className="mt-1 text-[11px] text-white/44">
+                                    {pick(lang, `${week.learners}명 진행 중 · 평균 ${week.avgProgress}%`, `${week.learners} learners · avg ${week.avgProgress}%`)}
+                                  </p>
+                                </div>
+                                <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${week.attention > 0 ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
+                                  {pick(lang, `주의 ${week.attention}`, `${week.attention} alerts`)}
+                                </span>
+                              </div>
+                              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
+                                <div>{pick(lang, `정체 ${week.stalled}`, `Stalled ${week.stalled}`)}</div>
+                                <div>{pick(lang, `저득점 ${week.lowScore}`, `Low score ${week.lowScore}`)}</div>
+                              </div>
+                            </div>
+                          ))}
+                          {dashboardInsights.bottlenecks.length === 0 && (
+                            <p className="text-[12px] text-white/40">{pick(lang, '주차 데이터가 없습니다', 'No week bottlenecks yet')}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차 분포', 'Week Distribution')}</p>
+                        <div className="mt-4 space-y-2.5">
+                          {weekDistribution.map((week) => (
+                            <div key={week.weekId} className="flex items-center gap-3">
+                              <span className="w-8 shrink-0 text-[11px] font-semibold text-white/58">W{week.weekId}</span>
+                              <div className="flex-1">
+                                <Meter value={(week.count / dashboardInsights.weekMax) * 100} color="#5741d8" height={7} />
+                              </div>
+                              <span className="w-8 shrink-0 text-right text-[12px] font-[700] tabular-nums text-white/88">{week.count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {isAnalyticsTab && (
                   <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
@@ -1326,7 +1289,7 @@ export default function Admin() {
                         <BarChart3 size={16} />
                       </span>
                     </div>
-                    <div className="mt-4 space-y-2">
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                       {dashboardInsights.lowPassQuizzes.map((quiz) => (
                         <div key={`${quiz.quizType}:${quiz.quizId}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
                           <div className="flex items-center gap-2">
@@ -1356,111 +1319,172 @@ export default function Admin() {
                       )}
                     </div>
                   </div>
-                </div>
+                )}
 
-                <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] overflow-hidden">
-                    <div className="border-b border-[rgba(255,255,255,0.06)] px-5 py-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <label className="flex flex-1 items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2 min-w-[160px] max-w-[280px]">
-                          <Search size={13} className="text-white/40" />
-                          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={pick(lang, '검색', 'Search')}
-                            className="w-full bg-transparent text-[12px] text-white/92 placeholder:text-white/40 outline-none" />
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => setFocusSegment('all')}
-                          className={`rounded-xl border px-3 py-2 text-[11px] font-semibold transition-colors ${
-                            focusSegment === 'all'
-                              ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
-                              : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-white/58 hover:text-white/82'
-                          }`}
-                        >
-                          {pick(lang, '개입 필터 해제', 'Clear ops filter')}
-                        </button>
-                        <FilterSelect label={pick(lang, '상태', 'Status')} value={statusFilter} onChange={setStatusFilter} options={statusOptions} />
-                        <FilterSelect label={pick(lang, '주차', 'Week')} value={weekFilter} onChange={setWeekFilter} options={weekOptions} />
-                        <span className="text-[11px] text-white/40 tabular-nums">{visibleRows.length}</span>
+                {isInterventionsTab && (
+                  <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '위험군 큐', 'At-risk Queue')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 확인 대상 학습자', 'Priority learners to review')}</h3>
+                        </div>
+                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                          <AlertTriangle size={16} />
+                        </span>
+                      </div>
+                      <div className="mt-4 space-y-2">
+                        {dashboardInsights.riskQueue.map((row) => (
+                          <button
+                            key={row.id}
+                            type="button"
+                            onClick={() => openLearnerRow(row.id)}
+                            className="flex w-full items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-left transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                          >
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="truncate text-[13px] font-semibold text-white/92">{row.displayName}</p>
+                                {stageBadge(lang, row.stage)}
+                              </div>
+                              <p className="mt-1 truncate text-[11px] text-white/46">{row.reasons.join(' · ')}</p>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              <p className="text-[12px] font-semibold tabular-nums text-white/70">W{row.currentWeek}</p>
+                              <p className="mt-1 text-[10px] text-white/40">{formatDate(lang, row.lastActivityAt)}</p>
+                            </div>
+                          </button>
+                        ))}
+                        {dashboardInsights.riskQueue.length === 0 && (
+                          <p className="text-[12px] text-white/40">{pick(lang, '우선 확인 대상이 없습니다', 'No urgent risk queue right now')}</p>
+                        )}
                       </div>
                     </div>
-                    <div className="divide-y divide-[rgba(255,255,255,0.06)] max-h-[600px] overflow-y-auto">
-                      {visibleRows.map((row) => (
-                        <button key={row.id} type="button" onClick={() => setSelectedId(row.id)}
-                          className={`flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors ${row.id === selectedId ? 'bg-[rgba(87,65,216,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <p className="text-[13px] font-semibold text-white/92">{row.displayName}</p>
-                              {stageBadge(lang, getLearnerStage(row))}
+
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '개입 원칙', 'Intervention Guidance')}</p>
+                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '그룹별 대응 기준을 한 번에 봅니다', 'Keep the response rules visible while triaging')}</h3>
+                      <div className="mt-4 space-y-3">
+                        {interventionGroups.map((group) => (
+                          <div key={`guide-${group.key}`} className={`rounded-xl border px-4 py-4 ${group.tone}`}>
+                            <div className="flex items-center justify-between gap-3">
+                              <p className="text-[13px] font-semibold">{group.title}</p>
+                              <span className="text-[18px] font-[800] tabular-nums">{group.count}</span>
                             </div>
-                            <p className="mt-0.5 text-[11px] text-white/66">W{row.currentWeek} · {row.articlePassedCount}/{totalLessons} quiz · {row.weeklyPassedCount}/{weeks.length} test</p>
+                            <p className="mt-2 text-[12px] opacity-80">{group.desc}</p>
+                            <p className="mt-3 text-[11px] opacity-75">
+                              {group.samples.length > 0 ? group.samples.join(' · ') : pick(lang, '현재 대상 없음', 'No learners in this group')}
+                            </p>
                           </div>
-                          <div className="shrink-0 w-20 text-right">
-                            <p className="text-[16px] font-[800] tabular-nums text-white/92">{row.progressPct}%</p>
-                            <div className="mt-1">
-                              <Meter value={row.progressPct} />
-                            </div>
-                          </div>
-                        </button>
-                      ))}
-                      {visibleRows.length === 0 && (
-                        <div className="px-5 py-10 text-center text-[12px] text-white/40">
-                          {pick(lang, '현재 필터에 맞는 학습자가 없습니다', 'No learners match the current filters')}
-                        </div>
-                      )}
+                        ))}
+                      </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Sidebar */}
-                  <aside className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5 xl:sticky xl:top-24 xl:max-h-[calc(100svh-8rem)] xl:overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
-                    {selectedRow ? (
-                      <>
-                        <div className="flex items-center gap-2">
-                          <h2 className="text-[20px] font-[800] tracking-[-0.04em] text-white/92">{selectedRow.displayName}</h2>
-                          {stageBadge(lang, getLearnerStage(selectedRow))}
+                {isInterventionsTab && (
+                  <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
+                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] overflow-hidden">
+                      <div className="border-b border-[rgba(255,255,255,0.06)] px-5 py-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <label className="flex flex-1 items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2 min-w-[160px] max-w-[280px]">
+                            <Search size={13} className="text-white/40" />
+                            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={pick(lang, '검색', 'Search')}
+                              className="w-full bg-transparent text-[12px] text-white/92 placeholder:text-white/40 outline-none" />
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setFocusSegment('all')}
+                            className={`rounded-xl border px-3 py-2 text-[11px] font-semibold transition-colors ${
+                              focusSegment === 'all'
+                                ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
+                                : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-white/58 hover:text-white/82'
+                            }`}
+                          >
+                            {pick(lang, '개입 필터 해제', 'Clear ops filter')}
+                          </button>
+                          <FilterSelect label={pick(lang, '상태', 'Status')} value={statusFilter} onChange={setStatusFilter} options={statusOptions} />
+                          <FilterSelect label={pick(lang, '주차', 'Week')} value={weekFilter} onChange={setWeekFilter} options={weekOptions} />
+                          <span className="text-[11px] text-white/40 tabular-nums">{visibleRows.length}</span>
                         </div>
-                        <p className="mt-1 text-[12px] text-white/66">{selectedRow.email || '-'}</p>
-
-                        <div className="mt-4 grid grid-cols-2 gap-2">
-                          {[
-                            { l: 'Week', v: selectedRow.currentWeek },
-                            { l: pick(lang, '진행률', 'Progress'), v: `${selectedRow.progressPct}%` },
-                            { l: pick(lang, '퀴즈', 'Quiz'), v: `${selectedRow.articlePassedCount}/${totalLessons}` },
-                            { l: pick(lang, '테스트', 'Test'), v: `${selectedRow.weeklyPassedCount}/${weeks.length}` },
-                            { l: pick(lang, '실습', 'Action'), v: `${selectedRow.completedActions}/${totalActions}` },
-                            { l: pick(lang, '평균점수', 'Avg'), v: `${selectedRow.avgScore}%` },
-                          ].map((s) => (
-                            <div key={s.l} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
-                              <p className="text-[9px] uppercase tracking-[0.14em] text-white/40">{s.l}</p>
-                              <p className="mt-1 text-[18px] font-[800] tabular-nums text-white/92">{s.v}</p>
-                            </div>
-                          ))}
-                        </div>
-
-                        <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-white/40">{pick(lang, '퀴즈 · 테스트 기록', 'Quiz & Test History')}</p>
-                        <div className="mt-2 space-y-1">
-                          {selectedRow.recentQuizAttempts.length > 0 ? selectedRow.recentQuizAttempts.map((a, i) => (
-                            <div key={`${a.quizType}-${a.quizId}-${i}`} className="flex items-center justify-between gap-2 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5">
-                                  <span className={`rounded px-1 py-0.5 text-[8px] font-bold uppercase ${a.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
-                                    {a.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
-                                  </span>
-                                  <p className="truncate text-[11px] font-medium text-white/92">{resolveQuizLabel(lang, a.quizType, a.quizId)}</p>
-                                </div>
-                                <p className="text-[9px] text-white/40">{formatDate(lang, a.attemptedAt)}</p>
+                      </div>
+                      <div className="divide-y divide-[rgba(255,255,255,0.06)] max-h-[600px] overflow-y-auto">
+                        {visibleRows.map((row) => (
+                          <button key={row.id} type="button" onClick={() => setSelectedId(row.id)}
+                            className={`flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors ${row.id === selectedId ? 'bg-[rgba(87,65,216,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-[13px] font-semibold text-white/92">{row.displayName}</p>
+                                {stageBadge(lang, getLearnerStage(row))}
                               </div>
-                              <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold tabular-nums ${a.passed ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]' : 'bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'}`}>
-                                {a.score}/{a.total}
-                              </span>
+                              <p className="mt-0.5 text-[11px] text-white/66">W{row.currentWeek} · {row.articlePassedCount}/{totalLessons} quiz · {row.weeklyPassedCount}/{weeks.length} test</p>
                             </div>
-                          )) : <p className="text-[11px] text-white/40">{pick(lang, '기록 없음', 'No records')}</p>}
-                        </div>
-                      </>
-                    ) : (
-                      <p className="py-8 text-center text-[12px] text-white/40">{pick(lang, '학습자를 선택하세요', 'Select a learner')}</p>
-                    )}
-                  </aside>
-                </div>
+                            <div className="shrink-0 w-20 text-right">
+                              <p className="text-[16px] font-[800] tabular-nums text-white/92">{row.progressPct}%</p>
+                              <div className="mt-1">
+                                <Meter value={row.progressPct} />
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                        {visibleRows.length === 0 && (
+                          <div className="px-5 py-10 text-center text-[12px] text-white/40">
+                            {pick(lang, '현재 필터에 맞는 학습자가 없습니다', 'No learners match the current filters')}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <aside className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5 xl:sticky xl:top-24 xl:max-h-[calc(100svh-8rem)] xl:overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                      {selectedRow ? (
+                        <>
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-[20px] font-[800] tracking-[-0.04em] text-white/92">{selectedRow.displayName}</h2>
+                            {stageBadge(lang, getLearnerStage(selectedRow))}
+                          </div>
+                          <p className="mt-1 text-[12px] text-white/66">{selectedRow.email || '-'}</p>
+
+                          <div className="mt-4 grid grid-cols-2 gap-2">
+                            {[
+                              { l: 'Week', v: selectedRow.currentWeek },
+                              { l: pick(lang, '진행률', 'Progress'), v: `${selectedRow.progressPct}%` },
+                              { l: pick(lang, '퀴즈', 'Quiz'), v: `${selectedRow.articlePassedCount}/${totalLessons}` },
+                              { l: pick(lang, '테스트', 'Test'), v: `${selectedRow.weeklyPassedCount}/${weeks.length}` },
+                              { l: pick(lang, '실습', 'Action'), v: `${selectedRow.completedActions}/${totalActions}` },
+                              { l: pick(lang, '평균점수', 'Avg'), v: `${selectedRow.avgScore}%` },
+                            ].map((s) => (
+                              <div key={s.l} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
+                                <p className="text-[9px] uppercase tracking-[0.14em] text-white/40">{s.l}</p>
+                                <p className="mt-1 text-[18px] font-[800] tabular-nums text-white/92">{s.v}</p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-white/40">{pick(lang, '퀴즈 · 테스트 기록', 'Quiz & Test History')}</p>
+                          <div className="mt-2 space-y-1">
+                            {selectedRow.recentQuizAttempts.length > 0 ? selectedRow.recentQuizAttempts.map((a, i) => (
+                              <div key={`${a.quizType}-${a.quizId}-${i}`} className="flex items-center justify-between gap-2 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className={`rounded px-1 py-0.5 text-[8px] font-bold uppercase ${a.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
+                                      {a.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
+                                    </span>
+                                    <p className="truncate text-[11px] font-medium text-white/92">{resolveQuizLabel(lang, a.quizType, a.quizId)}</p>
+                                  </div>
+                                  <p className="text-[9px] text-white/40">{formatDate(lang, a.attemptedAt)}</p>
+                                </div>
+                                <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold tabular-nums ${a.passed ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]' : 'bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'}`}>
+                                  {a.score}/{a.total}
+                                </span>
+                              </div>
+                            )) : <p className="text-[11px] text-white/40">{pick(lang, '기록 없음', 'No records')}</p>}
+                          </div>
+                        </>
+                      ) : (
+                        <p className="py-8 text-center text-[12px] text-white/40">{pick(lang, '학습자를 선택하세요', 'Select a learner')}</p>
+                      )}
+                    </aside>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1517,82 +1541,6 @@ export default function Admin() {
               </div>
             )}
 
-            {/* ─── Analytics Tab ─── */}
-            {tab === 'analytics' && (
-              <div className="mt-5 grid gap-5 lg:grid-cols-2">
-                {/* Week distribution */}
-                <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 분포', 'Week Distribution')}</p>
-                  <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '학습자가 어디에 있는지', 'Where learners are')}</h3>
-                  <div className="mt-4 space-y-2">
-                    {weekDistribution.map((w) => {
-                      const max = Math.max(1, ...weekDistribution.map((x) => x.count))
-                      return (
-                        <div key={w.weekId} className="flex items-center gap-3">
-                          <span className="shrink-0 w-8 text-[11px] font-semibold text-white/66">W{w.weekId}</span>
-                          <div className="flex-1 h-5 rounded bg-[rgba(255,255,255,0.08)] overflow-hidden">
-                            <div className="h-full rounded bg-[#5741d8] transition-all" style={{ width: `${(w.count / max) * 100}%` }} />
-                          </div>
-                          <span className="shrink-0 w-6 text-right text-[12px] font-[700] tabular-nums text-white/92">{w.count}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Stage distribution */}
-                <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '상태 분포', 'Stage Distribution')}</p>
-                  <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '학습자 상태 현황', 'Learner status overview')}</h3>
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    {[
-                      { stage: 'active', color: '#5741d8' },
-                      { stage: 'stalled', color: '#F87171' },
-                      { stage: 'completed', color: '#4ADE80' },
-                      { stage: 'not-started', color: '#6B7280' },
-                    ].map((s) => {
-                      const count = rows.filter((r) => getLearnerStage(r) === s.stage).length
-                      return (
-                        <div key={s.stage} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
-                            {stageBadge(lang, s.stage)}
-                          </div>
-                          <p className="mt-2 text-[24px] font-[800] tabular-nums text-white/92">{count}</p>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Quiz difficulty */}
-                <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5 lg:col-span-2">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '퀴즈 난이도', 'Quiz Difficulty')}</p>
-                  <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '통과율이 낮은 퀴즈부터', 'Hardest quizzes first')}</h3>
-                  {quizAnalytics.length > 0 ? (
-                    <div className="mt-4 space-y-1.5">
-                      {quizAnalytics.map((q) => (
-                        <div key={`${q.quizType}:${q.quizId}`} className="flex items-center gap-3 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-4 py-2.5">
-                          <span className={`shrink-0 rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${q.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
-                            {q.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
-                          </span>
-                          <p className="min-w-0 flex-1 truncate text-[12px] font-medium text-white/92">{resolveQuizLabel(lang, q.quizType, q.quizId)}</p>
-                          <div className="shrink-0 flex items-center gap-3 text-[11px] tabular-nums">
-                            <span className="text-white/40">{q.attempts}{pick(lang, '회', '')}</span>
-                            <span className="text-white/66">{pick(lang, '평균', 'avg')} {q.avgScore}%</span>
-                            <span className={`font-bold ${q.passRate >= 70 ? 'text-[#4ADE80]' : q.passRate >= 40 ? 'text-[#FBBF24]' : 'text-[#FCA5A5]'}`}>
-                              {q.passRate}% {pick(lang, '통과', 'pass')}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="mt-4 text-[12px] text-white/40">{pick(lang, '퀴즈 데이터 없음', 'No quiz data yet')}</p>
-                  )}
-                </div>
-              </div>
-            )}
           </>
         )}
       </section>

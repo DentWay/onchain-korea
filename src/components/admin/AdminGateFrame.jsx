@@ -24,6 +24,7 @@ export default function AdminGateFrame({
   chips = [],
   children,
   aside,
+  compact = false,
 }) {
   return (
     <div data-app-theme="dark" className="relative min-h-screen overflow-hidden bg-[#0c0d11] px-4 py-8 text-[#e8e9ed] md:px-6 md:py-10">
@@ -33,7 +34,7 @@ export default function AdminGateFrame({
         <div className="absolute bottom-[-8%] right-[-8%] h-80 w-80 rounded-full bg-[rgba(205,49,58,0.10)] blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className={`relative mx-auto ${compact ? 'max-w-3xl' : 'max-w-6xl'}`}>
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link to={backTo} className="text-[12px] text-[#a0a3b5] transition-colors hover:text-[#e8e9ed]">
             {backLabel}
@@ -41,7 +42,7 @@ export default function AdminGateFrame({
           <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#686b82]">{topLabel}</div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_360px] lg:items-start">
+        <div className={aside ? 'grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_360px] lg:items-start' : ''}>
           <section className="ok-readable-panel p-6 md:p-8 lg:p-10">
             <div className="relative z-10">
               <div className="flex flex-col gap-5 border-b border-[rgba(255,255,255,0.08)] pb-6">
@@ -79,9 +80,11 @@ export default function AdminGateFrame({
             </div>
           </section>
 
-          <aside className="ok-readable-panel-soft p-5 md:p-6">
-            <div className="relative z-10">{aside}</div>
-          </aside>
+          {aside ? (
+            <aside className="ok-readable-panel-soft p-5 md:p-6">
+              <div className="relative z-10">{aside}</div>
+            </aside>
+          ) : null}
         </div>
       </div>
     </div>

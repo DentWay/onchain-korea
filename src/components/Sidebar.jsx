@@ -1,5 +1,5 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, X, LogOut, LockKeyhole, Shield, UserCircle2, BarChart3 } from 'lucide-react'
+import { LayoutDashboard, BookOpen, Zap, Flame, MessageCircle, Trophy, X, LogOut, LockKeyhole, Shield, UserCircle2, BarChart3, Gauge } from 'lucide-react'
 import BrandLockup from './brand/BrandLockup'
 import useProgress from '../hooks/useProgress'
 import useAuth from '../hooks/useAuth'
@@ -63,7 +63,7 @@ export default function Sidebar({ onClose }) {
       items: [
         { to: ADMIN_ENTRY_PATH, icon: Shield, text: pick(lang, '관리자 입구', 'Admin Entry') },
         { to: ADMIN_ACCESS_PATH, icon: LockKeyhole, text: pick(lang, '잠금 해제', 'Unlock Access') },
-        ...(adminAccessGranted ? [{ to: `${ADMIN_CONSOLE_PATH}?view=dashboard`, icon: LayoutDashboard, text: pick(lang, '운영 대시보드', 'Ops Dashboard') }] : []),
+        ...(adminAccessGranted ? [{ to: `${ADMIN_CONSOLE_PATH}?view=overview`, icon: Gauge, text: pick(lang, '운영 개요', 'Ops Overview') }] : []),
       ],
     },
     {
@@ -79,9 +79,11 @@ export default function Sidebar({ onClose }) {
     {
       label: pick(lang, '운영 개요', 'Operations'),
       items: [
-        { to: `${ADMIN_CONSOLE_PATH}?view=dashboard`, icon: LayoutDashboard, text: pick(lang, '운영 대시보드', 'Ops Dashboard') },
-        { to: `${ADMIN_CONSOLE_PATH}?view=leaderboard`, icon: Trophy, text: pick(lang, '학습자 랭킹', 'Learner Ranking') },
-        { to: `${ADMIN_CONSOLE_PATH}?view=analytics`, icon: BarChart3, text: pick(lang, '학습 분석', 'Learning Analytics') },
+        { to: `${ADMIN_CONSOLE_PATH}?view=overview`, icon: Gauge, text: pick(lang, '운영 개요', 'Overview') },
+        { to: `${ADMIN_CONSOLE_PATH}?view=interventions`, icon: Shield, text: pick(lang, '개입 보드', 'Interventions') },
+        { to: `${ADMIN_CONSOLE_PATH}?view=content`, icon: BookOpen, text: pick(lang, '콘텐츠 검수', 'Content Audit') },
+        { to: `${ADMIN_CONSOLE_PATH}?view=analytics`, icon: BarChart3, text: pick(lang, '학습 분석', 'Analytics') },
+        { to: `${ADMIN_CONSOLE_PATH}?view=leaderboard`, icon: Trophy, text: pick(lang, '학습자 랭킹', 'Leaderboard') },
       ],
     },
     {
