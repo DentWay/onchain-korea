@@ -59,6 +59,13 @@ function metricToneClass(value) {
   if (value > 0) return 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
   return 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/46'
 }
+function classifyInterventionTier(row) {
+  if (matchesOpsSegment(row, 'urgent')) return 'urgent'
+  if (matchesOpsSegment(row, 'quiz-recovery')) return 'quiz-recovery'
+  if (matchesOpsSegment(row, 'inactive')) return 'inactive'
+  if (matchesOpsSegment(row, 'near-finish')) return 'near-finish'
+  return 'healthy'
+}
 function matchesOpsSegment(row, segment) {
   switch (segment) {
     case 'urgent':
@@ -172,6 +179,25 @@ function Meter({ value, color = '#5741d8', height = 6 }) {
   return (
     <div className="w-full overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]" style={{ height }}>
       <div className="h-full rounded-full transition-all duration-300" style={{ width: `${clamp(value)}%`, background: color }} />
+    </div>
+  )
+}
+
+function SegmentedMeter({ segments, height = 8 }) {
+  return (
+    <div className="flex w-full overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]" style={{ height }}>
+      {segments.map((segment) => (
+        <div
+          key={segment.key}
+          className="h-full transition-all duration-300"
+          style={{
+            width: `${Math.max(segment.pct, segment.count > 0 ? 3 : 0)}%`,
+            background: segment.color,
+            opacity: segment.count > 0 ? 1 : 0.18,
+          }}
+          title={`${segment.label}: ${segment.count}`}
+        />
+      ))}
     </div>
   )
 }
@@ -440,6 +466,29 @@ export default function Admin() {
     })
   }, [rows, lang])
 
+  const interventionMix = useMemo(() => {
+    const definitions = [
+      { key: 'urgent', label: pick(lang, '즉시 개입', 'Immediate'), color: '#F87171' },
+      { key: 'quiz-recovery', label: pick(lang, '퀴즈 회복군', 'Quiz recovery'), color: '#FBBF24' },
+      { key: 'inactive', label: pick(lang, '미시작', 'Inactive'), color: '#94A3B8' },
+      { key: 'near-finish', label: pick(lang, '수료 직전', 'Near finish'), color: '#4ADE80' },
+      { key: 'healthy', label: pick(lang, '안정', 'Healthy'), color: '#5741d8' },
+    ]
+
+    const counts = new Map(definitions.map((item) => [item.key, 0]))
+    const targetRows = rows.filter((row) => !row.isAdmin)
+    for (const row of targetRows) {
+      const key = classifyInterventionTier(row)
+      counts.set(key, (counts.get(key) || 0) + 1)
+    }
+
+    return definitions.map((item) => ({
+      ...item,
+      count: counts.get(item.key) || 0,
+      pct: ratio(counts.get(item.key) || 0, targetRows.length),
+    }))
+  }, [rows, lang])
+
   const weekPerformanceGrid = useMemo(() => {
     return weeks.map((week) => {
       const lessonIds = week.lessons.map((lesson) => lesson.id)
@@ -549,6 +598,57 @@ export default function Admin() {
       .sort((a, b) => b.severity - a.severity || b.weekId - a.weekId)
   }, [contentAudit, lang])
 
+  const contentReadinessMatrix = useMemo(() => {
+    return contentAudit.weeksAudit.map((week) => {
+      const structureReady = week.lessons === 3 && week.actions >= 1 && week.hasHidden && week.requiredWeeklyQuestions > 0
+      const articleReady = week.articleQuizReadyCount === week.lessons
+      const hiddenReady = week.hasHidden
+      const weeklyReady = week.requiredWeeklyQuestions > 0 && week.weeklyTestQuestionCount >= week.requiredWeeklyQuestions
+      const planned = week.status === 'planned'
+
+      return {
+        ...week,
+        cells: [
+          {
+            key: 'structure',
+            label: pick(lang, '구조', 'Structure'),
+            short: pick(lang, '구조', 'STR'),
+            state: structureReady ? 'ready' : 'issue',
+            value: structureReady ? pick(lang, '정상', 'Ready') : pick(lang, '점검', 'Fix'),
+          },
+          {
+            key: 'article',
+            label: pick(lang, '아티클 퀴즈', 'Article quiz'),
+            short: pick(lang, '퀴즈', 'QUIZ'),
+            state: articleReady ? 'ready' : planned ? 'planned' : 'issue',
+            value: `${week.articleQuizReadyCount}/${week.lessons}`,
+          },
+          {
+            key: 'action',
+            label: pick(lang, '실습', 'Action'),
+            short: pick(lang, '실습', 'ACT'),
+            state: week.actions > 0 ? 'ready' : 'issue',
+            value: `${week.actions}`,
+          },
+          {
+            key: 'hidden',
+            label: pick(lang, '히든 토픽', 'Hidden'),
+            short: pick(lang, '히든', 'HID'),
+            state: hiddenReady ? 'ready' : 'issue',
+            value: hiddenReady ? '1' : '0',
+          },
+          {
+            key: 'weekly',
+            label: pick(lang, '주간 테스트', 'Weekly test'),
+            short: pick(lang, '테스트', 'TEST'),
+            state: weeklyReady ? 'ready' : planned ? 'planned' : 'issue',
+            value: `${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`,
+          },
+        ],
+      }
+    })
+  }, [contentAudit, lang])
+
   const dashboardInsights = useMemo(() => {
     const now = Date.now()
     const startedRows = rows.filter((r) => isLearnerStarted(r))
@@ -621,6 +721,44 @@ export default function Admin() {
       weekMax: Math.max(1, ...weekDistribution.map((week) => week.count)),
     }
   }, [rows, quizAnalytics, weekDistribution, lang])
+
+  const weekHealthMap = useMemo(() => {
+    const bottleneckMap = new Map(dashboardInsights.bottlenecks.map((week) => [week.weekId, week]))
+    return weeks.map((week) => {
+      const bottleneck = bottleneckMap.get(week.id)
+      const learners = bottleneck?.learners || 0
+      const alerts = bottleneck?.attention || 0
+      const stalled = bottleneck?.stalled || 0
+      const avgProgress = bottleneck?.avgProgress || 0
+      const alertRate = ratio(alerts, learners)
+
+      return {
+        weekId: week.id,
+        title: l(week.title, lang),
+        learners,
+        alerts,
+        stalled,
+        avgProgress,
+        alertRate,
+        glow:
+          alertRate >= 50
+            ? 'rgba(248,113,113,0.18)'
+            : alertRate >= 25
+              ? 'rgba(251,191,36,0.16)'
+              : learners > 0
+                ? 'rgba(87,65,216,0.16)'
+                : 'rgba(255,255,255,0.04)',
+      }
+    })
+  }, [dashboardInsights.bottlenecks, lang])
+
+  const difficultySpectrum = useMemo(() => {
+    return quizAnalytics.slice(0, 8).map((quiz) => ({
+      ...quiz,
+      label: resolveQuizLabel(lang, quiz.quizType, quiz.quizId),
+      failRate: 100 - quiz.passRate,
+    }))
+  }, [quizAnalytics, lang])
 
   const selectedRow = visibleRows.find((r) => r.id === selectedId) || null
 
@@ -855,6 +993,67 @@ export default function Admin() {
                           </Link>
                         ))}
                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {isContentTab && (
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 규격 매트릭스', 'Readiness matrix')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 전체를 한 줄씩 스캔합니다', 'Scan week-by-week readiness in one pass')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <LayoutDashboard size={16} />
+                      </span>
+                    </div>
+
+                    <div className="mt-5 space-y-3">
+                      {contentReadinessMatrix.map((week) => (
+                        <div key={`matrix-${week.weekId}`} className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
+                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                            </div>
+                            <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${
+                              week.status === 'ready'
+                                ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
+                                : week.status === 'planned'
+                                  ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]'
+                                  : 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                            }`}>
+                              {week.status === 'ready'
+                                ? pick(lang, '준비 완료', 'Ready')
+                                : week.status === 'planned'
+                                  ? pick(lang, '교체 예정', 'Planned')
+                                  : pick(lang, '검토 필요', 'Needs review')}
+                            </span>
+                          </div>
+
+                          <div className="mt-4 grid gap-2 md:grid-cols-5">
+                            {week.cells.map((cell) => (
+                              <div
+                                key={`${week.weekId}-${cell.key}`}
+                                className={`rounded-xl border px-3 py-3 ${
+                                  cell.state === 'ready'
+                                    ? 'border-[rgba(74,222,128,0.20)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]'
+                                    : cell.state === 'planned'
+                                      ? 'border-[rgba(139,92,246,0.18)] bg-[rgba(139,92,246,0.10)] text-[#c4b5fd]'
+                                      : 'border-[rgba(248,113,113,0.18)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-[10px] uppercase tracking-[0.14em] opacity-80">{cell.short}</p>
+                                  <p className="text-[12px] font-[800] tabular-nums">{cell.value}</p>
+                                </div>
+                                <p className="mt-2 text-[11px] opacity-75">{cell.label}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -1261,15 +1460,44 @@ export default function Admin() {
                       </div>
 
                       <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차 분포', 'Week Distribution')}</p>
-                        <div className="mt-4 space-y-2.5">
-                          {weekDistribution.map((week) => (
-                            <div key={week.weekId} className="flex items-center gap-3">
-                              <span className="w-8 shrink-0 text-[11px] font-semibold text-white/58">W{week.weekId}</span>
-                              <div className="flex-1">
-                                <Meter value={(week.count / dashboardInsights.weekMax) * 100} color="#5741d8" height={7} />
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 히트맵', 'Week health map')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 중 어디에 경고가 몰리는지 봅니다', 'Spot the weeks that carry the most pressure')}</h3>
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                          {weekHealthMap.map((week) => (
+                            <div
+                              key={`health-${week.weekId}`}
+                              className="rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-3"
+                              style={{ background: `linear-gradient(135deg, ${week.glow}, rgba(255,255,255,0.03))` }}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <p className="text-[11px] font-semibold text-white/88">W{week.weekId}</p>
+                                <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                                  week.alertRate >= 50
+                                    ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
+                                    : week.alertRate >= 25
+                                      ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
+                                      : week.learners > 0
+                                        ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]'
+                                        : 'bg-[rgba(255,255,255,0.06)] text-white/46'
+                                }`}>
+                                  {week.alertRate}% {pick(lang, '경고', 'alert')}
+                                </span>
                               </div>
-                              <span className="w-8 shrink-0 text-right text-[12px] font-[700] tabular-nums text-white/88">{week.count}</span>
+                              <p className="mt-2 text-[12px] font-medium text-white/70">{week.title}</p>
+                              <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] text-white/58">
+                                <div>
+                                  <p className="text-white/38">{pick(lang, '진입', 'Entered')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.learners}</p>
+                                </div>
+                                <div>
+                                  <p className="text-white/38">{pick(lang, '주의', 'Alerts')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.alerts}</p>
+                                </div>
+                                <div>
+                                  <p className="text-white/38">{pick(lang, '평균', 'Avg')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.avgProgress}%</p>
+                                </div>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -1289,19 +1517,31 @@ export default function Admin() {
                         <BarChart3 size={16} />
                       </span>
                     </div>
-                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                      {dashboardInsights.lowPassQuizzes.map((quiz) => (
-                        <div key={`${quiz.quizType}:${quiz.quizId}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                          <div className="flex items-center gap-2">
+                    <div className="mt-4 space-y-2.5">
+                      {difficultySpectrum.map((quiz) => (
+                        <div key={`${quiz.quizType}:${quiz.quizId}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                          <div className="flex flex-wrap items-center gap-2">
                             <span className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${quiz.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
                               {quiz.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
                             </span>
-                            <p className="min-w-0 flex-1 truncate text-[12px] font-semibold text-white/88">{resolveQuizLabel(lang, quiz.quizType, quiz.quizId)}</p>
+                            <p className="min-w-0 flex-1 truncate text-[12px] font-semibold text-white/88">{quiz.label}</p>
+                            <span className={`text-[12px] font-[800] tabular-nums ${
+                              quiz.passRate >= 70 ? 'text-[#4ADE80]' : quiz.passRate >= 40 ? 'text-[#FBBF24]' : 'text-[#FCA5A5]'
+                            }`}>
+                              {quiz.passRate}% {pick(lang, '통과', 'pass')}
+                            </span>
+                          </div>
+                          <div className="mt-3">
+                            <Meter
+                              value={quiz.passRate}
+                              color={quiz.passRate >= 70 ? '#4ADE80' : quiz.passRate >= 40 ? '#FBBF24' : '#F87171'}
+                              height={9}
+                            />
                           </div>
                           <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
                             <div>
-                              <p className="text-white/38">{pick(lang, '통과율', 'Pass rate')}</p>
-                              <p className={`mt-1 font-[700] tabular-nums ${quiz.passRate >= 70 ? 'text-[#4ADE80]' : quiz.passRate >= 40 ? 'text-[#FBBF24]' : 'text-[#FCA5A5]'}`}>{quiz.passRate}%</p>
+                              <p className="text-white/38">{pick(lang, '실패율', 'Fail rate')}</p>
+                              <p className="mt-1 font-[700] tabular-nums text-white/88">{quiz.failRate}%</p>
                             </div>
                             <div>
                               <p className="text-white/38">{pick(lang, '평균점수', 'Avg score')}</p>
@@ -1314,9 +1554,42 @@ export default function Admin() {
                           </div>
                         </div>
                       ))}
-                      {dashboardInsights.lowPassQuizzes.length === 0 && (
+                      {difficultySpectrum.length === 0 && (
                         <p className="text-[12px] text-white/40">{pick(lang, '퀴즈 데이터가 없습니다', 'No quiz data yet')}</p>
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {isInterventionsTab && (
+                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '개입 분포', 'Intervention mix')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '운영 큐가 어디에 몰려 있는지 먼저 봅니다', 'See where the operational load is concentrated')}</h3>
+                      </div>
+                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-[11px] font-semibold text-white/62">
+                        {pick(lang, '우선순위 기준', 'Priority buckets')}
+                      </span>
+                    </div>
+
+                    <div className="mt-5">
+                      <SegmentedMeter segments={interventionMix} height={12} />
+                    </div>
+
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+                      {interventionMix.map((segment) => (
+                        <div key={`mix-${segment.key}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2.5 w-2.5 rounded-full" style={{ background: segment.color }} />
+                            <p className="text-[11px] font-semibold text-white/76">{segment.label}</p>
+                          </div>
+                          <div className="mt-3 flex items-end justify-between gap-3">
+                            <p className="text-[24px] font-[800] tabular-nums text-white/92">{segment.count}</p>
+                            <p className="text-[12px] font-semibold tabular-nums text-white/48">{segment.pct}%</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
