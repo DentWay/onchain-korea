@@ -2,7 +2,9 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CheckCircle2, Home, LogIn, Trash2 } from 'lucide-react'
 import BrandLockup from '../components/brand/BrandLockup'
+import ThemeToggle from '../components/ThemeToggle'
 import useLang from '../hooks/useLang'
+import useTheme from '../hooks/useTheme'
 
 function pick(lang, ko, en) {
   return lang === 'ko' ? ko : en
@@ -10,34 +12,38 @@ function pick(lang, ko, en) {
 
 export default function SignedOut() {
   const { lang } = useLang()
+  const { isDark } = useTheme()
   const [searchParams] = useSearchParams()
   const reason = searchParams.get('reason')
   const accountDeleted = reason === 'deleted'
 
   return (
-    <div className="min-h-screen bg-white px-4 py-10">
+    <div className="ok-theme-workbench min-h-screen px-4 py-10">
+      <div className="mx-auto flex max-w-5xl justify-end">
+        <ThemeToggle />
+      </div>
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl items-center justify-center">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white w-full max-w-4xl p-5 md:p-8"
+          className="w-full max-w-4xl p-5 md:p-8"
         >
-          <div className="rounded-xl border border-[#dedee5] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.03)] overflow-hidden">
-            <div className="border-b border-[#dedee5] px-6 pb-6 pt-7 text-center md:px-8">
+          <div className="overflow-hidden rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+            <div className="border-b border-[var(--app-divider)] px-6 pb-6 pt-7 text-center md:px-8">
               <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full ${
                 accountDeleted ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'
               }`}>
                 {accountDeleted ? <Trash2 size={24} /> : <CheckCircle2 size={24} />}
               </div>
               <div className="mt-5 flex justify-center">
-                <BrandLockup surface="light" className="origin-center scale-[0.96] md:scale-[1.02]" />
+                <BrandLockup surface={isDark ? 'dark' : 'light'} className="origin-center scale-[0.96] md:scale-[1.02]" />
               </div>
-              <h1 className="mt-5 text-[30px] font-[800] tracking-[-0.05em] text-[#101114] md:text-[34px]">
+              <h1 className="mt-5 text-[30px] font-[800] tracking-[-0.05em] text-[var(--app-ink-high)] md:text-[34px]">
                 {accountDeleted
                   ? pick(lang, '계정이 삭제되었습니다', 'Your account has been deleted')
                   : pick(lang, '로그아웃되었습니다', 'You have signed out')}
               </h1>
-              <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-[#686b82]">
+              <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--app-ink-mid)]">
                 {accountDeleted
                   ? pick(
                       lang,
@@ -53,7 +59,7 @@ export default function SignedOut() {
             </div>
 
             <div className="flex flex-col gap-3 px-6 py-6 md:flex-row md:justify-center md:px-8">
-              <Link to="/" className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[13px] font-semibold text-[#101114] hover:bg-[#dedee5] transition-colors">
+              <Link to="/" className="inline-flex items-center gap-2 rounded-xl bg-[var(--app-light-btn-bg)] px-5 py-3 text-[13px] font-semibold text-[var(--app-ink-high)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
                 <Home size={15} />
                 <span>{pick(lang, '홈으로', 'Go Home')}</span>
               </Link>

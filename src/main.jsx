@@ -5,6 +5,7 @@ import { AuthProvider } from './hooks/useAuth'
 import { ProgressProvider } from './hooks/useProgress'
 import { QuizProvider } from './hooks/useQuiz'
 import { LangProvider } from './hooks/useLang'
+import { ThemeProvider } from './hooks/useTheme'
 import ErrorBoundary from './components/ErrorBoundary'
 import App from './App'
 import './index.css'
@@ -54,15 +55,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <ErrorBoundary>
-        <LangProvider>
-          <AuthProvider>
-            <QuizProvider>
-              <ProgressProvider>
-                <App />
-              </ProgressProvider>
-            </QuizProvider>
-          </AuthProvider>
-        </LangProvider>
+        <ThemeProvider>
+          <LangProvider>
+            <AuthProvider>
+              <QuizProvider>
+                <ProgressProvider>
+                  <App />
+                </ProgressProvider>
+              </QuizProvider>
+            </AuthProvider>
+          </LangProvider>
+        </ThemeProvider>
       </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>

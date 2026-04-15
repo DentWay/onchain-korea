@@ -57,7 +57,7 @@ function metricToneClass(value) {
   if (value >= 80) return 'border-[rgba(74,222,128,0.20)] bg-[rgba(74,222,128,0.10)] text-[#4ADE80]'
   if (value >= 55) return 'border-[rgba(251,191,36,0.20)] bg-[rgba(251,191,36,0.10)] text-[#FBBF24]'
   if (value > 0) return 'border-[rgba(248,113,113,0.20)] bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'
-  return 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/46'
+  return 'border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] text-[var(--app-ink-low)]'
 }
 function classifyInterventionTier(row) {
   if (matchesOpsSegment(row, 'urgent')) return 'urgent'
@@ -108,7 +108,7 @@ function stageBadge(lang, stage) {
     admin: { label: pick(lang, '관리자', 'Admin'), cls: 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]' },
     completed: { label: pick(lang, '수료', 'Done'), cls: 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]' },
     stalled: { label: pick(lang, '정체', 'Stalled'), cls: 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]' },
-    'not-started': { label: pick(lang, '대기', 'Waiting'), cls: 'bg-[rgba(255,255,255,0.04)] text-white/40' },
+    'not-started': { label: pick(lang, '대기', 'Waiting'), cls: 'bg-[var(--app-soft-bg)] text-[var(--app-ink-low)]' },
     active: { label: pick(lang, '진행', 'Active'), cls: 'bg-[rgba(87,65,216,0.10)] text-[#a78bfa]' },
   }
   const m = map[stage] || map.active
@@ -166,10 +166,10 @@ function buildLearnerRows(profiles = [], progressRows = [], quizRows = []) {
 /* ── Shared UI ── */
 function FilterSelect({ label, value, onChange, options }) {
   return (
-    <label className="flex min-w-[130px] items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
-      <Filter size={12} className="text-white/40" />
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="bg-transparent text-[12px] font-medium text-white/92 outline-none">
-        {options.map((o) => <option key={o.value} value={o.value} className="bg-[#1a1a1f] text-white">{o.label}</option>)}
+    <label className="flex min-w-[130px] items-center gap-2 rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] px-3 py-2">
+      <Filter size={12} className="text-[var(--app-ink-low)]" />
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="bg-transparent text-[12px] font-medium text-[var(--app-ink-high)] outline-none">
+        {options.map((o) => <option key={o.value} value={o.value} className="bg-[var(--app-paper-bg)] text-[var(--app-ink-high)]">{o.label}</option>)}
       </select>
     </label>
   )
@@ -177,7 +177,7 @@ function FilterSelect({ label, value, onChange, options }) {
 
 function Meter({ value, color = '#5741d8', height = 6 }) {
   return (
-    <div className="w-full overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]" style={{ height }}>
+    <div className="w-full overflow-hidden rounded-full bg-[var(--app-track)]" style={{ height }}>
       <div className="h-full rounded-full transition-all duration-300" style={{ width: `${clamp(value)}%`, background: color }} />
     </div>
   )
@@ -185,7 +185,7 @@ function Meter({ value, color = '#5741d8', height = 6 }) {
 
 function SegmentedMeter({ segments, height = 8 }) {
   return (
-    <div className="flex w-full overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]" style={{ height }}>
+    <div className="flex w-full overflow-hidden rounded-full bg-[var(--app-track)]" style={{ height }}>
       {segments.map((segment) => (
         <div
           key={segment.key}
@@ -445,7 +445,7 @@ export default function Admin() {
         key: 'inactive',
         title: pick(lang, '미시작 대기군', 'Inactive starters'),
         desc: pick(lang, '등록은 됐지만 아직 시작하지 않은 계정', 'Accounts that registered but never actually started'),
-        tone: 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/72',
+        tone: 'border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] text-[var(--app-ink-mid)]',
       },
       {
         key: 'near-finish',
@@ -804,27 +804,27 @@ export default function Admin() {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <section className="rounded-2xl bg-[#101114] text-white p-5 md:p-8">
+      <section className="rounded-2xl ok-workbench text-[var(--app-ink-high)] p-5 md:p-8">
         {/* Header */}
         <header className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-[24px] font-[800] tracking-[-0.05em] text-white/92 md:text-[28px]">
+            <h1 className="text-[24px] font-[800] tracking-[-0.05em] text-[var(--app-ink-high)] md:text-[28px]">
               {pick(lang, '운영 콘솔', 'Admin Console')}
             </h1>
-            <div className="mt-2 inline-flex items-center gap-2 text-[11px] text-white/46">
+            <div className="mt-2 inline-flex items-center gap-2 text-[11px] text-[var(--app-ink-low)]">
               <Clock3 size={12} />
               <span>{pick(lang, '마지막 동기화', 'Last sync')}</span>
-              <span className="text-white/70">{formatDate(lang, lastLoadedAt)}</span>
+              <span className="text-[var(--app-ink-mid)]">{formatDate(lang, lastLoadedAt)}</span>
             </div>
           </div>
-          <button onClick={() => void loadAdminData(true)} className="inline-flex items-center justify-center rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.06)] text-white/66 hover:bg-[rgba(255,255,255,0.1)] transition-colors px-3 py-2 text-[11px]" disabled={loading}>
+          <button onClick={() => void loadAdminData(true)} className="inline-flex items-center justify-center rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg-strong)] px-3 py-2 text-[11px] text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]" disabled={loading}>
             <RefreshCcw size={13} className={loading ? 'animate-spin' : ''} />
           </button>
         </header>
 
-        <div className="mt-4 rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-5 py-4">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-white/40">{sectionMeta[tab]?.label}</p>
-          <p className="mt-2 text-[14px] text-white/66">{sectionMeta[tab]?.desc}</p>
+        <div className="mt-4 rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-5 py-4">
+          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{sectionMeta[tab]?.label}</p>
+          <p className="mt-2 text-[14px] text-[var(--app-ink-mid)]">{sectionMeta[tab]?.desc}</p>
         </div>
 
         {isOverviewTab && (
@@ -834,7 +834,7 @@ export default function Admin() {
                 label: pick(lang, '전체 학습자', 'Learners'),
                 value: rows.length,
                 meta: pick(lang, '운영 대상 전체', 'Total tracked accounts'),
-                tone: 'text-white/92',
+                tone: 'text-[var(--app-ink-high)]',
               },
               {
                 label: pick(lang, '최근 7일 활성', '7d active'),
@@ -855,10 +855,10 @@ export default function Admin() {
                 tone: 'text-[#4ADE80]',
               },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
-                <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+              <div key={item.label} className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4">
+                <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--app-ink-low)]">{item.label}</p>
                 <p className={`mt-2 text-[28px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
-                <p className="mt-2 text-[11px] text-white/44">{item.meta}</p>
+                <p className="mt-2 text-[11px] text-[var(--app-ink-low)]">{item.meta}</p>
               </div>
             ))}
           </div>
@@ -870,7 +870,7 @@ export default function Admin() {
 
         {loading ? (
           <div className="py-16 text-center">
-            <RefreshCcw size={18} className="mx-auto animate-spin text-white/66" />
+            <RefreshCcw size={18} className="mx-auto animate-spin text-[var(--app-ink-mid)]" />
           </div>
         ) : (
           <>
@@ -878,13 +878,13 @@ export default function Admin() {
               <div className="mt-5 space-y-5">
                 {isContentTab && (
                   <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 운영 규격과 검수 상태를 확인합니다', 'Review the eight-week structure and audit status')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '콘텐츠 구성', 'Program Structure')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '8주 운영 규격과 검수 상태를 확인합니다', 'Review the eight-week structure and audit status')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <LayoutDashboard size={16} />
                         </span>
                       </div>
@@ -898,7 +898,7 @@ export default function Admin() {
                           {
                             label: pick(lang, '검토 필요 주차', 'Weeks in review'),
                             value: `${contentAudit.reviewWeeks}`,
-                            tone: contentAudit.reviewWeeks > 0 ? 'text-[#FBBF24]' : 'text-white/88',
+                            tone: contentAudit.reviewWeeks > 0 ? 'text-[#FBBF24]' : 'text-[var(--app-ink-high)]',
                           },
                           {
                             label: pick(lang, '아티클 퀴즈', 'Article quizzes'),
@@ -908,25 +908,25 @@ export default function Admin() {
                           {
                             label: pick(lang, '주간 테스트', 'Weekly tests'),
                             value: `${contentAudit.weeklyTestsReady}/${weeks.length}`,
-                            tone: contentAudit.plannedWeeks > 0 ? 'text-[#FCA5A5]' : 'text-white/88',
+                            tone: contentAudit.plannedWeeks > 0 ? 'text-[#FCA5A5]' : 'text-[var(--app-ink-high)]',
                           },
                         ].map((item) => (
-                          <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
-                            <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
+                          <div key={item.label} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--app-ink-low)]">{item.label}</p>
                             <p className={`mt-2 text-[22px] font-[800] tabular-nums ${item.tone}`}>{item.value}</p>
                           </div>
                         ))}
                       </div>
                       <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                         {contentAudit.weeksAudit.map((week) => (
-                          <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div key={week.weekId} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
                             <div className="flex items-center justify-between gap-2">
-                              <p className="text-[11px] font-semibold text-white/92">W{week.weekId}</p>
+                              <p className="text-[11px] font-semibold text-[var(--app-ink-high)]">W{week.weekId}</p>
                               <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${week.weekId <= 4 ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]' : 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]'}`}>
                                 {week.phase}
                               </span>
                             </div>
-                            <p className="mt-2 text-[13px] font-semibold text-white/86">{week.title}</p>
+                            <p className="mt-2 text-[13px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
                             <div className="mt-2 flex items-center gap-2">
                               <span
                                 className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
@@ -936,7 +936,7 @@ export default function Admin() {
                                       ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
                                       : week.status === 'review'
                                         ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
-                                        : 'bg-[rgba(255,255,255,0.06)] text-white/56'
+                                        : 'bg-[var(--app-soft-bg-strong)] text-[var(--app-ink-mid)]'
                                 }`}
                               >
                                 {week.status === 'ready'
@@ -948,13 +948,13 @@ export default function Admin() {
                                       : pick(lang, '구성 점검', 'Structure issue')}
                               </span>
                             </div>
-                            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
+                            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-[var(--app-ink-mid)]">
                               <div>{pick(lang, `아티클 ${week.lessons}`, `${week.lessons} lessons`)}</div>
                               <div>{pick(lang, `실습 ${week.actions}`, `${week.actions} labs`)}</div>
                               <div>{pick(lang, `히든 ${week.hasHidden ? 1 : 0}`, `${week.hasHidden ? 1 : 0} hidden`)}</div>
                               <div>{pick(lang, `테스트 ${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions}`, `${week.weeklyTestQuestionCount}/${week.requiredWeeklyQuestions} test Qs`)}</div>
                             </div>
-                            <div className="mt-2 text-[11px] text-white/46">
+                            <div className="mt-2 text-[11px] text-[var(--app-ink-low)]">
                               {pick(
                                 lang,
                                 `아티클 퀴즈 ${week.articleQuizReadyCount}/${week.lessons} 완료${week.plannedReplacementCount > 0 ? ` · 교체 예정 ${week.plannedReplacementCount}` : ''}`,
@@ -966,13 +966,13 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '관리자 바로가기', 'Admin Shortcuts')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '검수 대상 화면으로 바로 이동합니다', 'Jump directly into the audit surfaces')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '관리자 바로가기', 'Admin Shortcuts')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '검수 대상 화면으로 바로 이동합니다', 'Jump directly into the audit surfaces')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <ArrowRight size={16} />
                         </span>
                       </div>
@@ -984,12 +984,12 @@ export default function Admin() {
                           { to: '/hidden', title: pick(lang, '히든 토픽', 'Hidden topics'), meta: pick(lang, '히든 토픽 공개 구조 점검', 'Review hidden-topic visibility') },
                           { to: '/certificate', title: pick(lang, '수료 증명', 'Proof of Attendance'), meta: pick(lang, '수료 조건 및 결과 화면 검수', 'Review proof requirements and result state') },
                         ].map((item) => (
-                          <Link key={item.to} to={item.to} className="flex items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 transition-colors hover:bg-[rgba(255,255,255,0.05)]">
+                          <Link key={item.to} to={item.to} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3 transition-colors hover:bg-[var(--app-soft-bg-strong)]">
                             <div className="min-w-0">
-                              <p className="text-[13px] font-semibold text-white/92">{item.title}</p>
-                              <p className="mt-1 text-[11px] text-white/46">{item.meta}</p>
+                              <p className="text-[13px] font-semibold text-[var(--app-ink-high)]">{item.title}</p>
+                              <p className="mt-1 text-[11px] text-[var(--app-ink-low)]">{item.meta}</p>
                             </div>
-                            <ArrowRight size={15} className="shrink-0 text-white/38" />
+                            <ArrowRight size={15} className="shrink-0 text-[var(--app-ink-low)]" />
                           </Link>
                         ))}
                       </div>
@@ -998,24 +998,24 @@ export default function Admin() {
                 )}
 
                 {isContentTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 규격 매트릭스', 'Readiness matrix')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 전체를 한 줄씩 스캔합니다', 'Scan week-by-week readiness in one pass')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '운영 규격 매트릭스', 'Readiness matrix')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '8주 전체를 한 줄씩 스캔합니다', 'Scan week-by-week readiness in one pass')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                      <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                         <LayoutDashboard size={16} />
                       </span>
                     </div>
 
                     <div className="mt-5 space-y-3">
                       {contentReadinessMatrix.map((week) => (
-                        <div key={`matrix-${week.weekId}`} className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                        <div key={`matrix-${week.weekId}`} className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4">
                           <div className="flex flex-wrap items-center justify-between gap-3">
                             <div className="min-w-0">
-                              <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
-                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                              <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">W{week.weekId}</p>
+                              <p className="mt-1 text-[14px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
                             </div>
                             <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${
                               week.status === 'ready'
@@ -1059,13 +1059,13 @@ export default function Admin() {
                 )}
 
                 {isContentTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '콘텐츠 검수 우선순위', 'Content audit queue')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '바로 손봐야 하는 주차를 모읍니다', 'Pull the weeks that need direct content work')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '콘텐츠 검수 우선순위', 'Content audit queue')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '바로 손봐야 하는 주차를 모읍니다', 'Pull the weeks that need direct content work')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                      <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                         <LayoutDashboard size={16} />
                       </span>
                     </div>
@@ -1074,12 +1074,12 @@ export default function Admin() {
                         <Link
                           key={week.weekId}
                           to={`/week/${week.weekId}`}
-                          className="block rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                          className="block rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4 transition-colors hover:bg-[var(--app-soft-bg-strong)]"
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                              <p className="text-[12px] font-semibold text-white/68">W{week.weekId}</p>
-                              <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                              <p className="text-[12px] font-semibold text-[var(--app-ink-mid)]">W{week.weekId}</p>
+                              <p className="mt-1 text-[14px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
                             </div>
                             <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
                               week.status === 'missing'
@@ -1097,7 +1097,7 @@ export default function Admin() {
                           </div>
                           <div className="mt-3 flex flex-wrap gap-2">
                             {week.issues.map((issue) => (
-                              <span key={`${week.weekId}-${issue}`} className="rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-2.5 py-1 text-[10px] text-white/64">
+                              <span key={`${week.weekId}-${issue}`} className="rounded-full border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] px-2.5 py-1 text-[10px] text-[var(--app-ink-mid)]">
                                 {issue}
                               </span>
                             ))}
@@ -1105,18 +1105,18 @@ export default function Admin() {
                         </Link>
                       ))}
                       {contentAuditQueue.length === 0 && (
-                        <p className="text-[12px] text-white/40">{pick(lang, '검수 큐가 비어 있습니다', 'The audit queue is clear')}</p>
+                        <p className="text-[12px] text-[var(--app-ink-low)]">{pick(lang, '검수 큐가 비어 있습니다', 'The audit queue is clear')}</p>
                       )}
                     </div>
                   </div>
                 )}
 
                 {isInterventionsTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 개입 보드', 'Intervention board')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 대응 그룹을 자동으로 분류합니다', 'Auto-group the learners that need different responses')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '운영 개입 보드', 'Intervention board')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '우선 대응 그룹을 자동으로 분류합니다', 'Auto-group the learners that need different responses')}</h3>
                       </div>
                       <button
                         type="button"
@@ -1124,7 +1124,7 @@ export default function Admin() {
                         className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
                           focusSegment === 'all'
                             ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
-                            : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-white/58 hover:text-white/82'
+                            : 'border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] text-[var(--app-ink-mid)] hover:text-[var(--app-ink-mid)]'
                         }`}
                       >
                         {pick(lang, '전체 보기', 'View all')}
@@ -1136,7 +1136,7 @@ export default function Admin() {
                           key={group.key}
                           type="button"
                           onClick={() => setFocusSegment(group.key)}
-                          className={`rounded-2xl border px-4 py-4 text-left transition-colors ${group.tone} ${focusSegment === group.key ? 'ring-1 ring-white/12' : 'hover:bg-[rgba(255,255,255,0.05)]'}`}
+                          className={`rounded-2xl border px-4 py-4 text-left transition-colors ${group.tone} ${focusSegment === group.key ? 'ring-1 ring-white/12' : 'hover:bg-[var(--app-soft-bg-strong)]'}`}
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
@@ -1157,17 +1157,17 @@ export default function Admin() {
 
                 {isOverviewTab && (
                   <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '활동 신선도', 'Activity Freshness')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '최근 활동 기준으로 정체 구간을 분류합니다', 'Segment learners by last activity recency')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '활동 신선도', 'Activity Freshness')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '최근 활동 기준으로 정체 구간을 분류합니다', 'Segment learners by last activity recency')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <Clock3 size={16} />
                         </span>
                       </div>
-                      <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                      <div className="mt-5 overflow-hidden rounded-full bg-[var(--app-track)]">
                         <div className="flex h-3 w-full">
                           {inactivityDistribution.map((bucket) => (
                             <div
@@ -1184,29 +1184,29 @@ export default function Admin() {
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                         {inactivityDistribution.map((bucket) => (
-                          <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div key={bucket.key} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
                             <div className="flex items-center gap-2">
                               <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
-                              <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                              <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">{bucket.label}</p>
                             </div>
-                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
-                            <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-[var(--app-ink-high)]">{bucket.count}</p>
+                            <p className="mt-1 text-[11px] text-[var(--app-ink-low)]">{bucket.pct}%</p>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '수료 준비도', 'Certificate Readiness')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '수료 조건 충족 단계별 분포입니다', 'Distribution by certificate readiness')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '수료 준비도', 'Certificate Readiness')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '수료 조건 충족 단계별 분포입니다', 'Distribution by certificate readiness')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <GraduationCap size={16} />
                         </span>
                       </div>
-                      <div className="mt-5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
+                      <div className="mt-5 overflow-hidden rounded-full bg-[var(--app-track)]">
                         <div className="flex h-3 w-full">
                           {certificateReadiness.buckets.map((bucket) => (
                             <div
@@ -1223,13 +1223,13 @@ export default function Admin() {
                       </div>
                       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         {certificateReadiness.buckets.map((bucket) => (
-                          <div key={bucket.key} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                          <div key={bucket.key} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
                             <div className="flex items-center gap-2">
                               <span className="h-2 w-2 rounded-full" style={{ background: bucket.color }} />
-                              <p className="text-[11px] font-semibold text-white/72">{bucket.label}</p>
+                              <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">{bucket.label}</p>
                             </div>
-                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-white/92">{bucket.count}</p>
-                            <p className="mt-1 text-[11px] text-white/42">{bucket.pct}%</p>
+                            <p className="mt-2 text-[22px] font-[800] tabular-nums text-[var(--app-ink-high)]">{bucket.count}</p>
+                            <p className="mt-1 text-[11px] text-[var(--app-ink-low)]">{bucket.pct}%</p>
                           </div>
                         ))}
                       </div>
@@ -1239,9 +1239,9 @@ export default function Admin() {
                           { label: pick(lang, '액션 기준', 'Action target'), value: '3' },
                           { label: pick(lang, '히든 기준', 'Hidden target'), value: '2' },
                         ].map((item) => (
-                          <div key={item.label} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.02)] px-4 py-3">
-                            <p className="text-[10px] uppercase tracking-[0.16em] text-white/40">{item.label}</p>
-                            <p className="mt-2 text-[18px] font-[800] tabular-nums text-white/88">{item.value}</p>
+                          <div key={item.label} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] px-4 py-3">
+                            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--app-ink-low)]">{item.label}</p>
+                            <p className="mt-2 text-[18px] font-[800] tabular-nums text-[var(--app-ink-high)]">{item.value}</p>
                           </div>
                         ))}
                       </div>
@@ -1251,13 +1251,13 @@ export default function Admin() {
 
                 {isAnalyticsTab && (
                   <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 unlock 전환', 'Weekly Unlock Conversion')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '진입부터 다음 단계까지 어디서 줄어드는지 봅니다', 'See where learners drop between entry and next unlock')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '주차별 unlock 전환', 'Weekly Unlock Conversion')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '진입부터 다음 단계까지 어디서 줄어드는지 봅니다', 'See where learners drop between entry and next unlock')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <Target size={16} />
                         </span>
                       </div>
@@ -1273,29 +1273,29 @@ export default function Admin() {
                             { label: nextLabel, count: week.nextUnlocked },
                           ]
                           return (
-                            <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                            <div key={week.weekId} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4">
                               <div className="flex items-start justify-between gap-3">
                                 <div>
-                                  <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
-                                  <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                                  <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">W{week.weekId}</p>
+                                  <p className="mt-1 text-[14px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
                                 </div>
                                 <div className="text-right">
-                                  <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.nextUnlocked}</p>
-                                  <p className="mt-1 text-[10px] text-white/40">{pick(lang, '최종 도달', 'Reached end')}</p>
+                                  <p className="text-[18px] font-[800] tabular-nums text-[var(--app-ink-high)]">{week.nextUnlocked}</p>
+                                  <p className="mt-1 text-[10px] text-[var(--app-ink-low)]">{pick(lang, '최종 도달', 'Reached end')}</p>
                                 </div>
                               </div>
                               <div className="mt-4 grid grid-cols-3 gap-2">
                                 {steps.map((step) => (
-                                  <div key={`${week.weekId}-${step.label}`} className="rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] px-3 py-2">
-                                    <p className="text-[9px] uppercase tracking-[0.14em] text-white/38">{step.label}</p>
-                                    <p className="mt-1 text-[16px] font-[800] tabular-nums text-white/88">{step.count}</p>
+                                  <div key={`${week.weekId}-${step.label}`} className="rounded-lg border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] px-3 py-2">
+                                    <p className="text-[9px] uppercase tracking-[0.14em] text-[var(--app-ink-low)]">{step.label}</p>
+                                    <p className="mt-1 text-[16px] font-[800] tabular-nums text-[var(--app-ink-high)]">{step.count}</p>
                                   </div>
                                 ))}
                               </div>
                               <div className="mt-4">
-                                <div className="mb-2 flex items-center justify-between text-[11px] text-white/44">
+                                <div className="mb-2 flex items-center justify-between text-[11px] text-[var(--app-ink-low)]">
                                   <span>{pick(lang, '다음 단계 전환률', 'Next-step conversion')}</span>
-                                  <span className="tabular-nums text-white/72">{ratio(week.nextUnlocked, week.entered)}%</span>
+                                  <span className="tabular-nums text-[var(--app-ink-mid)]">{ratio(week.nextUnlocked, week.entered)}%</span>
                                 </div>
                                 <Meter value={ratio(week.nextUnlocked, week.entered)} color="#5741d8" height={7} />
                               </div>
@@ -1305,27 +1305,27 @@ export default function Admin() {
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '주차별 실행 강도', 'Week Performance Grid')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '아티클, 액션, 테스트 강도를 함께 봅니다', 'Review article, action, and test intensity together')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '주차별 실행 강도', 'Week Performance Grid')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '아티클, 액션, 테스트 강도를 함께 봅니다', 'Review article, action, and test intensity together')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <BarChart3 size={16} />
                         </span>
                       </div>
                       <div className="mt-4 grid gap-3">
                         {weekPerformanceGrid.map((week) => (
-                          <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                          <div key={week.weekId} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4">
                             <div className="flex items-center justify-between gap-3">
                               <div>
-                                <p className="text-[11px] font-semibold text-white/60">W{week.weekId}</p>
-                                <p className="mt-1 text-[14px] font-semibold text-white/92">{week.title}</p>
+                                <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">W{week.weekId}</p>
+                                <p className="mt-1 text-[14px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-[18px] font-[800] tabular-nums text-white/92">{week.learners}</p>
-                                <p className="mt-1 text-[10px] text-white/40">{pick(lang, '진입 인원', 'Entered')}</p>
+                                <p className="text-[18px] font-[800] tabular-nums text-[var(--app-ink-high)]">{week.learners}</p>
+                                <p className="mt-1 text-[10px] text-[var(--app-ink-low)]">{pick(lang, '진입 인원', 'Entered')}</p>
                               </div>
                             </div>
                             <div className="mt-4 grid grid-cols-3 gap-2">
@@ -1348,13 +1348,13 @@ export default function Admin() {
                 )}
 
                 {isAnalyticsTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '전환 드릴다운', 'Conversion drilldown')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '주차별 가장 큰 이탈 지점을 추려냅니다', 'Surface the biggest drop-off point in each week')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '전환 드릴다운', 'Conversion drilldown')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '주차별 가장 큰 이탈 지점을 추려냅니다', 'Surface the biggest drop-off point in each week')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                      <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                         <Target size={16} />
                       </span>
                     </div>
@@ -1363,10 +1363,10 @@ export default function Admin() {
                         <Link
                           key={`drill-${week.weekId}`}
                           to={`/week/${week.weekId}`}
-                          className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4 transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                          className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4 transition-colors hover:bg-[var(--app-soft-bg-strong)]"
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-[11px] font-semibold text-white/62">W{week.weekId}</p>
+                            <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">W{week.weekId}</p>
                             <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
                               week.largestDrop.pct >= 45
                                 ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
@@ -1377,17 +1377,17 @@ export default function Admin() {
                               {week.largestDrop.pct}% drop
                             </span>
                           </div>
-                          <p className="mt-2 text-[14px] font-semibold text-white/92">{week.title}</p>
-                          <p className="mt-3 text-[12px] text-white/60">
+                          <p className="mt-2 text-[14px] font-semibold text-[var(--app-ink-high)]">{week.title}</p>
+                          <p className="mt-3 text-[12px] text-[var(--app-ink-mid)]">
                             {week.largestDrop.from} → {week.largestDrop.to}
                           </p>
-                          <div className="mt-3 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                          <div className="mt-3 flex items-center justify-between gap-3 text-[11px] text-[var(--app-ink-low)]">
                             <span>{pick(lang, '이탈 수', 'Lost')}</span>
-                            <span className="tabular-nums text-white/82">{week.largestDrop.count}</span>
+                            <span className="tabular-nums text-[var(--app-ink-mid)]">{week.largestDrop.count}</span>
                           </div>
-                          <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-white/48">
+                          <div className="mt-2 flex items-center justify-between gap-3 text-[11px] text-[var(--app-ink-low)]">
                             <span>{pick(lang, '최종 전환률', 'End conversion')}</span>
-                            <span className="tabular-nums text-white/82">{week.endRate}%</span>
+                            <span className="tabular-nums text-[var(--app-ink-mid)]">{week.endRate}%</span>
                           </div>
                         </Link>
                       ))}
@@ -1397,13 +1397,13 @@ export default function Admin() {
 
                 {isOverviewTab && (
                   <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,0.95fr)]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
-                          <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-white/92">{pick(lang, '등록부터 수료까지 전환을 확인합니다', 'Track conversion from registration to completion')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '학습 퍼널', 'Learning Funnel')}</p>
+                          <h3 className="mt-2 text-[20px] font-[800] tracking-[-0.04em] text-[var(--app-ink-high)]">{pick(lang, '등록부터 수료까지 전환을 확인합니다', 'Track conversion from registration to completion')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <Target size={16} />
                         </span>
                       </div>
@@ -1411,18 +1411,18 @@ export default function Admin() {
                         {dashboardInsights.funnel.map((stage) => (
                           <div key={stage.key} className="grid gap-2 md:grid-cols-[minmax(140px,180px)_minmax(0,1fr)_auto] md:items-center">
                             <div>
-                              <p className="text-[12px] font-semibold text-white/88">{stage.label}</p>
-                              <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/38">{stage.pctFromPrev}% {pick(lang, '전 단계 대비', 'from prev')}</p>
+                              <p className="text-[12px] font-semibold text-[var(--app-ink-high)]">{stage.label}</p>
+                              <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--app-ink-low)]">{stage.pctFromPrev}% {pick(lang, '전 단계 대비', 'from prev')}</p>
                             </div>
                             <div className="space-y-2">
                               <Meter value={stage.pctFromTop} color={stage.color} height={8} />
-                              <div className="flex items-center justify-between text-[11px] text-white/44">
+                              <div className="flex items-center justify-between text-[11px] text-[var(--app-ink-low)]">
                                 <span>{pick(lang, '전체 대비', 'of all')}</span>
                                 <span className="tabular-nums">{stage.pctFromTop}%</span>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-[22px] font-[800] tabular-nums text-white/92">{stage.count}</p>
+                              <p className="text-[22px] font-[800] tabular-nums text-[var(--app-ink-high)]">{stage.count}</p>
                             </div>
                           </div>
                         ))}
@@ -1430,16 +1430,16 @@ export default function Admin() {
                     </div>
 
                     <div className="grid gap-5">
-                      <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '병목 주차', 'Bottleneck Weeks')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '병목 구간을 먼저 확인합니다', 'Review the friction points first')}</h3>
+                      <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '병목 주차', 'Bottleneck Weeks')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '병목 구간을 먼저 확인합니다', 'Review the friction points first')}</h3>
                         <div className="mt-4 space-y-3">
                           {dashboardInsights.bottlenecks.slice(0, 4).map((week) => (
-                            <div key={week.weekId} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                            <div key={week.weekId} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
                               <div className="flex items-center justify-between gap-3">
                                 <div>
-                                  <p className="text-[12px] font-semibold text-white/92">W{week.weekId} · {week.title}</p>
-                                  <p className="mt-1 text-[11px] text-white/44">
+                                  <p className="text-[12px] font-semibold text-[var(--app-ink-high)]">W{week.weekId} · {week.title}</p>
+                                  <p className="mt-1 text-[11px] text-[var(--app-ink-low)]">
                                     {pick(lang, `${week.learners}명 진행 중 · 평균 ${week.avgProgress}%`, `${week.learners} learners · avg ${week.avgProgress}%`)}
                                   </p>
                                 </div>
@@ -1447,30 +1447,30 @@ export default function Admin() {
                                   {pick(lang, `주의 ${week.attention}`, `${week.attention} alerts`)}
                                 </span>
                               </div>
-                              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-white/58">
+                              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-[var(--app-ink-mid)]">
                                 <div>{pick(lang, `정체 ${week.stalled}`, `Stalled ${week.stalled}`)}</div>
                                 <div>{pick(lang, `저득점 ${week.lowScore}`, `Low score ${week.lowScore}`)}</div>
                               </div>
                             </div>
                           ))}
                           {dashboardInsights.bottlenecks.length === 0 && (
-                            <p className="text-[12px] text-white/40">{pick(lang, '주차 데이터가 없습니다', 'No week bottlenecks yet')}</p>
+                            <p className="text-[12px] text-[var(--app-ink-low)]">{pick(lang, '주차 데이터가 없습니다', 'No week bottlenecks yet')}</p>
                           )}
                         </div>
                       </div>
 
-                      <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '운영 히트맵', 'Week health map')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '8주 중 어디에 경고가 몰리는지 봅니다', 'Spot the weeks that carry the most pressure')}</h3>
+                      <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '운영 히트맵', 'Week health map')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '8주 중 어디에 경고가 몰리는지 봅니다', 'Spot the weeks that carry the most pressure')}</h3>
                         <div className="mt-4 grid grid-cols-2 gap-3">
                           {weekHealthMap.map((week) => (
                             <div
                               key={`health-${week.weekId}`}
-                              className="rounded-xl border border-[rgba(255,255,255,0.08)] px-4 py-3"
+                              className="rounded-xl border border-[var(--app-paper-border)] px-4 py-3"
                               style={{ background: `linear-gradient(135deg, ${week.glow}, rgba(255,255,255,0.03))` }}
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <p className="text-[11px] font-semibold text-white/88">W{week.weekId}</p>
+                                <p className="text-[11px] font-semibold text-[var(--app-ink-high)]">W{week.weekId}</p>
                                 <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
                                   week.alertRate >= 50
                                     ? 'bg-[rgba(248,113,113,0.12)] text-[#FCA5A5]'
@@ -1478,24 +1478,24 @@ export default function Admin() {
                                       ? 'bg-[rgba(251,191,36,0.12)] text-[#FBBF24]'
                                       : week.learners > 0
                                         ? 'bg-[rgba(87,65,216,0.12)] text-[#A78BFA]'
-                                        : 'bg-[rgba(255,255,255,0.06)] text-white/46'
+                                        : 'bg-[var(--app-soft-bg-strong)] text-[var(--app-ink-low)]'
                                 }`}>
                                   {week.alertRate}% {pick(lang, '경고', 'alert')}
                                 </span>
                               </div>
-                              <p className="mt-2 text-[12px] font-medium text-white/70">{week.title}</p>
-                              <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] text-white/58">
+                              <p className="mt-2 text-[12px] font-medium text-[var(--app-ink-mid)]">{week.title}</p>
+                              <div className="mt-3 grid grid-cols-3 gap-2 text-[11px] text-[var(--app-ink-mid)]">
                                 <div>
-                                  <p className="text-white/38">{pick(lang, '진입', 'Entered')}</p>
-                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.learners}</p>
+                                  <p className="text-[var(--app-ink-low)]">{pick(lang, '진입', 'Entered')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{week.learners}</p>
                                 </div>
                                 <div>
-                                  <p className="text-white/38">{pick(lang, '주의', 'Alerts')}</p>
-                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.alerts}</p>
+                                  <p className="text-[var(--app-ink-low)]">{pick(lang, '주의', 'Alerts')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{week.alerts}</p>
                                 </div>
                                 <div>
-                                  <p className="text-white/38">{pick(lang, '평균', 'Avg')}</p>
-                                  <p className="mt-1 font-[700] tabular-nums text-white/88">{week.avgProgress}%</p>
+                                  <p className="text-[var(--app-ink-low)]">{pick(lang, '평균', 'Avg')}</p>
+                                  <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{week.avgProgress}%</p>
                                 </div>
                               </div>
                             </div>
@@ -1507,24 +1507,24 @@ export default function Admin() {
                 )}
 
                 {isAnalyticsTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '난도 경고', 'Difficulty Alerts')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '통과율 낮은 퀴즈', 'Lowest pass-rate quizzes')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '난도 경고', 'Difficulty Alerts')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '통과율 낮은 퀴즈', 'Lowest pass-rate quizzes')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                      <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                         <BarChart3 size={16} />
                       </span>
                     </div>
                     <div className="mt-4 space-y-2.5">
                       {difficultySpectrum.map((quiz) => (
-                        <div key={`${quiz.quizType}:${quiz.quizId}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
+                        <div key={`${quiz.quizType}:${quiz.quizId}`} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-4">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className={`rounded px-1.5 py-0.5 text-[9px] font-bold uppercase ${quiz.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
                               {quiz.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
                             </span>
-                            <p className="min-w-0 flex-1 truncate text-[12px] font-semibold text-white/88">{quiz.label}</p>
+                            <p className="min-w-0 flex-1 truncate text-[12px] font-semibold text-[var(--app-ink-high)]">{quiz.label}</p>
                             <span className={`text-[12px] font-[800] tabular-nums ${
                               quiz.passRate >= 70 ? 'text-[#4ADE80]' : quiz.passRate >= 40 ? 'text-[#FBBF24]' : 'text-[#FCA5A5]'
                             }`}>
@@ -1540,35 +1540,35 @@ export default function Admin() {
                           </div>
                           <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
                             <div>
-                              <p className="text-white/38">{pick(lang, '실패율', 'Fail rate')}</p>
-                              <p className="mt-1 font-[700] tabular-nums text-white/88">{quiz.failRate}%</p>
+                              <p className="text-[var(--app-ink-low)]">{pick(lang, '실패율', 'Fail rate')}</p>
+                              <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{quiz.failRate}%</p>
                             </div>
                             <div>
-                              <p className="text-white/38">{pick(lang, '평균점수', 'Avg score')}</p>
-                              <p className="mt-1 font-[700] tabular-nums text-white/88">{quiz.avgScore}%</p>
+                              <p className="text-[var(--app-ink-low)]">{pick(lang, '평균점수', 'Avg score')}</p>
+                              <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{quiz.avgScore}%</p>
                             </div>
                             <div>
-                              <p className="text-white/38">{pick(lang, '응시 수', 'Attempts')}</p>
-                              <p className="mt-1 font-[700] tabular-nums text-white/88">{quiz.attempts}</p>
+                              <p className="text-[var(--app-ink-low)]">{pick(lang, '응시 수', 'Attempts')}</p>
+                              <p className="mt-1 font-[700] tabular-nums text-[var(--app-ink-high)]">{quiz.attempts}</p>
                             </div>
                           </div>
                         </div>
                       ))}
                       {difficultySpectrum.length === 0 && (
-                        <p className="text-[12px] text-white/40">{pick(lang, '퀴즈 데이터가 없습니다', 'No quiz data yet')}</p>
+                        <p className="text-[12px] text-[var(--app-ink-low)]">{pick(lang, '퀴즈 데이터가 없습니다', 'No quiz data yet')}</p>
                       )}
                     </div>
                   </div>
                 )}
 
                 {isInterventionsTab && (
-                  <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                  <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '개입 분포', 'Intervention mix')}</p>
-                        <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '운영 큐가 어디에 몰려 있는지 먼저 봅니다', 'See where the operational load is concentrated')}</h3>
+                        <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '개입 분포', 'Intervention mix')}</p>
+                        <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '운영 큐가 어디에 몰려 있는지 먼저 봅니다', 'See where the operational load is concentrated')}</h3>
                       </div>
-                      <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-[11px] font-semibold text-white/62">
+                      <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] px-3 py-1.5 text-[11px] font-semibold text-[var(--app-ink-mid)]">
                         {pick(lang, '우선순위 기준', 'Priority buckets')}
                       </span>
                     </div>
@@ -1579,14 +1579,14 @@ export default function Admin() {
 
                     <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
                       {interventionMix.map((segment) => (
-                        <div key={`mix-${segment.key}`} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3">
+                        <div key={`mix-${segment.key}`} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3">
                           <div className="flex items-center gap-2">
                             <span className="h-2.5 w-2.5 rounded-full" style={{ background: segment.color }} />
-                            <p className="text-[11px] font-semibold text-white/76">{segment.label}</p>
+                            <p className="text-[11px] font-semibold text-[var(--app-ink-mid)]">{segment.label}</p>
                           </div>
                           <div className="mt-3 flex items-end justify-between gap-3">
-                            <p className="text-[24px] font-[800] tabular-nums text-white/92">{segment.count}</p>
-                            <p className="text-[12px] font-semibold tabular-nums text-white/48">{segment.pct}%</p>
+                            <p className="text-[24px] font-[800] tabular-nums text-[var(--app-ink-high)]">{segment.count}</p>
+                            <p className="text-[12px] font-semibold tabular-nums text-[var(--app-ink-low)]">{segment.pct}%</p>
                           </div>
                         </div>
                       ))}
@@ -1596,13 +1596,13 @@ export default function Admin() {
 
                 {isInterventionsTab && (
                   <div className="grid gap-5 2xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '위험군 큐', 'At-risk Queue')}</p>
-                          <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '우선 확인 대상 학습자', 'Priority learners to review')}</h3>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '위험군 큐', 'At-risk Queue')}</p>
+                          <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '우선 확인 대상 학습자', 'Priority learners to review')}</h3>
                         </div>
-                        <span className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-2 text-white/50">
+                        <span className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] p-2 text-[var(--app-ink-low)]">
                           <AlertTriangle size={16} />
                         </span>
                       </div>
@@ -1612,30 +1612,30 @@ export default function Admin() {
                             key={row.id}
                             type="button"
                             onClick={() => openLearnerRow(row.id)}
-                            className="flex w-full items-center justify-between gap-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-left transition-colors hover:bg-[rgba(255,255,255,0.05)]"
+                            className="flex w-full items-center justify-between gap-3 rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3 text-left transition-colors hover:bg-[var(--app-soft-bg-strong)]"
                           >
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
-                                <p className="truncate text-[13px] font-semibold text-white/92">{row.displayName}</p>
+                                <p className="truncate text-[13px] font-semibold text-[var(--app-ink-high)]">{row.displayName}</p>
                                 {stageBadge(lang, row.stage)}
                               </div>
-                              <p className="mt-1 truncate text-[11px] text-white/46">{row.reasons.join(' · ')}</p>
+                              <p className="mt-1 truncate text-[11px] text-[var(--app-ink-low)]">{row.reasons.join(' · ')}</p>
                             </div>
                             <div className="shrink-0 text-right">
-                              <p className="text-[12px] font-semibold tabular-nums text-white/70">W{row.currentWeek}</p>
-                              <p className="mt-1 text-[10px] text-white/40">{formatDate(lang, row.lastActivityAt)}</p>
+                              <p className="text-[12px] font-semibold tabular-nums text-[var(--app-ink-mid)]">W{row.currentWeek}</p>
+                              <p className="mt-1 text-[10px] text-[var(--app-ink-low)]">{formatDate(lang, row.lastActivityAt)}</p>
                             </div>
                           </button>
                         ))}
                         {dashboardInsights.riskQueue.length === 0 && (
-                          <p className="text-[12px] text-white/40">{pick(lang, '우선 확인 대상이 없습니다', 'No urgent risk queue right now')}</p>
+                          <p className="text-[12px] text-[var(--app-ink-low)]">{pick(lang, '우선 확인 대상이 없습니다', 'No urgent risk queue right now')}</p>
                         )}
                       </div>
                     </div>
 
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">{pick(lang, '개입 원칙', 'Intervention Guidance')}</p>
-                      <h3 className="mt-2 text-[18px] font-[700] text-white/92">{pick(lang, '그룹별 대응 기준을 한 번에 봅니다', 'Keep the response rules visible while triaging')}</h3>
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{pick(lang, '개입 원칙', 'Intervention Guidance')}</p>
+                      <h3 className="mt-2 text-[18px] font-[700] text-[var(--app-ink-high)]">{pick(lang, '그룹별 대응 기준을 한 번에 봅니다', 'Keep the response rules visible while triaging')}</h3>
                       <div className="mt-4 space-y-3">
                         {interventionGroups.map((group) => (
                           <div key={`guide-${group.key}`} className={`rounded-xl border px-4 py-4 ${group.tone}`}>
@@ -1656,13 +1656,13 @@ export default function Admin() {
 
                 {isInterventionsTab && (
                   <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
-                    <div className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] overflow-hidden">
-                      <div className="border-b border-[rgba(255,255,255,0.06)] px-5 py-3">
+                    <div className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] overflow-hidden">
+                      <div className="border-b border-[var(--app-paper-border)] px-5 py-3">
                         <div className="flex flex-wrap items-center gap-2">
-                          <label className="flex flex-1 items-center gap-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2 min-w-[160px] max-w-[280px]">
-                            <Search size={13} className="text-white/40" />
+                          <label className="flex flex-1 items-center gap-2 rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] px-3 py-2 min-w-[160px] max-w-[280px]">
+                            <Search size={13} className="text-[var(--app-ink-low)]" />
                             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={pick(lang, '검색', 'Search')}
-                              className="w-full bg-transparent text-[12px] text-white/92 placeholder:text-white/40 outline-none" />
+                              className="w-full bg-transparent text-[12px] text-[var(--app-ink-high)] placeholder:text-[var(--app-ink-low)] outline-none" />
                           </label>
                           <button
                             type="button"
@@ -1670,29 +1670,29 @@ export default function Admin() {
                             className={`rounded-xl border px-3 py-2 text-[11px] font-semibold transition-colors ${
                               focusSegment === 'all'
                                 ? 'border-[rgba(87,65,216,0.22)] bg-[rgba(87,65,216,0.12)] text-[#c4b5fd]'
-                                : 'border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-white/58 hover:text-white/82'
+                                : 'border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] text-[var(--app-ink-mid)] hover:text-[var(--app-ink-mid)]'
                             }`}
                           >
                             {pick(lang, '개입 필터 해제', 'Clear ops filter')}
                           </button>
                           <FilterSelect label={pick(lang, '상태', 'Status')} value={statusFilter} onChange={setStatusFilter} options={statusOptions} />
                           <FilterSelect label={pick(lang, '주차', 'Week')} value={weekFilter} onChange={setWeekFilter} options={weekOptions} />
-                          <span className="text-[11px] text-white/40 tabular-nums">{visibleRows.length}</span>
+                          <span className="text-[11px] text-[var(--app-ink-low)] tabular-nums">{visibleRows.length}</span>
                         </div>
                       </div>
-                      <div className="divide-y divide-[rgba(255,255,255,0.06)] max-h-[600px] overflow-y-auto">
+                      <div className="divide-y divide-[var(--app-divider)] max-h-[600px] overflow-y-auto">
                         {visibleRows.map((row) => (
                           <button key={row.id} type="button" onClick={() => setSelectedId(row.id)}
-                            className={`flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors ${row.id === selectedId ? 'bg-[rgba(87,65,216,0.08)]' : 'hover:bg-[rgba(255,255,255,0.03)]'}`}>
+                            className={`flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors ${row.id === selectedId ? 'bg-[rgba(87,65,216,0.08)]' : 'hover:bg-[var(--app-paper-bg)]'}`}>
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-2">
-                                <p className="text-[13px] font-semibold text-white/92">{row.displayName}</p>
+                                <p className="text-[13px] font-semibold text-[var(--app-ink-high)]">{row.displayName}</p>
                                 {stageBadge(lang, getLearnerStage(row))}
                               </div>
-                              <p className="mt-0.5 text-[11px] text-white/66">W{row.currentWeek} · {row.articlePassedCount}/{totalLessons} quiz · {row.weeklyPassedCount}/{weeks.length} test</p>
+                              <p className="mt-0.5 text-[11px] text-[var(--app-ink-mid)]">W{row.currentWeek} · {row.articlePassedCount}/{totalLessons} quiz · {row.weeklyPassedCount}/{weeks.length} test</p>
                             </div>
                             <div className="shrink-0 w-20 text-right">
-                              <p className="text-[16px] font-[800] tabular-nums text-white/92">{row.progressPct}%</p>
+                              <p className="text-[16px] font-[800] tabular-nums text-[var(--app-ink-high)]">{row.progressPct}%</p>
                               <div className="mt-1">
                                 <Meter value={row.progressPct} />
                               </div>
@@ -1700,21 +1700,21 @@ export default function Admin() {
                           </button>
                         ))}
                         {visibleRows.length === 0 && (
-                          <div className="px-5 py-10 text-center text-[12px] text-white/40">
+                          <div className="px-5 py-10 text-center text-[12px] text-[var(--app-ink-low)]">
                             {pick(lang, '현재 필터에 맞는 학습자가 없습니다', 'No learners match the current filters')}
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <aside className="rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-5 xl:sticky xl:top-24 xl:max-h-[calc(100svh-8rem)] xl:overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+                    <aside className="rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] p-5 xl:sticky xl:top-24 xl:max-h-[calc(100svh-8rem)] xl:overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
                       {selectedRow ? (
                         <>
                           <div className="flex items-center gap-2">
-                            <h2 className="text-[20px] font-[800] tracking-[-0.04em] text-white/92">{selectedRow.displayName}</h2>
+                            <h2 className="text-[20px] font-[800] tracking-[-0.04em] text-[var(--app-ink-high)]">{selectedRow.displayName}</h2>
                             {stageBadge(lang, getLearnerStage(selectedRow))}
                           </div>
-                          <p className="mt-1 text-[12px] text-white/66">{selectedRow.email || '-'}</p>
+                          <p className="mt-1 text-[12px] text-[var(--app-ink-mid)]">{selectedRow.email || '-'}</p>
 
                           <div className="mt-4 grid grid-cols-2 gap-2">
                             {[
@@ -1725,35 +1725,35 @@ export default function Admin() {
                               { l: pick(lang, '실습', 'Action'), v: `${selectedRow.completedActions}/${totalActions}` },
                               { l: pick(lang, '평균점수', 'Avg'), v: `${selectedRow.avgScore}%` },
                             ].map((s) => (
-                              <div key={s.l} className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
-                                <p className="text-[9px] uppercase tracking-[0.14em] text-white/40">{s.l}</p>
-                                <p className="mt-1 text-[18px] font-[800] tabular-nums text-white/92">{s.v}</p>
+                              <div key={s.l} className="rounded-xl border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] px-3 py-2">
+                                <p className="text-[9px] uppercase tracking-[0.14em] text-[var(--app-ink-low)]">{s.l}</p>
+                                <p className="mt-1 text-[18px] font-[800] tabular-nums text-[var(--app-ink-high)]">{s.v}</p>
                               </div>
                             ))}
                           </div>
 
-                          <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-white/40">{pick(lang, '퀴즈 · 테스트 기록', 'Quiz & Test History')}</p>
+                          <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-[var(--app-ink-low)]">{pick(lang, '퀴즈 · 테스트 기록', 'Quiz & Test History')}</p>
                           <div className="mt-2 space-y-1">
                             {selectedRow.recentQuizAttempts.length > 0 ? selectedRow.recentQuizAttempts.map((a, i) => (
-                              <div key={`${a.quizType}-${a.quizId}-${i}`} className="flex items-center justify-between gap-2 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-2">
+                              <div key={`${a.quizType}-${a.quizId}-${i}`} className="flex items-center justify-between gap-2 rounded-lg border border-[var(--app-paper-border)] bg-[var(--app-soft-bg)] px-3 py-2">
                                 <div className="min-w-0 flex-1">
                                   <div className="flex items-center gap-1.5">
                                     <span className={`rounded px-1 py-0.5 text-[8px] font-bold uppercase ${a.quizType === 'weekly' ? 'bg-[rgba(139,92,246,0.14)] text-[#A78BFA]' : 'bg-[rgba(87,65,216,0.12)] text-[#a78bfa]'}`}>
                                       {a.quizType === 'weekly' ? 'TEST' : 'QUIZ'}
                                     </span>
-                                    <p className="truncate text-[11px] font-medium text-white/92">{resolveQuizLabel(lang, a.quizType, a.quizId)}</p>
+                                    <p className="truncate text-[11px] font-medium text-[var(--app-ink-high)]">{resolveQuizLabel(lang, a.quizType, a.quizId)}</p>
                                   </div>
-                                  <p className="text-[9px] text-white/40">{formatDate(lang, a.attemptedAt)}</p>
+                                  <p className="text-[9px] text-[var(--app-ink-low)]">{formatDate(lang, a.attemptedAt)}</p>
                                 </div>
                                 <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold tabular-nums ${a.passed ? 'bg-[rgba(74,222,128,0.12)] text-[#4ADE80]' : 'bg-[rgba(248,113,113,0.10)] text-[#FCA5A5]'}`}>
                                   {a.score}/{a.total}
                                 </span>
                               </div>
-                            )) : <p className="text-[11px] text-white/40">{pick(lang, '기록 없음', 'No records')}</p>}
+                            )) : <p className="text-[11px] text-[var(--app-ink-low)]">{pick(lang, '기록 없음', 'No records')}</p>}
                           </div>
                         </>
                       ) : (
-                        <p className="py-8 text-center text-[12px] text-white/40">{pick(lang, '학습자를 선택하세요', 'Select a learner')}</p>
+                        <p className="py-8 text-center text-[12px] text-[var(--app-ink-low)]">{pick(lang, '학습자를 선택하세요', 'Select a learner')}</p>
                       )}
                     </aside>
                   </div>
@@ -1763,10 +1763,10 @@ export default function Admin() {
 
             {/* ─── Leaderboard Tab ─── */}
             {tab === 'leaderboard' && (
-              <div className="mt-5 rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] overflow-x-auto">
+              <div className="mt-5 rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] overflow-x-auto">
                 <table className="min-w-full text-left text-[12px]">
-                  <thead className="border-b border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)]">
-                    <tr className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                  <thead className="border-b border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)]">
+                    <tr className="text-[10px] uppercase tracking-[0.16em] text-[var(--app-ink-low)]">
                       <th className="px-4 py-3">#</th>
                       <th className="px-4 py-3">{pick(lang, '학습자', 'Learner')}</th>
                       <th className="px-4 py-3">Week</th>
@@ -1782,31 +1782,31 @@ export default function Admin() {
                   </thead>
                   <tbody>
                     {[...rows].sort((a, b) => b.progressPct - a.progressPct || b.weeklyPassedCount - a.weeklyPassedCount).map((row, idx) => (
-                      <tr key={row.id} className={`border-t border-[rgba(255,255,255,0.06)] ${idx % 2 === 0 ? '' : 'bg-[rgba(255,255,255,0.015)]'} hover:bg-[rgba(87,65,216,0.06)]`}>
-                        <td className="px-4 py-3 tabular-nums text-white/40">{idx + 1}</td>
+                      <tr key={row.id} className={`border-t border-[var(--app-paper-border)] ${idx % 2 === 0 ? '' : 'bg-[var(--app-soft-bg)]'} hover:bg-[rgba(87,65,216,0.06)]`}>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-low)]">{idx + 1}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2 min-w-[160px]">
-                            <p className="font-semibold text-white/92">{row.displayName}</p>
+                            <p className="font-semibold text-[var(--app-ink-high)]">{row.displayName}</p>
                             {stageBadge(lang, getLearnerStage(row))}
                           </div>
-                          <p className="text-[10px] text-white/40">{row.email || '-'}</p>
+                          <p className="text-[10px] text-[var(--app-ink-low)]">{row.email || '-'}</p>
                         </td>
-                        <td className="px-4 py-3 tabular-nums font-semibold text-white/92">{row.currentWeek}</td>
+                        <td className="px-4 py-3 tabular-nums font-semibold text-[var(--app-ink-high)]">{row.currentWeek}</td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2 min-w-[100px]">
-                            <span className="tabular-nums font-[700] text-white/92">{row.progressPct}%</span>
+                            <span className="tabular-nums font-[700] text-[var(--app-ink-high)]">{row.progressPct}%</span>
                             <div className="flex-1">
                               <Meter value={row.progressPct} />
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 tabular-nums text-white/66">{row.articlePassedCount}/{totalLessons}</td>
-                        <td className="px-4 py-3 tabular-nums text-white/66">{row.weeklyPassedCount}/{weeks.length}</td>
-                        <td className="px-4 py-3 tabular-nums text-white/66">{row.completedActions}/{totalActions}</td>
-                        <td className="px-4 py-3 tabular-nums text-white/66">{row.readHiddenTopics}/{totalHiddenTopics}</td>
-                        <td className="px-4 py-3 tabular-nums text-white/66">{row.avgScore}%</td>
-                        <td className="px-4 py-3 tabular-nums text-white/40">{row.quizAttempts}</td>
-                        <td className="px-4 py-3 text-white/40 text-[11px]">{formatDate(lang, row.lastActivityAt)}</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-mid)]">{row.articlePassedCount}/{totalLessons}</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-mid)]">{row.weeklyPassedCount}/{weeks.length}</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-mid)]">{row.completedActions}/{totalActions}</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-mid)]">{row.readHiddenTopics}/{totalHiddenTopics}</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-mid)]">{row.avgScore}%</td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--app-ink-low)]">{row.quizAttempts}</td>
+                        <td className="px-4 py-3 text-[var(--app-ink-low)] text-[11px]">{formatDate(lang, row.lastActivityAt)}</td>
                       </tr>
                     ))}
                   </tbody>

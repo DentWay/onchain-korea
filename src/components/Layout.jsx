@@ -3,9 +3,11 @@ import { useState } from 'react'
 import { Menu, LogOut, LockKeyhole, Shield, UserCircle2 } from 'lucide-react'
 import Sidebar from './Sidebar'
 import LangToggle from './LangToggle'
+import ThemeToggle from './ThemeToggle'
 import BrandLockup from './brand/BrandLockup'
 import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
+import useTheme from '../hooks/useTheme'
 import { ADMIN_ACCESS_PATH, ADMIN_CONSOLE_PATH, ADMIN_ENTRY_PATH } from '../lib/adminRoute'
 
 function getPageChrome(pathname, lang) {
@@ -90,9 +92,11 @@ export default function Layout() {
   const location = useLocation()
   const { user, profile, isAdmin, canAccessAdminGate, adminAccessGranted, signOut, lockAdminAccess, supabaseEnabled } = useAuth()
   const { t, lang } = useLang()
+  const { isDark } = useTheme()
 
   const displayName = profile?.display_name || user?.email?.split('@')[0] || ''
   const chrome = getPageChrome(location.pathname, lang)
+  const brandSurface = isDark ? 'dark' : 'light'
   const handleSignOut = async () => {
     await signOut()
   }
@@ -101,35 +105,39 @@ export default function Layout() {
   }
 
   return (
-    <div data-app-theme="dark" className="flex h-screen overflow-hidden bg-white text-[#101114]">
+    <div className="ok-theme-workbench flex h-screen overflow-hidden text-[var(--app-ink-high)]">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-3 focus:bg-[#5741d8] focus:text-white">Skip to content</a>
       <div className={`fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setSidebarOpen(false)} />
       <div className={`fixed md:relative z-50 md:z-auto transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar onClose={() => setSidebarOpen(false)} />
       </div>
       <main id="main-content" className="flex-1 overflow-y-auto relative">
-        <div className="sticky top-0 z-30 md:hidden flex items-center justify-between px-4 h-12 bg-white/95 backdrop-blur-xl border-b border-[#dedee5]">
-          <button onClick={() => setSidebarOpen(true)} aria-label="Open menu / 메뉴 열기" className="p-1.5 rounded-lg hover:bg-[#f7f7f8] transition-colors"><Menu size={20} className="text-[#686b82]" /></button>
+        <div className="sticky top-0 z-30 md:hidden flex h-12 items-center justify-between border-b border-[var(--app-divider)] bg-[var(--app-paper-bg)] px-4 backdrop-blur-xl">
+          <button onClick={() => setSidebarOpen(true)} aria-label="Open menu / 메뉴 열기" className="p-1.5 rounded-lg transition-colors hover:bg-[var(--app-soft-bg)]"><Menu size={20} className="text-[var(--app-ink-mid)]" /></button>
           <Link to="/" className="shrink-0">
-            <BrandLockup surface="light" className="origin-center scale-[0.68]" />
+            <BrandLockup surface={brandSurface} className="origin-center scale-[0.68]" />
           </Link>
-          <LangToggle className="bg-[#f7f7f8] border border-[#dedee5] text-[#686b82] hover:bg-[#eef0f3] text-[11px]" />
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle />
+            <LangToggle className="bg-[var(--app-light-btn-bg)] border border-[var(--app-light-btn-border)] text-[var(--app-ink-mid)] hover:bg-[var(--app-light-btn-hover-bg)] text-[11px]" />
+          </div>
         </div>
-        <div className="hidden md:block sticky top-0 z-40 border-b border-[#dedee5] bg-white/95 px-6 py-3 backdrop-blur-xl">
+        <div className="sticky top-0 z-40 hidden border-b border-[var(--app-divider)] bg-[var(--app-paper-bg)] px-6 py-3 backdrop-blur-xl md:block">
           <div className="flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-3">
               <Link to="/dashboard" className="shrink-0 transition-opacity hover:opacity-80">
-                <BrandLockup surface="light" className="origin-left scale-[0.62]" />
+                <BrandLockup surface={brandSurface} className="origin-left scale-[0.62]" />
               </Link>
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[#9497a9]">{chrome.label}</p>
-                <p className="mt-1 text-[12px] text-[#686b82] truncate">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--app-ink-low)]">{chrome.label}</p>
+                <p className="mt-1 truncate text-[12px] text-[var(--app-ink-mid)]">
                   {chrome.hint}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               {supabaseEnabled && user && (
                 <>
                   {canAccessAdminGate && (
@@ -141,10 +149,10 @@ export default function Layout() {
                       <span>{t('sidebar.admin')}</span>
                     </a>
                   )}
-                  {canAccessAdminGate && <div className="w-px h-3.5 bg-[#dedee5]" />}
+                  {canAccessAdminGate && <div className="h-3.5 w-px bg-[var(--app-divider)]" />}
                   <Link
                     to="/settings"
-                    className="inline-flex max-w-[220px] items-center gap-1.5 truncate px-2 py-1.5 text-[11px] font-medium text-[#686b82] transition-colors hover:text-[#101114]"
+                    className="inline-flex max-w-[220px] items-center gap-1.5 truncate px-2 py-1.5 text-[11px] font-medium text-[var(--app-ink-mid)] transition-colors hover:text-[var(--app-ink-high)]"
                   >
                     <UserCircle2 size={12} />
                     <span className="truncate">{displayName}</span>
@@ -152,22 +160,22 @@ export default function Layout() {
                   {isAdmin && <span className="rounded-full bg-[rgba(87,65,216,0.1)] px-2 py-1 text-[10px] font-semibold text-[#5741d8]">Admin</span>}
                   {isAdmin && adminAccessGranted && (
                     <>
-                      <div className="w-px h-3.5 bg-[#dedee5]" />
-                      <button type="button" onClick={handleLockAdmin} className="flex items-center gap-1.5 text-[11px] text-[#9497a9] hover:text-[#686b82] transition-colors">
+                      <div className="h-3.5 w-px bg-[var(--app-divider)]" />
+                      <button type="button" onClick={handleLockAdmin} className="flex items-center gap-1.5 text-[11px] text-[var(--app-ink-low)] transition-colors hover:text-[var(--app-ink-mid)]">
                         <LockKeyhole size={11} />
                         <span>{lang === 'ko' ? '관리자 잠금' : 'Lock Admin'}</span>
                       </button>
                     </>
                   )}
-                  <div className="w-px h-3.5 bg-[#dedee5]" />
-                  <button type="button" onClick={handleSignOut} className="flex items-center gap-1.5 text-[11px] text-[#9497a9] hover:text-[#686b82] transition-colors">
+                  <div className="h-3.5 w-px bg-[var(--app-divider)]" />
+                  <button type="button" onClick={handleSignOut} className="flex items-center gap-1.5 text-[11px] text-[var(--app-ink-low)] transition-colors hover:text-[var(--app-ink-mid)]">
                     <LogOut size={11} />
                     <span>{t('auth.signOut')}</span>
                   </button>
-                  <div className="w-px h-3.5 bg-[#dedee5]" />
+                  <div className="h-3.5 w-px bg-[var(--app-divider)]" />
                 </>
               )}
-              <LangToggle className="text-[#686b82] hover:text-[#101114] text-[11px]" />
+              <LangToggle className="text-[var(--app-ink-mid)] hover:text-[var(--app-ink-high)] text-[11px]" />
             </div>
           </div>
         </div>

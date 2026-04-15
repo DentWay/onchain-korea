@@ -3,8 +3,10 @@ import { Navigate, useLocation, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Mail, Lock, User, ArrowLeft, Wallet } from 'lucide-react'
 import BrandLockup from '../components/brand/BrandLockup'
+import ThemeToggle from '../components/ThemeToggle'
 import useAuth from '../hooks/useAuth'
 import useLang from '../hooks/useLang'
+import useTheme from '../hooks/useTheme'
 import { persistAuthIntent } from '../lib/authRedirect'
 
 const GoogleIcon = () => (
@@ -26,6 +28,7 @@ const SolanaIcon = () => (
 export default function Auth() {
   const { user, loading, signInWithEmail, signUpWithEmail, signInWithGoogle, signInWithKakao, signInWithEthereum, signInWithSolana, supabaseEnabled } = useAuth()
   const { t } = useLang()
+  const { isDark } = useTheme()
   const location = useLocation()
   const from = location.state?.from || '/dashboard'
   const oauthError = location.state?.authError || ''
@@ -46,7 +49,7 @@ export default function Auth() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="ok-theme-workbench min-h-screen flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-[rgba(87,65,216,0.30)] border-t-[#5741d8] rounded-full animate-spin" />
       </div>
     )
@@ -97,19 +100,19 @@ export default function Auth() {
 
   if (signupDone) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white px-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white border border-[#dedee5] rounded-[12px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-8 max-w-sm w-full text-center">
+      <div className="ok-theme-workbench min-h-screen flex items-center justify-center px-4">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm rounded-[12px] border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] p-8 text-center shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
           <div className="w-12 h-12 rounded-full bg-[rgba(20,158,97,0.10)] flex items-center justify-center mx-auto mb-4">
             <Mail size={24} className="text-[#026b3f]" />
           </div>
-          <h2 className="text-lg font-semibold text-[#101114] mb-2">
+          <h2 className="mb-2 text-lg font-semibold text-[var(--app-ink-high)]">
             {t('auth.checkEmail')}
           </h2>
-          <p className="text-[13px] text-[#686b82] mb-4">
+          <p className="mb-4 text-[13px] text-[var(--app-ink-mid)]">
             {t('auth.confirmEmailPrefix')}{email}{t('auth.confirmEmailSent')}
           </p>
           <button onClick={() => { setSignupDone(false); setMode('signin') }}
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#dedee5] bg-transparent text-[#686b82] font-semibold text-[13px] px-4 py-2 transition-colors hover:bg-[#f7f7f8]">
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] px-4 py-2 text-[13px] font-semibold text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
             {t('auth.backToSignIn')}
           </button>
         </motion.div>
@@ -118,29 +121,33 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm w-full">
-        <Link to="/" className="flex items-center gap-2 text-[12px] text-[#9497a9] hover:text-[#686b82] transition-colors mb-6">
-          <ArrowLeft size={14} />
-          {t('auth.backToHome')}
-        </Link>
+    <div className="ok-theme-workbench min-h-screen px-4 py-8">
+      <div className="mx-auto flex max-w-5xl justify-end">
+        <ThemeToggle />
+      </div>
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-sm w-full">
+          <Link to="/" className="mb-6 flex items-center gap-2 text-[12px] text-[var(--app-ink-low)] transition-colors hover:text-[var(--app-ink-mid)]">
+            <ArrowLeft size={14} />
+            {t('auth.backToHome')}
+          </Link>
 
-        <div className="mb-6">
-          <BrandLockup surface="light" className="origin-left scale-[1.08] md:scale-[1.14]" />
-          <div className="mt-3">
-            <h1 className="text-lg font-semibold text-[#101114]">
-              {mode === 'signin' ? t('auth.title') : t('auth.signup')}
-            </h1>
-            <p className="text-[11px] text-[#9497a9]">OnChain Korea</p>
+          <div className="mb-6">
+            <BrandLockup surface={isDark ? 'dark' : 'light'} className="origin-left scale-[1.08] md:scale-[1.14]" />
+            <div className="mt-3">
+              <h1 className="text-lg font-semibold text-[var(--app-ink-high)]">
+                {mode === 'signin' ? t('auth.title') : t('auth.signup')}
+              </h1>
+              <p className="text-[11px] text-[var(--app-ink-low)]">OnChain Korea</p>
+            </div>
           </div>
-        </div>
 
-        <div className="bg-white border border-[#dedee5] rounded-[12px] shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-5 space-y-3">
+          <div className="space-y-3 rounded-[12px] border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
           {/* Social Login */}
-          <p className="text-[10px] text-[#9497a9] uppercase tracking-[0.15em]">{t('auth.socialLogin')}</p>
+          <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--app-ink-low)]">{t('auth.socialLogin')}</p>
 
           <button onClick={() => handleOAuthLogin('google')}
-            className="w-full inline-flex items-center justify-center gap-2.5 rounded-full border border-[#dedee5] bg-transparent text-[#686b82] font-semibold py-2.5 text-[13px] transition-colors hover:bg-[#f7f7f8]">
+            className="w-full inline-flex items-center justify-center gap-2.5 rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] py-2.5 text-[13px] font-semibold text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
             <GoogleIcon />
             {t('auth.google')}
           </button>
@@ -154,20 +161,20 @@ export default function Auth() {
 
           {/* Divider */}
           <div className="flex items-center gap-3 pt-1">
-            <div className="flex-1 h-px bg-[#dedee5]" />
-            <span className="text-[10px] text-[#9497a9] uppercase tracking-[0.15em]">{t('auth.walletLogin')}</span>
-            <div className="flex-1 h-px bg-[#dedee5]" />
+            <div className="h-px flex-1 bg-[var(--app-divider)]" />
+            <span className="text-[10px] uppercase tracking-[0.15em] text-[var(--app-ink-low)]">{t('auth.walletLogin')}</span>
+            <div className="h-px flex-1 bg-[var(--app-divider)]" />
           </div>
 
           {/* Wallet Login */}
           <div className="grid grid-cols-2 gap-2">
             <button onClick={() => handleWalletLogin('ethereum')}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#dedee5] bg-transparent text-[#686b82] font-semibold py-2.5 text-[12px] transition-colors hover:bg-[#f7f7f8]">
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] py-2.5 text-[12px] font-semibold text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
               <EthereumIcon />
               Ethereum
             </button>
             <button onClick={() => handleWalletLogin('solana')}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#dedee5] bg-transparent text-[#686b82] font-semibold py-2.5 text-[12px] transition-colors hover:bg-[#f7f7f8]">
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] py-2.5 text-[12px] font-semibold text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
               <SolanaIcon />
               Solana
             </button>
@@ -177,7 +184,7 @@ export default function Auth() {
             <div className="space-y-1.5 rounded-lg border border-[rgba(220,38,38,0.20)] bg-[rgba(220,38,38,0.06)] px-3 py-2.5">
               <p className="text-[11px] text-[#dc2626] text-center">{error}</p>
               {oauthProvider === 'kakao' && (
-                <p className="text-[11px] text-[#686b82] text-center">{t('auth.kakaoSetupHint')}</p>
+                <p className="text-[11px] text-[var(--app-ink-mid)] text-center">{t('auth.kakaoSetupHint')}</p>
               )}
             </div>
           )}
@@ -186,12 +193,12 @@ export default function Auth() {
           {!showEmail ? (
             <>
               <div className="flex items-center gap-3 pt-1">
-                <div className="flex-1 h-px bg-[#dedee5]" />
-                <span className="text-[10px] text-[#9497a9]">{t('auth.or')}</span>
-                <div className="flex-1 h-px bg-[#dedee5]" />
+                <div className="h-px flex-1 bg-[var(--app-divider)]" />
+                <span className="text-[10px] text-[var(--app-ink-low)]">{t('auth.or')}</span>
+                <div className="h-px flex-1 bg-[var(--app-divider)]" />
               </div>
               <button onClick={() => setShowEmail(true)}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-[#dedee5] bg-transparent text-[#686b82] font-semibold py-2.5 text-[12px] transition-colors hover:bg-[#f7f7f8]">
+                className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] py-2.5 text-[12px] font-semibold text-[var(--app-ink-mid)] transition-colors hover:bg-[var(--app-light-btn-hover-bg)]">
                 <Mail size={15} />
                 {t('auth.emailLogin')}
               </button>
@@ -199,30 +206,30 @@ export default function Auth() {
           ) : (
             <>
               <div className="flex items-center gap-3 pt-1">
-                <div className="flex-1 h-px bg-[#dedee5]" />
-                <span className="text-[10px] text-[#9497a9]">{t('auth.emailLogin')}</span>
-                <div className="flex-1 h-px bg-[#dedee5]" />
+                <div className="h-px flex-1 bg-[var(--app-divider)]" />
+                <span className="text-[10px] text-[var(--app-ink-low)]">{t('auth.emailLogin')}</span>
+                <div className="h-px flex-1 bg-[var(--app-divider)]" />
               </div>
               <form onSubmit={handleSubmit} className="space-y-3">
                 {mode === 'signup' && (
                   <div className="relative">
-                    <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9497a9]" />
+                    <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-ink-low)]" />
                     <input type="text" value={name} onChange={e => setName(e.target.value)}
                       placeholder={t('auth.name')}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-[#dedee5] text-[13px] text-[#101114] placeholder:text-[#9497a9] focus:outline-none focus:border-[#5741d8] transition-colors" />
+                      className="w-full rounded-lg border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] py-2.5 pl-9 pr-3 text-[13px] text-[var(--app-ink-high)] transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#5741d8] focus:outline-none" />
                   </div>
                 )}
                 <div className="relative">
-                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9497a9]" />
+                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-ink-low)]" />
                   <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
                     placeholder={t('auth.email')}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-[#dedee5] text-[13px] text-[#101114] placeholder:text-[#9497a9] focus:outline-none focus:border-[#5741d8] transition-colors" />
+                    className="w-full rounded-lg border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] py-2.5 pl-9 pr-3 text-[13px] text-[var(--app-ink-high)] transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#5741d8] focus:outline-none" />
                 </div>
                 <div className="relative">
-                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9497a9]" />
+                  <Lock size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-ink-low)]" />
                   <input type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                     placeholder={t('auth.password')}
-                    className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-white border border-[#dedee5] text-[13px] text-[#101114] placeholder:text-[#9497a9] focus:outline-none focus:border-[#5741d8] transition-colors" />
+                    className="w-full rounded-lg border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] py-2.5 pl-9 pr-3 text-[13px] text-[var(--app-ink-high)] transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#5741d8] focus:outline-none" />
                 </div>
                 <button type="submit" disabled={submitting}
                   className="w-full inline-flex items-center justify-center gap-2 rounded-[56px] bg-[#5741d8] text-white font-semibold py-2.5 text-[13px] transition-colors hover:bg-[#7132f5] disabled:opacity-50">
@@ -233,16 +240,17 @@ export default function Auth() {
               </form>
             </>
           )}
-        </div>
+          </div>
 
-        <p className="text-center text-[12px] text-[#686b82] mt-4">
-          {mode === 'signin' ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
-          <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setShowEmail(false) }}
-            className="text-[#5741d8] hover:text-[#7132f5] transition-colors font-medium">
-            {mode === 'signin' ? t('auth.signup') : t('auth.title')}
-          </button>
-        </p>
-      </motion.div>
+          <p className="mt-4 text-center text-[12px] text-[var(--app-ink-mid)]">
+            {mode === 'signin' ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
+            <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setShowEmail(false) }}
+              className="text-[#5741d8] hover:text-[#7132f5] transition-colors font-medium">
+              {mode === 'signin' ? t('auth.signup') : t('auth.title')}
+            </button>
+          </p>
+        </motion.div>
+      </div>
     </div>
   )
 }

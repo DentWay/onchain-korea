@@ -89,12 +89,12 @@ export default function AdminAccess() {
 
       {!user ? (
         <div className="space-y-4">
-          <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-5">
+          <div className="rounded-[24px] border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] px-5 py-5">
             <div className="flex items-center gap-2">
               <ShieldCheck size={16} className="text-[#c4b5fd]" />
-              <p className="text-[12px] font-semibold text-[#f3f4f6]">{pick(lang, '로그인 필요', 'Sign-in required')}</p>
+              <p className="text-[12px] font-semibold text-[var(--app-ink-high)]">{pick(lang, '로그인 필요', 'Sign-in required')}</p>
             </div>
-            <p className="mt-3 text-[14px] leading-relaxed text-[#a0a3b5]">
+            <p className="mt-3 text-[14px] leading-relaxed text-[var(--app-ink-mid)]">
               {pick(
                 lang,
                 '승인된 관리자 계정으로 로그인한 뒤 비밀번호를 입력하세요.',
@@ -133,13 +133,13 @@ export default function AdminAccess() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="rounded-[24px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-5">
-            <p className="text-[11px] text-[#a0a3b5]">
+          <div className="rounded-[24px] border border-[var(--app-paper-border)] bg-[var(--app-paper-muted-bg)] px-5 py-5">
+            <p className="text-[11px] text-[var(--app-ink-mid)]">
               {pick(lang, '승인 계정 로그인됨', 'Approved account signed in')}
-              <span className="ml-2 font-medium text-[#f3f4f6]">{currentEmail || '-'}</span>
+              <span className="ml-2 font-medium text-[var(--app-ink-high)]">{currentEmail || '-'}</span>
             </p>
 
-            <label htmlFor="admin-password" className="mt-5 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#686b82]">
+            <label htmlFor="admin-password" className="mt-5 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--app-ink-low)]">
               {pick(lang, '비밀번호', 'Password')}
             </label>
             <input
@@ -149,7 +149,7 @@ export default function AdminAccess() {
               onChange={(event) => setPassword(event.target.value)}
               placeholder={pick(lang, '운영 비밀번호를 입력하세요', 'Enter the operations password')}
               autoComplete="current-password"
-              className="mt-3 w-full rounded-2xl border border-[rgba(255,255,255,0.10)] bg-[rgba(10,12,17,0.48)] px-4 py-3 text-[14px] text-[#e8e9ed] outline-none transition-colors placeholder:text-[#686b82] focus:border-[#5741d8]"
+              className="mt-3 w-full rounded-2xl border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] px-4 py-3 text-[14px] text-[var(--app-ink-high)] outline-none transition-colors placeholder:text-[var(--app-ink-low)] focus:border-[#5741d8]"
             />
           </div>
 
@@ -170,7 +170,7 @@ export default function AdminAccess() {
             </button>
             <Link
               to="/dashboard"
-              className="inline-flex items-center justify-center rounded-full border border-[rgba(255,255,255,0.10)] bg-[rgba(255,255,255,0.04)] px-6 py-3 text-[13px] font-semibold text-[#e8e9ed]"
+              className="inline-flex items-center justify-center rounded-full border border-[var(--app-paper-border)] bg-[var(--app-light-btn-bg)] px-6 py-3 text-[13px] font-semibold text-[var(--app-ink-high)]"
             >
               {pick(lang, '대시보드로', 'Go to dashboard')}
             </Link>

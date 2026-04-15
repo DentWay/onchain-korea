@@ -5,16 +5,14 @@ import { ADMIN_ACCESS_PATH } from '../lib/adminRoute'
 export default function ProtectedRoute({ children, adminOnly = false }) {
   const { user, isAdmin, canAccessAdminGate, adminAccessGranted, adminAccessLoading, loading, supabaseEnabled } = useAuth()
   const location = useLocation()
-  const loadingShell = adminOnly
-    ? 'flex min-h-screen items-center justify-center bg-[#0c0d11]'
-    : 'flex h-screen items-center justify-center bg-white'
+  const loadingShell = 'ok-theme-workbench flex min-h-screen items-center justify-center text-[var(--app-ink-high)]'
 
   // If Supabase is not configured, allow access (dev mode / no-auth fallback)
   if (!supabaseEnabled) return children
 
   if (loading) {
     return (
-      <div data-app-theme={adminOnly ? 'dark' : undefined} className={loadingShell}>
+      <div className={loadingShell}>
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(87,65,216,0.25)] border-t-[#5741d8]" />
       </div>
     )
@@ -34,7 +32,7 @@ export default function ProtectedRoute({ children, adminOnly = false }) {
 
   if (adminOnly && adminAccessLoading) {
     return (
-      <div data-app-theme="dark" className={loadingShell}>
+      <div className={loadingShell}>
         <div className="h-6 w-6 animate-spin rounded-full border-2 border-[rgba(87,65,216,0.25)] border-t-[#5741d8]" />
       </div>
     )

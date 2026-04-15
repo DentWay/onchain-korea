@@ -16,7 +16,7 @@ These notes capture the usable rules from the current brand PDF and screenshots.
 
 ## Theme Split
 - Landing: light, editorial, brand-led
-- Learning app: dark, denser utility UI
+- Learning app and admin workspace: default light utility UI with runtime light/dark toggle
 - `by Elixi.` appears only in landing lockups and landing certificate preview
 
 ## Landing Hero Invariants
