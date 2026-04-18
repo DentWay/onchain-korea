@@ -6,7 +6,7 @@ import { clearAuthIntent, readAuthIntent } from '../lib/authRedirect'
 
 export default function AuthCallback() {
   const navigate = useNavigate()
-  const { t } = useLang()
+  const { t, lang } = useLang()
 
   useEffect(() => {
     let cancelled = false
@@ -84,8 +84,16 @@ export default function AuthCallback() {
   }, [navigate, t])
 
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
-      <div className="w-6 h-6 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+    <div className="ok-theme-workbench flex min-h-screen items-center justify-center px-6">
+      <div className="ok-app-card w-full max-w-sm rounded-[1.5rem] p-8 text-center">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(87,65,216,0.12)]">
+          <div className="h-6 w-6 rounded-full border-2 border-[rgba(87,65,216,0.28)] border-t-[#5741d8] animate-spin" />
+        </div>
+        <p className="mt-5 text-[15px] font-[700] text-[var(--app-ink-high)]">{t('auth.processing')}</p>
+        <p className="mt-2 text-[13px] leading-relaxed text-[var(--app-ink-mid)]">
+          {lang === 'ko' ? '로그인 연동을 마무리하고 있습니다.' : 'Finishing your sign-in flow.'}
+        </p>
+      </div>
     </div>
   )
 }

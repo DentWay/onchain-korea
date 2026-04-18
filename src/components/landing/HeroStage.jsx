@@ -44,7 +44,15 @@ export default function HeroStage() {
             {...fade(0.25)}
             className="mt-8 text-[36px] md:text-[52px] lg:text-[80px] font-bold leading-[1.00] tracking-[-2px] text-white"
           >
-            {pick('블록체인, 처음부터 안전하게', 'Blockchain. Safe from the Start.')}
+            {lang === 'ko' ? (
+              <>
+                블록체인
+                <br />
+                처음부터 안전하게
+              </>
+            ) : (
+              'Blockchain. Safe from the Start.'
+            )}
           </motion.h1>
 
           {/* Sub-heading */}

@@ -1,9 +1,13 @@
+> **공통 규칙 필독**: 작업 전 반드시 `../CLAUDE.md` (프로젝트 공통 운영 규칙)를 먼저 읽는다.
+
+**last_verified: 2026-04-17**
+
 # Onchain Korea — Project Context
 
 ## Overview
 Blockchain Literacy & Safety Education Platform for Korea.
 Built by Elixi Venture Studio Group × Greed Academy.
-4-week curriculum teaching Korean beginners from wallet setup to staking.
+8-week curriculum teaching Korean beginners from wallet setup to staking.
 
 - **Production**: https://onchain-korea.vercel.app
 - **Repo**: https://github.com/DentWay/onchain-korea
@@ -21,6 +25,8 @@ Built by Elixi Venture Studio Group × Greed Academy.
 ## Curriculum Structure (Korean Market Optimized)
 
 Order designed for Korean user journey: 업비트 → 지갑 → 스테이블코인 → DYOR → DeFi → NFT → 스테이킹
+
+⚠️ **Lesson ID Re-mapping Note**: Lesson IDs in documentation (w1-0, w2-1, etc.) are outdated legacy references. Current code uses full alphanumeric IDs (w3-t1, w4-p2, etc.) per `curriculum.js`. Refer to source code for authoritative lesson ID mappings.
 
 ### Week 1: 크립토 기초 + 지갑 설정
 | Lesson | ID | GA Source |
@@ -158,6 +164,10 @@ Environment variables (Vercel + .env.local):
 5. **No fake data** — all countdown timers use real semester deadline (2026-04-30), stats come from DB.
 6. **"Proof of Attendance (PoAP)" not "Certificate"** — Bojana feedback: avoid implying official credential. All user-facing copy uses "Proof of Attendance" instead of "Certificate".
 7. **"Semester" = Greed Academy cohort** — Current offering is Semester 1 + 2 combined (Greed Academy S1 & S2 curriculum merged). Explained in FAQ.
+
+## Implementation Status Notes
+
+- **[미구현] GA 트래킹** — 문서에만 존재하며, 코드에 GA 이벤트 추적이 실제로 구현되지 않음. 설치 필요시 `pages/`의 각 라우트에 `gtag.event()` 호출 추가 필요.
 
 ## Content Factcheck Status (as of 2026-03-27)
 All 20 lessons and 4 hidden topic articles have been verified against primary sources.

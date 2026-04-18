@@ -168,3 +168,69 @@ Responsibilities:
 - **소스 품질**: TODO/FIXME 0건
 - **다음 우선순위**: 번들 최적화 → lucide-react 업데이트 → 모바일 반응형 → E2E 테스트
 - **다음 리뷰**: 2026-04-11
+
+### 2026-04-13 (에이전트 업데이트)
+- **빌드 상태**: 정상. React 18.2.0 (RSC 미사용 → CVE 비영향) ✅
+- **최근 커밋**: admin entry/console insights 강화, content audit status, dashboard shortcuts 확장, navigation 개선, legacy gate rewrites 제거
+- **admin 대시보드**: benchmark 설계 문서 완성 (04.12) — KPI strip, learning funnel, week bottleneck, at-risk queue, difficulty alerts 구조
+- **번들 크기**: 500KB+ 경고 지속 — **코드 스플리팅 최긴급** 🔴🔴
+- **의존성 업데이트 가용**: lucide-react 0.294→0.577 (번들 감소 기대), react-router-dom 6.20→7.x, Vite 5→8.x, Tailwind 3.3→4.x
+- **인증**: 3계층 관리자 인증 안정 ✅, RLS 재귀 수정 완료 ✅
+- **인프라**: Vercel/Supabase 정상. Supabase Explain/Analyze 다이어그램 가용
+- **소스 품질**: TODO/FIXME 0건
+- **다음 우선순위**: 번들 최적화 (코드 스플리팅 + lucide-react 업데이트) → admin 대시보드 benchmark 구현 → 모바일 반응형 → E2E 테스트
+- **다음 리뷰**: 2026-04-14
+
+### 2026-04-14 (에이전트 업데이트)
+- **빌드 상태**: 정상. React 18.2.0 (RSC 미사용 → CVE-2026-23869 React2DoS 직접 영향 없음) ✅
+- **최근 커밋**: admin intervention dashboard 확장 (92eaf5f), console insights 강화 (b93efe9), content audit status (dd1f3d9), dashboard shortcuts 확장 (96d6a22), navigation 개선 (685dd02), legacy gate rewrites 제거 (fa76b72)
+- **번들 크기**: 500KB+ 경고 지속 — **코드 스플리팅 최긴급** 🔴🔴🔴. Spline 3D + 라우트 lazy loading 조합 권장
+- **의존성 업데이트 가용**: lucide-react **0.294→0.577** (tree-shaking 개선 → 즉시 번들 감소 기대), react-router-dom 6.20→7.x, Vite 5→8.x (Rolldown), Tailwind 3.3→4.x
+- **현재 스택 확인**: @splinetool/react-spline 4.1.0, @splinetool/runtime 1.12.73, framer-motion 12.38.0, @supabase/supabase-js 2.100.0 ✅
+- **인증**: 3계층 관리자 인증 안정 ✅, RLS 재귀 수정 완료 ✅
+- **admin benchmark**: 04.12 설계 문서 기반 구현 단계 진입 (intervention dashboard, console insights 확장 중)
+- **인프라**: Vercel/Supabase 정상. Vercel Dashboard SQL 통합 활용 가능 (Supabase 직접 쿼리)
+- **Node 권장**: Vercel 런타임 Node 22+ 전환 확인 (20 SIGSEGV 이력)
+- **Claude API**: OnChain Korea는 LLM 호출 없음 → Haiku 3 폐기 04.19 직접 영향 없음
+- **소스 품질**: TODO/FIXME 0건 ✅
+- **다음 우선순위**: (1) **lucide-react 0.577 업그레이드** (즉시 번들 감소) → (2) 코드 스플리팅 (Spline + 라우트 lazy) → (3) admin benchmark 구현 → (4) 모바일 반응형 → (5) E2E Playwright
+- **다음 리뷰**: 2026-04-15
+
+### 2026-04-15 (에이전트 업데이트)
+- **빌드 상태**: 정상 ✅. React 18.3.1 (RSC 미사용 → CVE-2026-23869 무관)
+- **최근 커밋**: admin dashboard infographics (cf27c22), console IA 리팩터링 (2c5ee98), intervention dashboard 확장 (92eaf5f)
+- **번들**: dist 8.9MB — Spline 3D 런타임이 주요 비중. **코드 스플리팅 + Spline lazy loading 최우선** 🔴
+- **의존성 업데이트 가용**: lucide-react 0.294→0.577 (tree-shaking 대폭 개선), react-router-dom 6→7, Vite 5→8, Tailwind 3→4
+- **admin dashboard**: LMS 벤치마크 기반 재설계 구현 중 — KPI strip, 학습 퍼널, 위험군 큐
+- **인증**: 3계층 안정 ✅. 기본 비밀번호 환경변수 이전 여전히 미완료
+- **인프라**: Vercel/Supabase 정상. Supabase PostgREST v14 (20% RPS 향상), Log Drains Pro 가용
+- **Claude API**: 미사용 → Haiku 3 폐기/1M 컨텍스트 변경 영향 없음
+- **소스 품질**: TODO/FIXME 0건 ✅
+- **다음 우선순위**: (1) lucide-react 0.577 업그레이드 (2) 코드 스플리팅 (3) admin benchmark 구현 마무리 (4) 모바일 반응형
+- **다음 리뷰**: 2026-04-16
+
+### 2026-04-16 (에이전트 업데이트)
+- **빌드 상태**: 정상 ✅. React 18.3.1 (RSC 미사용 → CVE-2026-23869 무관)
+- **최근 커밋**: shared light-dark theme (0cb6824), admin dashboard infographics (cf27c22), console IA 리팩터링 (2c5ee98), intervention dashboard 확장 (92eaf5f)
+- **번들**: dist 8.9MB — Spline 3D 런타임 주요 비중. **코드 스플리팅 + Spline lazy loading 최우선** 🔴
+- **의존성 업데이트 가용**: lucide-react **0.294→0.577** (tree-shaking 대폭 개선), react-router-dom 6→7, Vite 5→8 (Rolldown), Tailwind 3→4
+- **admin dashboard**: LMS 벤치마크 기반 재설계 구현 중 — infographics, console IA 리팩터링, intervention dashboard 확장
+- **인증**: 3계층 안정 ✅. 기본 비밀번호 환경변수 이전 미완료 (보안 리스크)
+- **인프라**: Vercel/Supabase 정상. Supabase Multigres 오픈소스 공개, Studio Fix with Assistant, Push Protection 추가
+- **Claude API**: 미사용 → 모델 변경 영향 없음
+- **소스 품질**: TODO/FIXME 0건 ✅
+- **다음 우선순위**: (1) lucide-react 0.577 업그레이드 (2) 코드 스플리팅 (Spline + 라우트 lazy) (3) admin benchmark 마무리 (4) 모바일 반응형 (5) E2E Playwright
+- **다음 리뷰**: 2026-04-17
+
+### 2026-04-17 (에이전트 업데이트)
+- **빌드 상태**: 정상 ✅. React 18.2.0 (RSC 미사용 → CVE-2026-23869 무관)
+- **최근 커밋**: shared light-dark theme (0cb6824), admin dashboard infographics (cf27c22), console IA 리팩터링 (2c5ee98), intervention dashboard 확장 (92eaf5f)
+- **번들**: dist 8.9MB — Spline 3D 런타임 주요 비중. **코드 스플리팅 + Spline lazy loading 최우선** 🔴
+- **의존성 업데이트 가용**: lucide-react **0.294→0.577** (tree-shaking 대폭 개선), react-router-dom 6→7, Vite 5→8 (Rolldown), Tailwind 3→4
+- **admin dashboard**: LMS 벤치마크 기반 재설계 — infographics, console IA 리팩터링, intervention dashboard 확장 진행 중
+- **인증**: 3계층 안정 ✅. 기본 비밀번호 환경변수 이전 미완료 (보안 리스크)
+- **인프라**: Vercel Turbo 빌드 16% 인하, Supabase Studio Fix with Assistant, Push Protection 추가
+- **Claude API**: 미사용 → Opus 4.7 출시/Haiku 3 폐기/모델 변경 영향 없음
+- **소스 품질**: TODO/FIXME 0건 ✅
+- **다음 우선순위**: (1) lucide-react 0.577 업그레이드 (2) 코드 스플리팅 (Spline + 라우트 lazy) (3) admin benchmark 마무리 (4) 모바일 반응형 (5) E2E Playwright
+- **다음 리뷰**: 2026-04-18

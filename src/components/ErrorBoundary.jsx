@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 
 function ErrorFallback() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
-      <div className="rounded-xl border border-[#dedee5] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.03)] p-8 max-w-md text-center">
+    <div className="ok-theme-workbench min-h-screen flex items-center justify-center p-6">
+      <div className="ok-app-card max-w-md rounded-[1.5rem] p-8 text-center">
         <p className="text-4xl mb-4">⚠️</p>
-        <h1 className="text-lg font-semibold text-[#101114] mb-2">Something went wrong</h1>
-        <p className="text-sm text-[#686b82] mb-6">Refresh the page or go back home.</p>
+        <h1 className="text-lg font-semibold text-[var(--app-ink-high)] mb-2">Something went wrong</h1>
+        <p className="text-sm text-[var(--app-ink-mid)] mb-6">Refresh the page or go back home.</p>
         <div className="flex gap-3 justify-center">
           <button
             onClick={() => window.location.reload()}
@@ -15,7 +15,7 @@ function ErrorFallback() {
           >
             Refresh
           </button>
-          <Link to="/" className="inline-flex items-center gap-2 rounded-xl bg-[#eef0f3] px-5 py-3 text-[14px] font-semibold text-[#101114] hover:bg-[#dedee5] transition-colors">
+          <Link to="/" className="ok-app-secondary-button inline-flex items-center gap-2 rounded-xl px-5 py-3 text-[14px] font-semibold">
             Go Home
           </Link>
         </div>

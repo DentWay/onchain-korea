@@ -242,6 +242,52 @@ body {
   border-color: var(--app-soft-border);
 }
 
+.ok-app-section,
+.ok-app-card,
+.ok-app-muted-card {
+  border: 1px solid var(--app-paper-border);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ok-app-section,
+.ok-app-card {
+  background: var(--app-paper-bg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+}
+
+.ok-app-muted-card {
+  background: var(--app-paper-muted-bg);
+}
+
+.ok-app-pill {
+  border: 1px solid var(--app-paper-border);
+  background: var(--app-paper-muted-bg);
+  color: var(--app-ink-mid);
+}
+
+.ok-app-divider {
+  border-color: var(--app-divider);
+}
+
+.ok-app-text-high { color: var(--app-ink-high); }
+.ok-app-text-mid { color: var(--app-ink-mid); }
+.ok-app-text-low { color: var(--app-ink-low); }
+
+.ok-app-track {
+  background: var(--app-track);
+}
+
+.ok-app-secondary-button {
+  border: 1px solid var(--app-light-btn-border);
+  background: var(--app-light-btn-bg);
+  color: var(--app-ink-high);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.ok-app-secondary-button:hover {
+  background: var(--app-light-btn-hover-bg);
+}
+
 .ok-landing-panel,
 .ok-landing-card {
   border: 1px solid rgba(255, 255, 255, 0.08);

@@ -4,7 +4,41 @@
 
 ---
 
-## 2026-04-15
+## 2026-04-17
+
+### 랜딩 커리큘럼 sticky 전환 기준 보정
+- `Curriculum.jsx`의 좌측 sticky 포커스 카드가 단순 고정처럼 보이던 문제를 수정하고, 우측 주차 섹션이 화면 기준선에 도달할 때 활성 주차가 바뀌도록 스크롤 기준을 재설계
+- 기존의 `closest section` 방식 대신 `trigger line`을 지난 마지막 주차를 현재 포커스로 삼도록 바꿔 Week 2, Week 3 등 각 섹션 진입 시점이 더 직관적으로 맞도록 보정
+- sticky 카드 본문에 `AnimatePresence`/`motion` 전환을 추가해 제목, 설명, 요약 카드, 아티클 리스트가 주차 변경 시 자연스럽게 교체되도록 정리
+- 추가 원인 분석 결과 랜딩 최상위 래퍼의 `overflow-x-hidden`이 sticky를 깨고 있었고, `Curriculum` 그리드의 `items-start/self-start` 조합도 sticky parent 높이를 카드 높이로 축소시켜 추적 불가 상태를 만들고 있었음을 확인
+- `Landing.jsx`에서 랜딩 레벨 `overflow-x-hidden`을 제거하고, `Curriculum.jsx`에서 sticky parent가 오른쪽 로드맵 높이를 그대로 따라가도록 되돌린 뒤 headless Chrome DevTools 실측으로 `stickyTop`이 `112px`에 유지되는 것을 검증
+- 추가로 sticky 노출 브레이크포인트를 `lg`에서 `min-[900px]`로 낮춰 좁은 데스크톱 폭에서도 같은 구조가 유지되도록 보정했고, headless Chrome 캡처 기준 `900px`와 `1440px` 모두에서 좌측 포커스 카드가 주차 진행에 맞춰 따라오는 것을 재확인
+
+## 2026-04-16
+
+### 앱 전역 다크모드 토큰 마이그레이션 마무리
+- 학습자 앱, 인증 흐름, 로그아웃 완료 화면, 관리자 공용 컴포넌트에서 남아 있던 `bg-white`, `#101114`, `#686b82`, `#9497a9`, `#dedee5`, `#eef0f3`, `#f7f7f8` 하드코드를 `--app-*` 토큰 기반으로 정리
+- `WeekDetail`, `LessonDetail`, `HiddenTopics`, `Dashboard`, `Quiz`, `ActionGuide`, `Certificate`, `Settings`, `Community`, `LessonInline`, `CircleProgress`, `ErrorBoundary`, `Auth`, `AuthCallback`를 중심으로 카드/텍스트/보더/트랙이 다크/라이트 모두 일관되게 보이도록 보정
+- `index.css`에 `ok-app-section`, `ok-app-card`, `ok-app-muted-card`, `ok-app-pill`, `ok-app-divider`, `ok-app-track`, `ok-app-secondary-button` 등 공통 app-surface 유틸리티를 추가
+- `AuthCallback`의 전체 흰 화면 spinner를 제거하고 앱 테마를 따르는 callback shell로 교체
+
+### 랜딩 Hero 한국어 헤드라인 줄바꿈 조정
+- `HeroStage` 한국어 타이틀을 `블록체인, 처음부터 안전하게`에서 `블록체인` / `처음부터 안전하게` 2줄 구조로 변경
+- 한국어 버전에서만 comma를 제거하고, 영문 hero 카피와 3D hero 구조는 그대로 유지
+
+### 랜딩 8주 로드맵 sticky-scroll 재구성
+- `Curriculum.jsx`를 카드 8개 그리드에서 `sticky focus + 8주 스크롤 시퀀스` 구조로 전면 교체
+- 좌측 sticky 패널에서 현재 주차의 제목, 오픈 규칙, 핵심 아티클, article/action/test 요약을 집중해서 읽도록 재구성
+- 우측에는 `Week 1-4 기본 트랙 / Week 5-8 확장 트랙`을 한 줄 흐름으로 읽는 vertical roadmap을 배치
+- 각 주차에 `이번 주 핵심 아티클`, `오픈 규칙`, `다음 주 개방 조건`을 넣어 8주 unlock 흐름을 랜딩에서 바로 이해할 수 있게 정리
+- 모바일에서는 같은 데이터를 sticky 없이 순차형 open layout으로 유지하도록 정리
+
+### Aceternity 컴포넌트 적합성 조사 정리
+- `Aceternity UI` 컴포넌트들을 온체인코리아 랜딩/유저/관리자 구조에 맞춰 `채택 / 조건부 채택 / 배제` 기준으로 정리
+- 현재 제품 제약상 `hero spectacle`보다 `정보 구조`와 `운영 인터랙션`에 쓰는 것이 맞다고 판단
+- 최우선 후보를 `Sticky Scroll Reveal / Tabs / Sidebar / Stateful Button / Animated Modal`로 고정
+- `Apple Cards Carousel / Timeline / Compare / Sticky Banner`는 조건부 채택 대상으로 분리
+- 결과 문서를 `docs/design/aceternity-component-fit-2026-04-15.md`로 추가
 
 ### 관리자/앱 공통 테마 토글 및 라이트 기본 정렬
 - `ThemeProvider`, `useTheme`, `ThemeToggle`를 추가해 앱 셸 기준 라이트/다크 토글을 전역 상태로 관리하도록 정리

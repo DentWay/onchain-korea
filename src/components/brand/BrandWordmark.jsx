@@ -11,8 +11,8 @@ import BrandIcon from './BrandIcon'
  * compact = false → hero / auth / certificate (48px icon, ~2.4rem text)
  */
 export default function BrandWordmark({ surface = 'light', compact = false, className = '' }) {
-  const mainTone = surface === 'dark' ? 'text-white' : 'text-[#101114]'
-  const krTone = surface === 'dark' ? 'text-white/50' : 'text-[#9497a9]'
+  const mainTone = surface === 'dark' ? 'text-white' : 'text-[var(--app-ink-high)]'
+  const krTone = surface === 'dark' ? 'text-white/50' : 'text-[var(--app-ink-low)]'
 
   // Icon size and text size are coupled
   const iconSize = compact ? 22 : 44

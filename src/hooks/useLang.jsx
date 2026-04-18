@@ -8,7 +8,7 @@ const translations = {
   'nav.curriculum': { ko: '커리큘럼', en: 'Curriculum' },
   'nav.features': { ko: '특징', en: 'Features' },
   'sidebar.title': { ko: 'OnChain Korea', en: 'OnChain Korea' },
-  'sidebar.tagline': { ko: '블록체인, 처음부터 안전하게', en: 'Blockchain, safely from the start' },
+  'sidebar.tagline': { ko: '블록체인 처음부터 안전하게', en: 'Blockchain, safely from the start' },
   'sidebar.learning': { ko: '학습', en: 'Learning' },
   'sidebar.community_label': { ko: '소통', en: 'Community' },
   'sidebar.dashboard': { ko: '대시보드', en: 'Dashboard' },
@@ -235,7 +235,7 @@ const translations = {
 
   // Footer
   'footer.program': { ko: '프로그램', en: 'Program' },
-  'footer.desc': { ko: '블록체인, 처음부터 안전하게. Greed Academy 커리큘럼 기반 무료 교육 프로그램.', en: 'Blockchain, safely from the start. Free education based on Greed Academy curriculum.' },
+  'footer.desc': { ko: '블록체인 처음부터 안전하게. Greed Academy 커리큘럼 기반 무료 교육 프로그램.', en: 'Blockchain, safely from the start. Free education based on Greed Academy curriculum.' },
 
   // Fomo Banner
   'fomo.text': { ko: '등록 중', en: 'Open' },

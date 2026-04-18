@@ -103,7 +103,7 @@ export default function Auth() {
       <div className="ok-theme-workbench min-h-screen flex items-center justify-center px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm rounded-[12px] border border-[var(--app-paper-border)] bg-[var(--app-paper-bg)] p-8 text-center shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
           <div className="w-12 h-12 rounded-full bg-[rgba(20,158,97,0.10)] flex items-center justify-center mx-auto mb-4">
-            <Mail size={24} className="text-[#026b3f]" />
+            <Mail size={24} className="text-[var(--success)]" />
           </div>
           <h2 className="mb-2 text-lg font-semibold text-[var(--app-ink-high)]">
             {t('auth.checkEmail')}
@@ -182,7 +182,7 @@ export default function Auth() {
 
           {error && (
             <div className="space-y-1.5 rounded-lg border border-[rgba(220,38,38,0.20)] bg-[rgba(220,38,38,0.06)] px-3 py-2.5">
-              <p className="text-[11px] text-[#dc2626] text-center">{error}</p>
+              <p className="text-[11px] text-[var(--error)] text-center">{error}</p>
               {oauthProvider === 'kakao' && (
                 <p className="text-[11px] text-[var(--app-ink-mid)] text-center">{t('auth.kakaoSetupHint')}</p>
               )}
