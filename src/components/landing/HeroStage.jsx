@@ -51,18 +51,23 @@ export default function HeroStage() {
                 처음부터 안전하게
               </>
             ) : (
-              'Blockchain. Safe from the Start.'
+              <>
+                Blockchain
+                <br />
+                Safe from the Start
+              </>
             )}
           </motion.h1>
 
           {/* Sub-heading */}
           <motion.p
             {...fade(0.4)}
-            className="mx-auto mt-6 max-w-[520px] text-[16px] md:text-[18px] leading-[1.65] text-[#9497a9]"
+            className="mx-auto mt-6 max-w-[520px] whitespace-pre-line text-[16px] md:text-[18px] leading-[1.65] text-[#9497a9]"
           >
             {pick(
               '지갑 생성부터 DeFi까지, 8주 만에 온체인 세계를 경험하세요. Greed Academy 커리큘럼 기반, 100% 무료.',
-              'From wallet creation to DeFi, experience the on-chain world in 8 weeks. Based on the Greed Academy curriculum, 100% free.'
+              `From wallet creation to DeFi, experience the on-chain world in 8 weeks.
+Based on the Greed Academy curriculum, 100% free.`
             )}
           </motion.p>
 

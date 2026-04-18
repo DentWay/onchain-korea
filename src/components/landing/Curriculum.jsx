@@ -258,11 +258,12 @@ export default function Curriculum() {
           <h2 className="mt-4 text-[38px] font-[800] tracking-[-0.055em] text-[#101114] md:text-[56px]">
             {pick(lang, '8주 전체 로드맵', 'The Full 8-Week Roadmap')}
           </h2>
-          <p className="mt-5 max-w-2xl text-[16px] leading-[1.75] text-[#515668] md:text-[18px]">
+          <p className="mt-5 max-w-2xl whitespace-pre-line text-[16px] leading-[1.75] text-[#515668] md:text-[18px]">
             {pick(
               lang,
               'Week 1-4에서 지갑, 보안, 토큰, DYOR 기본기를 먼저 만들고, 매주 통과할 때마다 Week 5-8 실전 트랙이 순서대로 이어집니다.',
-              'Weeks 1-4 build the foundation across wallets, security, tokens, and DYOR. As you pass each checkpoint, Weeks 5-8 open into the practical track.'
+              `Weeks 1-4 build the foundation across wallets, security, tokens, and DYOR.
+As you pass each checkpoint, Weeks 5-8 open into the practical track.`
             )}
           </p>
         </div>

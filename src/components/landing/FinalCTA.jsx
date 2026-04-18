@@ -45,11 +45,12 @@ export default function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="mt-5 text-[18px] text-[#9497a9]"
+          className="mt-5 whitespace-pre-line text-[18px] text-[#9497a9]"
         >
           {lang === 'ko'
             ? '4월 30일까지 등록 가능합니다.'
-            : 'Registration open until April 30.'}
+            : `Registration stays open
+until April 30.`}
         </motion.p>
 
         {/* Countdown */}

@@ -127,8 +127,8 @@ const translations = {
 
   // Landing page
   'landing.badge': { ko: '4주 기본기 + 4주 심화 확장 · 완전 무료', en: '4-week foundation + 4-week advanced track · 100% free' },
-  'landing.hero1': { ko: '블록체인, ', en: 'Blockchain, ' },
-  'landing.hero2': { ko: '4주면 충분합니다', en: '4 Weeks Is All You Need' },
+  'landing.hero1': { ko: '블록체인', en: 'Blockchain' },
+  'landing.hero2': { ko: '처음부터 안전하게', en: 'Safe from the Start' },
   'landing.heroSub': { ko: '4주 동안 지갑 · 보안 · 토큰 · DYOR 기본기를 만들고, 통과하면 DeFi · NFT · DAO · 크로스체인까지 8주 경로로 이어져요.', en: 'Build wallet, security, token, and DYOR fundamentals in 4 weeks — then continue into the full 8-week path covering DeFi, NFT, DAO, and cross-chain.' },
   'landing.semester1Badge': { ko: 'Semester 1 · Week 1-4', en: 'Semester 1 · Weeks 1-4' },
   'landing.semester2Badge': { ko: 'Week 1-4 통과 후 Week 5-8 열림', en: 'Weeks 5-8 open after passing Weeks 1-4' },

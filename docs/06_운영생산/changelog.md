@@ -4,7 +4,23 @@
 
 ---
 
+## 2026-04-18
+
+### 랜딩 Hero 영문 헤드라인 레거시 문구 정리
+- `HeroStage`의 영문 헤드라인이 `Blockchain` / `Safe from the Start` 2줄 구조로 고정되도록 재확인
+- 남아 있던 legacy 번역 키 `landing.hero1`, `landing.hero2`도 새 문구로 통일해 이전 comma 기반 표현이 다시 섞여 나오지 않도록 정리
+
+---
+
 ## 2026-04-17
+
+### 랜딩 영문 카피 줄바꿈 가독성 보정
+- `HeroStage`, `Curriculum`, `Features`, `FinalCTA`, `FAQ`의 영문 설명 문구를 다시 검토하고, 한 줄 길이가 과한 구간은 문장 단위 줄바꿈으로 정리
+- 히어로 서브카피, 커리큘럼 소개문, CTA 보조문구는 `whitespace-pre-line` 기반으로 2줄 리듬을 주고, FAQ 영문 답변은 문단형 줄바꿈으로 읽기 밀도를 낮춤
+
+### 랜딩 Hero 영문 헤드라인 줄바꿈 정리
+- `HeroStage.jsx` 영문 타이틀을 `Blockchain. Safe from the Start.`에서 `Blockchain` / `Safe from the Start` 2줄 구조로 변경
+- 영문 버전에서도 마침표를 제거해 한국어 히어로와 같은 리듬으로 정리
 
 ### 랜딩 커리큘럼 sticky 전환 기준 보정
 - `Curriculum.jsx`의 좌측 sticky 포커스 카드가 단순 고정처럼 보이던 문제를 수정하고, 우측 주차 섹션이 화면 기준선에 도달할 때 활성 주차가 바뀌도록 스크롤 기준을 재설계

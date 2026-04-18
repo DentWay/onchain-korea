@@ -16,7 +16,8 @@ export default function Features() {
       desc: pick(
         lang,
         '읽기 → 퀴즈 → 실습 → 인증. 이론만이 아닌 실전 경험.',
-        'Read → Quiz → Practice → Certify. Real experience, not just theory.'
+        `Read → Quiz → Practice → Certify.
+Real experience, not just theory.`
       ),
     },
     {
@@ -34,7 +35,8 @@ export default function Features() {
       desc: pick(
         lang,
         '수료 조건 달성 시 블록체인에 영구 기록되는 수료 인증서.',
-        'A certificate permanently recorded on the blockchain upon completion.'
+        `A certificate permanently recorded on the blockchain
+upon completion.`
       ),
     },
     {
@@ -43,7 +45,8 @@ export default function Features() {
       desc: pick(
         lang,
         '카카오톡 스터디 그룹과 주간 리듬으로 함께 학습합니다.',
-        'Learn together with KakaoTalk study groups and a weekly rhythm.'
+        `Learn together with KakaoTalk study groups
+and a weekly rhythm.`
       ),
     },
   ]
@@ -84,7 +87,7 @@ export default function Features() {
                   {feature.title}
                 </h3>
 
-                <p className="mt-2 text-[16px] leading-[1.50] text-[#9497a9]">
+                <p className="mt-2 whitespace-pre-line text-[16px] leading-[1.50] text-[#9497a9]">
                   {feature.desc}
                 </p>
               </motion.div>
